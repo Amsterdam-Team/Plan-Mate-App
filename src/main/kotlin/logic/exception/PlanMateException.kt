@@ -2,19 +2,19 @@ package logic.exception
 
 sealed class PlanMateException : Exception() {
     sealed class AuthorizationException : PlanMateException() {
-        data object AdminPrivilegesRequired : AuthorizationException()
-        data object UserNotFound : AuthorizationException()
+        data object AdminPrivilegesRequiredException : AuthorizationException()
+        data object UserNotFoundException : AuthorizationException()
 
     }
 
     sealed class ValidationException : PlanMateException() {
-        data object InvalidUsername : ValidationException()
-        data object InvalidPassword : ValidationException()
-        data object InvalidStateName : ValidationException()
-        data object InvalidTaskName : ValidationException()
-        data object InvalidTaskID : ValidationException()
-        data object InvalidProjectName : ValidationException()
-        data object InvalidProjectID : ValidationException()
+        data object InvalidUsernameException : ValidationException()
+        data object InvalidPasswordException : ValidationException()
+        data object InvalidStateNameException : ValidationException()
+        data object InvalidTaskNameException : ValidationException()
+        data object InvalidTaskIDException : ValidationException()
+        data object InvalidProjectNameException : ValidationException()
+        data object InvalidProjectIDException : ValidationException()
     }
 
     sealed class ParsingException : PlanMateException() {
