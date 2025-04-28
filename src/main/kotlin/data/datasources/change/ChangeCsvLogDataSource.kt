@@ -1,13 +1,11 @@
-package data.repository.change
+package data.datasources.change
 
-import data.datasources.change.ChangeLogDataSource
+import logic.entities.Change
 import logic.entities.ProjectChangeLog
 import logic.entities.TaskChangeLog
-import logic.repository.ChangeRepository
-import org.amsterdam.planmate.data.datasources.project.ProjectDataSource
 import java.util.*
 
-class ChangeRepositoryImpl(val changeLogDataSource: ChangeLogDataSource): ChangeRepository {
+class ChangeCsvLogDataSource() : ChangeLogDataSource {
     override fun addTaskChangeLog(taskId: UUID, message: String, date: Date) {
         TODO("Not yet implemented")
     }
@@ -23,6 +21,5 @@ class ChangeRepositoryImpl(val changeLogDataSource: ChangeLogDataSource): Change
     override fun getProjectChangeLogsById(projectId: UUID): List<ProjectChangeLog> {
         TODO("Not yet implemented")
     }
-
 
 }

@@ -1,32 +1,32 @@
 package org.amsterdam.planmate.data.repository.task
 
+import logic.entities.State
 import logic.entities.Task
 import logic.repository.TaskRepository
+import org.amsterdam.planmate.data.datasources.task.TaskDataSource
 import utils.ResultStatus
+import java.util.*
 
-class TaskRepositoryImpl: TaskRepository {
-    override fun createTask(task: Task): ResultStatus<Task> {
+class TaskRepositoryImpl(val taskDataSource: TaskDataSource): TaskRepository {
+    override fun addTask(projectId: UUID, taskName: String, taskState: State) {
         TODO("Not yet implemented")
     }
 
-    override fun updateTask(task: Task): ResultStatus<Task> {
+    override fun deleteTask(id: UUID) {
         TODO("Not yet implemented")
     }
 
-    override fun deleteTask(taskId: String): ResultStatus<Task> {
+    override fun updateTaskState(id: UUID, newState: State) {
         TODO("Not yet implemented")
     }
 
-    override fun getTasks(): ResultStatus<List<Task>> {
+    override fun getTaskById(id: UUID): Task {
         TODO("Not yet implemented")
     }
 
-    override fun getAllTasksByProjectId(projectId: String): ResultStatus<List<Task>> {
+    override fun getAllTasks(): List<Task> {
         TODO("Not yet implemented")
     }
 
-    override fun getAllTasksByUserId(userId: String): ResultStatus<List<Task>> {
-        TODO("Not yet implemented")
-    }
 
 }
