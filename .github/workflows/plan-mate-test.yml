@@ -1,0 +1,27 @@
+name: Run PlanMate Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Grant permission to Gradle
+        run: chmod +x ./gradlew
+
+      - name: Run Tests
+        run: ./gradlew test
