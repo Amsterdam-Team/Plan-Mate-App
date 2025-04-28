@@ -8,3 +8,19 @@ data class Change(
     val message: String,
     val date: LocalDate
 )
+
+data class TaskChangeLog(
+    val id: UUID,
+    val message: String,
+    val date: LocalDate,
+    val taskId: UUID,
+    val doneBy: String  // the name of user
+
+)
+data class ProjectChangeLog(
+    val id: UUID,
+    val message: String,
+    val date: LocalDate,
+    val projectId: UUID,
+
+    )

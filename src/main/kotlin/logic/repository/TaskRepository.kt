@@ -1,14 +1,15 @@
 package logic.repository
 
+import logic.entities.State
 import logic.entities.Task
 import utils.ResultStatus
+import java.util.*
 
 interface TaskRepository {
-    fun createTask(task: Task): ResultStatus<Task>
-    fun updateTask(task: Task): ResultStatus<Task>
-    fun deleteTask(taskId: String): ResultStatus<Task>
-    fun getTasks():ResultStatus<List<Task>>
-    fun getAllTasksByProjectId(projectId: String): ResultStatus<List<Task>>
-    fun getAllTasksByUserId(userId: String): ResultStatus<List<Task>>
+    fun addTask(projectId: UUID, taskName: String, taskState: State)
+    fun deleteTask(id: UUID)
+    fun updateTaskState(id: UUID, newState: State)
 
+    fun getTaskById(id: UUID): Task
+    fun getAllTasks(): List<Task>
 }

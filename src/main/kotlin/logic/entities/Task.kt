@@ -6,6 +6,6 @@ data class Task(
     val id: UUID,
     val name: String,
     val projectId: UUID,
-    val taskState: State,
-    val changes: List<Change>
+    val taskState: String,
+
 )
