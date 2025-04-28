@@ -15,6 +15,8 @@ sealed class PlanMateException : Exception() {
         data object InvalidTaskIDException : ValidationException()
         data object InvalidProjectNameException : ValidationException()
         data object InvalidProjectIDException : ValidationException()
+        data object EmptyDataException : ValidationException()
+
     }
 
     sealed class ParsingException : PlanMateException() {
