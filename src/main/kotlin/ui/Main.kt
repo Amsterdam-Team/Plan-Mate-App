@@ -1,4 +1,4 @@
-package org.amsterdam.planmate.ui
+package ui
 
 fun main() {
     println("amsterdam")
