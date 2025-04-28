@@ -3,9 +3,9 @@ package usecase
 import io.mockk.every
 import io.mockk.mockk
 import logic.entities.User
-import logic.exception.PlanMateException
+import logic.exception.PlanMateException.AuthorizationException.*
 import logic.repository.AuthRepository
-import logic.usecases.task.LoginUseCase
+import logic.usecases.LoginUseCase
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -77,10 +77,10 @@ class LoginUseCaseTest {
         val username= "He"
         val password = "123456"
 
-        every { repository.login(username, password) } throws PlanMateException.AuthorizationException.WrongUsername
+        every { repository.login(username, password) } throws WrongUsername
 
         //When && Throw
-        assertThrows<PlanMateException.AuthorizationException.WrongUsername> {
+        assertThrows<WrongUsername> {
             useCase.verifyUserState(username, password)
         }
     }
@@ -91,10 +91,10 @@ class LoginUseCaseTest {
         val username= "Hend"
         val password = "123"
 
-        every { repository.login(username, password) } throws PlanMateException.AuthorizationException.WrongPassword
+        every { repository.login(username, password) } throws WrongPassword
 
         //When && Throw
-        assertThrows<PlanMateException.AuthorizationException.WrongPassword> {
+        assertThrows<WrongPassword> {
             useCase.verifyUserState(username, password)
         }
     }
@@ -110,10 +110,10 @@ class LoginUseCaseTest {
                 username,
                 password
             )
-        } throws PlanMateException.AuthorizationException.UserNotFoundException
+        } throws UserNotFoundException
 
         //When && Throw
-        assertThrows<PlanMateException.AuthorizationException.UserNotFoundException> {
+        assertThrows<UserNotFoundException> {
             useCase.verifyUserState(username, password)
         }
     }
