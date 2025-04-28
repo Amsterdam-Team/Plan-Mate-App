@@ -1,12 +1,14 @@
+package usecase
+
 import io.mockk.every
 import io.mockk.mockk
 import logic.entities.User
-import logic.exception.PlanMateException.AuthorizationException.*
+import logic.exception.PlanMateException
 import logic.repository.AuthRepository
 import logic.usecases.task.LoginUseCase
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.util.UUID
 import kotlin.test.assertFalse
@@ -39,7 +41,7 @@ class LoginUseCaseTest {
         val username= "Hend"
         val password = "123456"
         //When
-        every { repository.login(username,password) } returns validAdminUserData
+        every { repository.login(username, password) } returns validAdminUserData
         //then
         val returnedRole = useCase.verifyUserState(username, password)
         Assertions.assertEquals(validAdminUserData.isAdmin, returnedRole)
@@ -51,7 +53,7 @@ class LoginUseCaseTest {
         val username= "Hend"
         val password = "123456"
         //When
-        every { repository.login(username,password) } returns validAdminUserData
+        every { repository.login(username, password) } returns validAdminUserData
         //then
         val returnedRole = useCase.verifyUserState(username, password)
         Assertions.assertTrue(returnedRole)
@@ -63,7 +65,7 @@ class LoginUseCaseTest {
         val username= "Nada"
         val password = "12345"
         //When
-        every { repository.login(username,password) } returns validMateUserData
+        every { repository.login(username, password) } returns validMateUserData
         //then
         val returnedRole = useCase.verifyUserState(username, password)
         assertFalse(returnedRole)
@@ -75,11 +77,11 @@ class LoginUseCaseTest {
         val username= "He"
         val password = "123456"
 
-        every { repository.login(username, password) } throws WrongUsername
+        every { repository.login(username, password) } throws PlanMateException.AuthorizationException.WrongUsername
 
         //When && Throw
-        assertThrows <WrongUsername>{
-            useCase.verifyUserState(username,password)
+        assertThrows<PlanMateException.AuthorizationException.WrongUsername> {
+            useCase.verifyUserState(username, password)
         }
     }
 
@@ -89,11 +91,11 @@ class LoginUseCaseTest {
         val username= "Hend"
         val password = "123"
 
-        every { repository.login(username, password) } throws WrongPassword
+        every { repository.login(username, password) } throws PlanMateException.AuthorizationException.WrongPassword
 
         //When && Throw
-        assertThrows <WrongPassword>{
-            useCase.verifyUserState(username,password)
+        assertThrows<PlanMateException.AuthorizationException.WrongPassword> {
+            useCase.verifyUserState(username, password)
         }
     }
 
@@ -103,11 +105,16 @@ class LoginUseCaseTest {
         val username= "He"
         val password = "123"
 
-        every { repository.login(username, password) } throws UserNotFoundException
+        every {
+            repository.login(
+                username,
+                password
+            )
+        } throws PlanMateException.AuthorizationException.UserNotFoundException
 
         //When && Throw
-        assertThrows <UserNotFoundException>{
-            useCase.verifyUserState(username,password)
+        assertThrows<PlanMateException.AuthorizationException.UserNotFoundException> {
+            useCase.verifyUserState(username, password)
         }
     }
 }
