@@ -108,28 +108,6 @@ It supports both **Admin** and **Mate** user types, providing a flexible and sec
 
 ### Running the App
 ```bash
-# Compile
-kotlinc Main.kt -include-runtime -d foodMoodApp.jar
-
-# Run
-java -jar foodMoodApp.jar
-```
-
----
-
-
-## 📧 Feedback & Contributions
-Feel free to fork the project and submit a pull request or reach out with ideas, improvements, or issues. Your contributions are welcome!
-
----
-
-## 🧠 Next Steps
-- Add unit tests for all core features
-- Support saving user preferences
-
----
-
-## 🌟 Acknowledgment
-This project is part of **The Chance** program—Week 2-3 Challenge.
+ 
 
 ---
