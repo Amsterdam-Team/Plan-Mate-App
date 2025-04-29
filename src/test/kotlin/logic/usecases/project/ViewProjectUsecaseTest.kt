@@ -3,12 +3,10 @@ package logic.usecases.project
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
-import logic.exception.PlanMateException
 import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
 import logic.exception.PlanMateException.ValidationException.EmptyDataException
 import logic.repository.ProjectRepository
 import logic.usecases.project.helper.createProject
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -31,7 +29,7 @@ class ViewProjectUsecaseTest() {
         val projects = listOf(
             createProject(
                 projectID,
-                "PlanMate", listOf(), listOf(), listOf()
+                "PlanMate", listOf(), listOf()
             )
         )
         //Given
@@ -48,7 +46,7 @@ class ViewProjectUsecaseTest() {
         val projects = listOf(
             createProject(
                 projectID,
-                "PlanMate", listOf(), listOf(), listOf()
+                "PlanMate", listOf(), listOf()
             )
         )
         //Given
