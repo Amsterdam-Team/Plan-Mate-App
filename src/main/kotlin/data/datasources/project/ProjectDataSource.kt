@@ -1,4 +1,4 @@
-package org.amsterdam.planmate.data.datasources.project
+package data.datasources.project
 
 interface ProjectDataSource {
 }
