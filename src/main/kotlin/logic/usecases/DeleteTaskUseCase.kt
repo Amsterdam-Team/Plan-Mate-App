@@ -11,7 +11,7 @@ class DeleteTaskUseCase(
     private val taskRepository: TaskRepository,
     private val logRepository: LogRepository
 ) {
-    fun execute(taskId: UUID, performedBy: String): ResultStatus<Task> {
+    fun execute(taskId: UUID, performedBy: String): ResultStatus<Unit> {
         return ResultStatus.Error(PlanMateException.NotFoundException.TaskNotFoundException)
     }
 }
