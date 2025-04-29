@@ -38,7 +38,7 @@ class ViewTaskLogsUseCaseTest {
     }
 
     @Test
-    fun `should return logs of task when id of task is valid`(){
+    fun `should return logs of task when id of task is found`(){
         val id = UUID.fromString("123e4567-e89b-12d3-a456-426614174000")
         every { repository.viewLogsById(id) } returns taskLogs
 
@@ -50,8 +50,8 @@ class ViewTaskLogsUseCaseTest {
     fun `should throw InvalidTaskIdException when id of task not found`(){
         val id = UUID.fromString("123e4588-e11b-12d5-a4c6-426614174000")
 
-         every { repository.viewLogsById(id) } throws PlanMateException.ValidationException.InvalidTaskIDException
-       assertThrows<PlanMateException.ValidationException.InvalidTaskIDException> {
+        every { repository.viewLogsById(id) } throws PlanMateException.ValidationException.InvalidTaskIDException
+        assertThrows<PlanMateException.ValidationException.InvalidTaskIDException> {
            useCase.viewTaskLogs(id)
        }
     }
