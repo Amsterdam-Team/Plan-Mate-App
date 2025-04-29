@@ -23,7 +23,7 @@ class CreateUserUseCaseTest {
     }
 
     @Test
-    fun `should create user and call repository once when username and password are valid`() {
+    fun `should create user when username and password are valid`() {
         // Given
         val user = createUser()
 
