@@ -1,6 +1,5 @@
 package logic.usecases
 
-import logic.entities.Task
 import logic.exception.PlanMateException
 import logic.repository.LogRepository
 import logic.repository.TaskRepository

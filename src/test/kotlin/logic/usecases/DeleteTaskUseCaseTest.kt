@@ -37,7 +37,7 @@ class DeleteTaskUseCaseTest {
         deleteTaskUseCase.execute(taskId, "mina")
 
         // Then
-        verify(exactly = 1) { taskRepository.deleteTask(taskId.toString()) }
+        verify(exactly = 1) { taskRepository.deleteTask(taskId) }
     }
 
     @Test
