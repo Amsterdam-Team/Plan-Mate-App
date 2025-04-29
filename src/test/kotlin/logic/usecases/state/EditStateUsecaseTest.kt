@@ -22,10 +22,9 @@ class EditStateUsecaseTest{
  @Test
  fun `should edit state when state is valid`() {
   // Given
-  val projectID = UUID.fromString("")
+  val projectID = UUID.fromString("db373589-b656-4e68-a7c0-2ccc705ca169")
   val oldState = "In Progress"
   val newState = "In Review"
-
 
   // When & Then
   verify (exactly = 1){ useCase.editState(projectID, newState,oldState) }
@@ -35,7 +34,7 @@ class EditStateUsecaseTest{
  @Test
  fun `should throw InvalidStateNameException when new state name is blank`() {
   // Given
-  val projectID = UUID.fromString("")
+  val projectID = UUID.fromString("db373589-b656-4e68-a7c0-2ccc705ca169")
   val oldState = "In Progress"
   val newState = " "
 
@@ -48,7 +47,7 @@ class EditStateUsecaseTest{
  @Test
  fun `should throw InvalidStateNameException when old state name is blank`() {
   // Given
-  val projectID = UUID.fromString("")
+  val projectID = UUID.fromString("db373589-b656-4e68-a7c0-2ccc705ca169")
   val oldState = " "
   val newState = "In Progress"
 
