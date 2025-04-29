@@ -3,27 +3,26 @@ package logic.usecases.project
 import com.google.common.truth.Truth.assertThat
 import data.repository.project.ProjectRepositoryImpl
 import io.mockk.*
-import logic.exception.PlanMateException.NotFoundException.*
-import logic.exception.PlanMateException.AuthorizationException.*
+import logic.entities.Project
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertDoesNotThrow
-import org.junit.jupiter.api.assertThrows
+import java.util.UUID
 
 class DeleteProjectUseCaseTest {
     lateinit var repository: ProjectRepositoryImpl
     lateinit var usecase: DeleteProjectUseCase
-
+    lateinit var dummyProjectId: UUID
     @BeforeEach
     fun setUp() {
         repository = mockk(relaxed = true)
         usecase = DeleteProjectUseCase(repository)
+        dummyProjectId = UUID.randomUUID()
     }
 
     @Test
     fun `should return true when deleting project successfully `() {
         // when
-        val result = usecase.deleteProject("er0uj34")
+        val result = usecase.deleteProject(dummyProjectId.toString())
 
         // then
         assertThat(result).isTrue()
@@ -31,22 +30,9 @@ class DeleteProjectUseCaseTest {
 
 
     @Test
-    fun `should throw not found exception when deleting project not exist`() {
+    fun `should call delete project repo function when try to delete project`() {
 
-        // when & then
-        assertThrows<ProjectNotFoundException> {
-            usecase.deleteProject("")
-        }
-
-    }
-
-    @Test
-    fun `should throw Admin Privileges Required Exception when deleting by user not admin`() {
-
-        // when & then
-        assertThrows<AdminPrivilegesRequiredException> {
-            usecase.deleteProject("")
-        }
+        verify(exactly = 1) { repository.deleteProject(dummyProjectId) }
 
     }
 

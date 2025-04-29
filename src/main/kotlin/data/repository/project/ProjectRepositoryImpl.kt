@@ -5,10 +5,9 @@ import logic.entities.Project
 import logic.repository.ProjectRepository
 import java.util.*
 
-class ProjectRepositoryImpl(val dataSource: DataSource<Project>): ProjectRepository {
+class ProjectRepositoryImpl(val dataSource: DataSource<Project>) : ProjectRepository {
     override fun createProject(project: Project) {
-        dataSource
-        throw Exception("unimplemented yet")
+        TODO("Not yet implemented")
     }
 
     override fun updateProjectNameById(id: UUID, newName: String) {
@@ -16,7 +15,9 @@ class ProjectRepositoryImpl(val dataSource: DataSource<Project>): ProjectReposit
     }
 
     override fun deleteProject(projectId: UUID) {
-        TODO("Not yet implemented")
+        dataSource
+        throw Exception("unimplemented yet")
+
     }
 
     override fun getProjects(): List<Project> {
