@@ -10,13 +10,13 @@ import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 
 class DeleteProjectUseCaseTest{
-  lateinit var projectRepository: ProjectRepositoryImpl
-  lateinit var deleteProjectUsecase: DeleteProjectUseCase
+  lateinit var repository: ProjectRepositoryImpl
+  lateinit var usecase: DeleteProjectUseCase
 
   @BeforeEach
   fun setUp() {
-   projectRepository = mockk(relaxed = true)
-   deleteProjectUsecase = DeleteProjectUseCase(projectRepository)
+   repository = mockk(relaxed = true)
+   usecase = DeleteProjectUseCase(repository)
   }
 
      @Test
@@ -25,7 +25,7 @@ class DeleteProjectUseCaseTest{
 
       // when & then
          assertDoesNotThrow {
-             deleteProjectUsecase.deleteProject("er0uj34")
+             usecase.deleteProject("er0uj34")
          }
       }
 
@@ -35,7 +35,7 @@ class DeleteProjectUseCaseTest{
 
          // when & then
          assertThrows<ProjectNotFoundException> {
-             deleteProjectUsecase.deleteProject("")
+             usecase.deleteProject("")
          }
 
      }
@@ -45,7 +45,7 @@ class DeleteProjectUseCaseTest{
 
         // when & then
         assertThrows<AdminPrivilegesRequiredException> {
-            deleteProjectUsecase.deleteProject("")
+            usecase.deleteProject("")
         }
 
     }

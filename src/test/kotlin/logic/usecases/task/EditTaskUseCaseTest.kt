@@ -10,20 +10,20 @@ import logic.exception.PlanMateException.NotFoundException.*
 import java.util.*
 
 class EditTaskUseCaseTest {
-    lateinit var projectRepository: TaskRepositoryImpl
-    lateinit var editTaskUsecase: EditTaskUseCase
+    lateinit var repository: TaskRepositoryImpl
+    lateinit var usecase: EditTaskUseCase
 
     @BeforeEach
     fun setUp() {
-        projectRepository = mockk(relaxed = true)
-        editTaskUsecase = EditTaskUseCase(projectRepository)
+        repository = mockk(relaxed = true)
+        usecase = EditTaskUseCase(repository)
     }
 
     @Test
     fun `should edit task name successfully when the task exists`() {
 
         assertDoesNotThrow {
-            editTaskUsecase.editTask("43r34ferc", "new name")
+            usecase.editTask("43r34ferc", "new name")
         }
     }
 
@@ -31,7 +31,7 @@ class EditTaskUseCaseTest {
     fun `should throw not found task exception when trying to update not existed task`() {
 
         assertThrows<TaskNotFoundException> {
-            editTaskUsecase.editTask("43r34ferc", "new name")
+            usecase.editTask("43r34ferc", "new name")
         }
     }
 
@@ -41,7 +41,7 @@ class EditTaskUseCaseTest {
 
 
         assertThrows<IllegalFormatException> {
-            editTaskUsecase.editTask("00000000", "new name")
+            usecase.editTask("00000000", "new name")
         }
     }
 
