@@ -27,4 +27,9 @@ sealed class PlanMateException : Exception() {
         data object StateNotFoundException : ParsingException()
     }
 
+    sealed class ExistException : PlanMateException() {
+        data object ProjectAlreadyExistsException : ExistException()
+        data object TaskAlreadyExistsException : ExistException()
+    }
+
 }
