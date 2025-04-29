@@ -43,7 +43,7 @@ class GetProjectLogsUseCaseTest {
     }
 
     @Test
-    fun `should return ProjectNotFoundException when project is not exist`() {
+    fun `should return ProjectNotFoundException when project is not exist `() {
         // Given
         val projectId = UUID.randomUUID()
         every { logRepository.viewLogsById(projectId) } throws PlanMateException.NotFoundException.ProjectNotFoundException
