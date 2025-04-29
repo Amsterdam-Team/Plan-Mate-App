@@ -1,6 +1,5 @@
 package logic.usecases
 
-import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -11,6 +10,7 @@ import logic.repository.LogRepository
 import logic.repository.TaskRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import java.util.UUID
 
 class DeleteTaskUseCaseTest {
@@ -62,19 +62,16 @@ class DeleteTaskUseCaseTest {
         }
     }
 
-
     @Test
     fun `should return TaskNotFoundException when task is not found`() {
         // Given
         val taskId = UUID.randomUUID()
         every { taskRepository.getTaskById(taskId) } throws PlanMateException.NotFoundException.TaskNotFoundException
 
-        // When
-        val result = deleteTaskUseCase.execute(taskId, "mina")
-
-        // Then
-        assertThat(result).isInstanceOf(PlanMateException.NotFoundException.TaskNotFoundException::class.java)
+        // When & Then
+        assertThrows<PlanMateException.NotFoundException.TaskNotFoundException> {
+            deleteTaskUseCase.execute(taskId, "mina")
+        }
     }
-
 
 }
