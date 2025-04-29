@@ -8,7 +8,7 @@ class AuthRepositoryImpl: AuthRepository {
         TODO("Not yet implemented")
     }
 
-    override fun login(username: String, password: String) : User {
+    override fun login(username: String, password: String) {
         TODO("Not yet implemented")
     }
 }
