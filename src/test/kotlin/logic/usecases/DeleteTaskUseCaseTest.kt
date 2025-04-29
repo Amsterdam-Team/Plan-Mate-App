@@ -9,7 +9,6 @@ import logic.entities.Task
 import logic.exception.PlanMateException
 import logic.repository.LogRepository
 import logic.repository.TaskRepository
-import utils.ResultStatus
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.UUID
@@ -63,32 +62,6 @@ class DeleteTaskUseCaseTest {
         }
     }
 
-    @Test
-    fun `should return success when task is deleted`() {
-        // Given
-        val taskId = UUID.randomUUID()
-        val task = Task(taskId, "Test Task", UUID.randomUUID(), "TODO")
-        every { taskRepository.getTaskById(taskId) } returns task
-
-        // When
-        val result = deleteTaskUseCase.execute(taskId, "mina")
-
-        // Then
-        assertThat(result).isInstanceOf(ResultStatus.Success::class.java)
-    }
-
-    @Test
-    fun `should return Error when task is not found`() {
-        // Given
-        val taskId = UUID.randomUUID()
-        every { taskRepository.getTaskById(taskId) } throws PlanMateException.NotFoundException.TaskNotFoundException
-
-        // When
-        val result = deleteTaskUseCase.execute(taskId, "mina")
-
-        // Then
-        assertThat(result).isInstanceOf(ResultStatus.Error::class.java)
-    }
 
     @Test
     fun `should return TaskNotFoundException when task is not found`() {
@@ -97,10 +70,10 @@ class DeleteTaskUseCaseTest {
         every { taskRepository.getTaskById(taskId) } throws PlanMateException.NotFoundException.TaskNotFoundException
 
         // When
-        val result = deleteTaskUseCase.execute(taskId, "mina") as ResultStatus.Error
+        val result = deleteTaskUseCase.execute(taskId, "mina")
 
         // Then
-        assertThat(result.exception).isInstanceOf(PlanMateException.NotFoundException.TaskNotFoundException::class.java)
+        assertThat(result).isInstanceOf(PlanMateException.NotFoundException.TaskNotFoundException::class.java)
     }
 
 
