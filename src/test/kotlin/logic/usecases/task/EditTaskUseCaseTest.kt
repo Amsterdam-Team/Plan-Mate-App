@@ -3,7 +3,6 @@ package logic.usecases.task
 import com.google.common.truth.Truth.assertThat
 import data.repository.task.TaskRepositoryImpl
 import io.mockk.mockk
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
@@ -46,8 +45,6 @@ class EditTaskUseCaseTest {
             usecase.editTask("00000000", "new name")
         }
     }
-
-
 
 
 }
