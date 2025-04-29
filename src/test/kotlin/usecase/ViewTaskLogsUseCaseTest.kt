@@ -4,7 +4,7 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlinx.datetime.LocalDateTime
 import logic.entities.LogItem
-import logic.exception.PlanMateException
+import logic.exception.PlanMateException.NotFoundException.TaskIDNotFoundException
 import logic.repository.LogRepository
 import logic.usecases.ViewTaskLogsUseCase
 import org.junit.jupiter.api.BeforeEach
@@ -47,11 +47,11 @@ class ViewTaskLogsUseCaseTest {
     }
 
    @Test
-    fun `should throw InvalidTaskIdException when id of task not found`(){
+    fun `should throw TaskIdNotFoundException when id of task not found`(){
         val id = UUID.fromString("123e4588-e11b-12d5-a4c6-426614174000")
 
-        every { repository.viewLogsById(id) } throws PlanMateException.ValidationException.InvalidTaskIDException
-        assertThrows<PlanMateException.ValidationException.InvalidTaskIDException> {
+        every { repository.viewLogsById(id) } throws TaskIDNotFoundException
+        assertThrows<TaskIDNotFoundException> {
            useCase.viewTaskLogs(id)
        }
     }

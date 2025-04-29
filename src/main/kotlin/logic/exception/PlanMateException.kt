@@ -25,6 +25,8 @@ sealed class PlanMateException : Exception() {
         data object ProjectNotFoundException : ParsingException()
         data object TaskNotFoundException : ParsingException()
         data object StateNotFoundException : ParsingException()
+        data object TaskIDNotFoundException : NotFoundException()
+
     }
 
 }

@@ -7,11 +7,5 @@ class ViewTaskLogsUIController(
     private val viewTaskLogsUseCase: ViewTaskLogsUseCase
 ) {
 
-    fun viewTaskLogsUIController(){
-
-    }
-
-    fun validateTaskId(taskID : String): UUID{
-        return UUID.randomUUID()
-    }
+    fun viewTaskLogsUIController(){}
 }
