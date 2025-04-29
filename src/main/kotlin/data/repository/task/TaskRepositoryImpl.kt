@@ -21,7 +21,7 @@ class TaskRepositoryImpl: TaskRepository {
         TODO("Not yet implemented")
     }
 
-    override fun deleteTask(taskId: String) {
+    override fun deleteTask(taskId: UUID) {
         TODO("Not yet implemented")
     }
 
