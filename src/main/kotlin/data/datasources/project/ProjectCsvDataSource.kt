@@ -1,4 +1,5 @@
-package org.amsterdam.planmate.data.datasources.project
+package data.datasources.project
+
 
 class ProjectCsvDataSource : ProjectDataSource {
 }

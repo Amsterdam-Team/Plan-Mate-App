@@ -1,4 +1,4 @@
-package org.amsterdam.planmate.data.datasources.auth
+package data.datasources.auth
 
 interface UserDataSource {
 

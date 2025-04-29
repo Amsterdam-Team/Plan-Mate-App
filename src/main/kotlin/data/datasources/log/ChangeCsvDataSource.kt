@@ -1,4 +1,4 @@
-package data.datasources.change
+package data.datasources.log
 
 class ChangeCsvDataSource : ChangeDataSource {
 }
