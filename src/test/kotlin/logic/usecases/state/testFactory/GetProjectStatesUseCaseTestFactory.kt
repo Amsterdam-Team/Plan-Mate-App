@@ -1,5 +1,6 @@
 package logic.usecases.state.testFactory
 
+import logic.entities.Project
 import java.util.*
 
 object GetProjectStatesUseCaseTestFactory {
@@ -8,4 +9,10 @@ object GetProjectStatesUseCaseTestFactory {
 
     val EXPECTED_PROJECT_STATES: List<String> = listOf("to-do", "in progress", "done")
 
+    val dummyProject = Project(
+        id = existingProjectID,
+        name = "PlanMate",
+        states = EXPECTED_PROJECT_STATES,
+        tasks = emptyList()
+    )
 }

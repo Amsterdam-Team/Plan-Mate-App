@@ -1,10 +1,12 @@
 package logic.usecases.state
 
 import com.google.common.truth.Truth.assertThat
+import io.mockk.every
 import io.mockk.mockk
 import logic.exception.PlanMateException.NotFoundException.*
 import logic.repository.ProjectRepository
 import logic.usecases.state.testFactory.GetProjectStatesUseCaseTestFactory.EXPECTED_PROJECT_STATES
+import logic.usecases.state.testFactory.GetProjectStatesUseCaseTestFactory.dummyProject
 import logic.usecases.state.testFactory.GetProjectStatesUseCaseTestFactory.existingProjectID
 import logic.usecases.state.testFactory.GetProjectStatesUseCaseTestFactory.notExistingProjectID
 import org.junit.jupiter.api.BeforeEach
@@ -24,25 +26,34 @@ class GetProjectStatesUseCaseTest{
 
     @Test
     fun `should return the correct states when the project exists`() {
-        //Given & When
+        //Given
+        every { repository.getProject(existingProjectID) } returns dummyProject
+
+        //When
         val states = useCase.getProjectStatesByProjectID(existingProjectID)
 
         //Then
-        assertThat(states).containsExactly(EXPECTED_PROJECT_STATES)
+        assertThat(states).containsAtLeastElementsIn(EXPECTED_PROJECT_STATES)
     }
 
     @Test
     fun `should return sorted states by creation date when the project exists`() {
-        //Given & When
+        //Given
+        every { repository.getProject(existingProjectID) } returns dummyProject
+
+        //When
         val states = useCase.getProjectStatesByProjectID(existingProjectID)
 
         //Then
-        assertThat(states).containsExactly(EXPECTED_PROJECT_STATES).inOrder()
+        assertThat(states).containsAtLeastElementsIn(EXPECTED_PROJECT_STATES).inOrder()
     }
 
     @Test
     fun `should throw ProjectNotFoundException when the task is not exists`() {
-        //Given & When & Then
+        //Given
+        every { repository.getProject(notExistingProjectID) } throws  ProjectNotFoundException
+
+        // & When & Then
         assertThrows<ProjectNotFoundException> { useCase.getProjectStatesByProjectID(notExistingProjectID) }
     }
 }
