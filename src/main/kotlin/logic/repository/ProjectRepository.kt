@@ -6,7 +6,7 @@ import java.util.*
 interface ProjectRepository {
     fun createProject(project: Project)
     fun updateProjectNameById(id : UUID, newName :String)
-    fun deleteProject(projectId: String)
+    fun deleteProject(projectId: UUID)
     fun getProjects(): List<Project>
     fun getProject(id : UUID) : Project
 
