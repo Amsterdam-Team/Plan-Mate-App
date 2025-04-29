@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test
 import kotlinx.datetime.Clock
 import kotlinx.datetime.toLocalDateTime
 import logic.exception.PlanMateException
+import org.junit.jupiter.api.assertThrows
 import java.util.UUID
 
 class GetProjectLogsUseCaseTest {
@@ -43,16 +44,15 @@ class GetProjectLogsUseCaseTest {
     }
 
     @Test
-    fun `should return ProjectNotFoundException when project is not exist `() {
+    fun `should throw ProjectNotFoundException when project does not exist`() {
         // Given
         val projectId = UUID.randomUUID()
         every { logRepository.viewLogsById(projectId) } throws PlanMateException.NotFoundException.ProjectNotFoundException
 
-        // When
-        val result = viewProjectHistoryUseCase.execute(projectId)
-
-        // Then
-        assertThat(result).isInstanceOf(PlanMateException.NotFoundException.ProjectNotFoundException::class.java)
+        // When & Then
+        assertThrows<PlanMateException.NotFoundException.ProjectNotFoundException> {
+            viewProjectHistoryUseCase.execute(projectId)
+        }
     }
 
 
