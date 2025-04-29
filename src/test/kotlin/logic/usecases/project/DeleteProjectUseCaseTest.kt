@@ -1,11 +1,7 @@
 package logic.usecases.project
 
-import logic.repository.ProjectRepository
-import com.google.common.truth.Truth.assertThat
-import com.google.common.truth.Truth.assertWithMessage
 import data.repository.project.ProjectRepositoryImpl
 import io.mockk.*
-import logic.exception.PlanMateException
 import logic.exception.PlanMateException.NotFoundException.*
 import logic.exception.PlanMateException.AuthorizationException.*
 import org.junit.jupiter.api.BeforeEach
@@ -13,14 +9,14 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 
-class DeleteProjectUsecaseTest{
+class DeleteProjectUseCaseTest{
   lateinit var projectRepository: ProjectRepositoryImpl
-  lateinit var deleteProjectUsecase: DeleteProjectUsecase
+  lateinit var deleteProjectUsecase: DeleteProjectUseCase
 
   @BeforeEach
   fun setUp() {
    projectRepository = mockk(relaxed = true)
-   deleteProjectUsecase = DeleteProjectUsecase(projectRepository)
+   deleteProjectUsecase = DeleteProjectUseCase(projectRepository)
   }
 
      @Test
