@@ -4,8 +4,9 @@ import logic.repository.ProjectRepository
 
 class DeleteProjectUseCase(val projectRepository: ProjectRepository){
 
-    fun deleteProject(projectId: String) {
-        throw Exception("unimplemented yet")
+    fun deleteProject(projectId: String): Boolean {
+
+        return false
     }
 
 }
