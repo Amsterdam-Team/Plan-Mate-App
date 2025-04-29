@@ -1,7 +1,7 @@
 package logic.usecases.task
 
 
-import com.google.common.truth.Truth.assertThat
+import io.mockk.every
 import io.mockk.mockk
 import logic.exception.PlanMateException.NotFoundException.*
 import logic.repository.TaskRepository
@@ -9,6 +9,7 @@ import logic.usecases.task.testFactory.CreateTaskTestFactory.taskWithWrongProjec
 import logic.usecases.task.testFactory.CreateTaskTestFactory.validTask
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 
 class CreateTaskUseCaseTest {
@@ -25,15 +26,18 @@ class CreateTaskUseCaseTest {
     @Test
     fun `should create task when all input are valid`() {
         //Given
-        val createdTask = useCase.createTask(validTask)
+        every { repository.createTask(validTask) } returns Unit
 
         //When & Then
-        assertThat(createdTask).isTrue()
+        assertDoesNotThrow { useCase.createTask(validTask) }
     }
 
     @Test
     fun `should throw ProjectNotFoundException when project does not exist`() {
-        // Given & When & Then
+        // Given
+        every { repository.createTask(taskWithWrongProjectID) } throws  ProjectNotFoundException
+
+        //When & Then
         assertThrows<ProjectNotFoundException> { useCase.createTask(taskWithWrongProjectID) }
     }
 }
