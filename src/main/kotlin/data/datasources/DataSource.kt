@@ -7,5 +7,4 @@ interface DataSource <T>{
     fun getById(id: UUID): T?
     fun saveAll(items: List<T>)
     fun add(item: T)
-    fun deleteById(id: UUID)
 }

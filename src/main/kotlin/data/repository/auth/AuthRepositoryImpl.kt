@@ -1,12 +1,10 @@
 package data.repository.auth
 
-import data.datasources.DataSource
 import logic.entities.User
 import logic.repository.AuthRepository
 
 class AuthRepositoryImpl: AuthRepository {
     override fun createUser(user: User) {
-        TODO("Not yet implemented")
     }
 
     override fun login(username: String, password: String): User {
