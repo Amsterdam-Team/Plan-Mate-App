@@ -7,6 +7,6 @@ class GetProjectStatesUseCase(private val repository: ProjectRepository) {
 
     fun getProjectStatesByProjectID(id: UUID): List<String> {
 
-        return listOf()
+        return repository.getProject(id).states
     }
 }
