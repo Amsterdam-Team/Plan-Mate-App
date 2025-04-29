@@ -1,5 +1,6 @@
 package logic.usecases.task
 
+import com.google.common.truth.Truth.assertThat
 import data.repository.task.TaskRepositoryImpl
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.*
@@ -20,11 +21,12 @@ class EditTaskUseCaseTest {
     }
 
     @Test
-    fun `should edit task name successfully when the task exists`() {
+    fun `should return true when editing task function complete successfully`() {
 
-        assertDoesNotThrow {
-            usecase.editTask("43r34ferc", "new name")
-        }
+        // when
+        val result = usecase.editTask("43r34ferc", "new name")
+
+        assertThat(result).isTrue()
     }
 
     @Test
