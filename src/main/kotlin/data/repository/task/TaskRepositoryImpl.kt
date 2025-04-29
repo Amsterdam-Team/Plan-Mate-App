@@ -1,16 +1,17 @@
 package data.repository.task
 
+import data.datasources.DataSource
 import logic.entities.Task
 import logic.repository.TaskRepository
 import java.util.*
 
-class TaskRepositoryImpl: TaskRepository {
+class TaskRepositoryImpl(val dataSource: DataSource<Task>): TaskRepository {
     override fun createTask(task: Task) {
         TODO("Not yet implemented")
     }
 
     override fun updateTask(task: Task) {
-        TODO("Not yet implemented")
+        throw Exception("unimplemented yet")
     }
 
     override fun updateTaskNameByID(taskId: UUID, newName: String) {

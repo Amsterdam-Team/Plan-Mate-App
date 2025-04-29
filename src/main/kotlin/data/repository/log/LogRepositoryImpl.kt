@@ -16,5 +16,4 @@ class LogRepositoryImpl: LogRepository {
     override fun addLog(log: LogItem) {
         TODO("Not yet implemented")
     }
-
 }
