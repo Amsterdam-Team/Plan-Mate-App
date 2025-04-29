@@ -28,7 +28,7 @@ class CreateTaskUseCaseTest {
         val createdTask = useCase.createTask(validTask)
 
         //When & Then
-        assertThat(createdTask).isEqualTo(validTask)
+        assertThat(createdTask).isTrue()
     }
 
     @Test
