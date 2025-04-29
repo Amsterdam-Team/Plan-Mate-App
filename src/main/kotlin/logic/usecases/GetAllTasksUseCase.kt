@@ -1,4 +1,4 @@
-package logic.usecases.task
+package logic.usecases
 
 class GetAllTasksUseCase {
 }
