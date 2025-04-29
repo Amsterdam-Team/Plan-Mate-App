@@ -13,7 +13,7 @@ class ProjectRepositoryImpl: ProjectRepository {
         TODO("Not yet implemented")
     }
 
-    override fun deleteProject(projectId: String) {
+    override fun deleteProject(projectId: UUID) {
         TODO("Not yet implemented")
     }
 

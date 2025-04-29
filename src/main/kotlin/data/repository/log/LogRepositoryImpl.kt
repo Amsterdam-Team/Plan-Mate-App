@@ -1,4 +1,4 @@
-package data.repository.change
+package data.repository.log
 
 import logic.entities.LogItem
 import logic.repository.LogRepository
@@ -10,6 +10,10 @@ class LogRepositoryImpl: LogRepository {
     }
 
     override fun viewAllLogs(): List<LogItem> {
+        TODO("Not yet implemented")
+    }
+
+    override fun addLog(log: LogItem) {
         TODO("Not yet implemented")
     }
 
