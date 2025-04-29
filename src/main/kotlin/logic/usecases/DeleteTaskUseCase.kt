@@ -5,9 +5,8 @@ import logic.repository.TaskRepository
 import java.util.UUID
 
 class DeleteTaskUseCase(
-    private val taskRepository: TaskRepository,
-    private val logRepository: LogRepository
+    private val taskRepository: TaskRepository
 ) {
-    fun execute(taskId: UUID, performedBy: String) {
+    fun execute(taskId: UUID) {
     }
 }

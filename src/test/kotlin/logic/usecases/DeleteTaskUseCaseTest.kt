@@ -1,5 +1,6 @@
 package logic.usecases
 
+import helpers.DeleteTaskTestFactory
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -15,52 +16,29 @@ import java.util.UUID
 
 class DeleteTaskUseCaseTest {
     private lateinit var taskRepository: TaskRepository
-    private lateinit var logRepository: LogRepository
     private lateinit var deleteTaskUseCase: DeleteTaskUseCase
 
     @BeforeEach
     fun setup() {
         taskRepository = mockk(relaxed = true)
-        logRepository = mockk(relaxed = true)
-        deleteTaskUseCase = DeleteTaskUseCase(taskRepository, logRepository)
+        deleteTaskUseCase = DeleteTaskUseCase(taskRepository)
     }
 
     @Test
     fun `should call deleteTask when task is found`() {
         // Given
         val taskId = UUID.randomUUID()
-        val task = Task(taskId, "Test Task", UUID.randomUUID(), "TODO")
+        val task = DeleteTaskTestFactory.TASK_1
         every { taskRepository.getTaskById(taskId) } returns task
 
         // When
-        deleteTaskUseCase.execute(taskId, "mina")
+        deleteTaskUseCase.execute(taskId)
 
         // Then
         verify(exactly = 1) { taskRepository.deleteTask(taskId) }
     }
 
-    @Test
-    fun `should save log when task is deleted`() {
-        // Given
-        val taskId = UUID.randomUUID()
-        val task = Task(taskId, "Test Task", UUID.randomUUID(), "TODO")
-        every { taskRepository.getTaskById(taskId) } returns task
 
-        // When
-        deleteTaskUseCase.execute(taskId, "mina")
-
-        // Then
-        verify(exactly = 1) {
-            logRepository.addLog(
-                LogItem(
-                    id = any(),
-                    message = any(),
-                    date = any(),
-                    entityId = any()
-                )
-            )
-        }
-    }
 
     @Test
     fun `should return TaskNotFoundException when task is not found`() {
@@ -70,7 +48,7 @@ class DeleteTaskUseCaseTest {
 
         // When & Then
         assertThrows<PlanMateException.NotFoundException.TaskNotFoundException> {
-            deleteTaskUseCase.execute(taskId, "mina")
+            deleteTaskUseCase.execute(taskId)
         }
     }
 
