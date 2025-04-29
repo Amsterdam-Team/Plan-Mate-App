@@ -1,14 +1,13 @@
 package logic.usecases
 
 import com.google.common.truth.Truth.assertThat
+import helpers.ViewProjectHistoryTestFactory.LOGS_FOR_PROJECT_1
+import helpers.ViewProjectHistoryTestFactory.PROJECT_1
 import io.mockk.every
 import io.mockk.mockk
-import logic.entities.LogItem
 import logic.repository.LogRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import kotlinx.datetime.Clock
-import kotlinx.datetime.toLocalDateTime
 import logic.exception.PlanMateException
 import org.junit.jupiter.api.assertThrows
 import java.util.UUID
@@ -24,16 +23,11 @@ class GetProjectLogsUseCaseTest {
         viewProjectHistoryUseCase = ViewProjectHistoryUseCase(logRepository)
     }
 
-
     @Test
     fun `should return the correct logs list when projectId is valid`() {
         // Given
-        val projectId = UUID.randomUUID()
-        val now = Clock.System.now().toLocalDateTime(kotlinx.datetime.TimeZone.UTC)
-        val logs = listOf(
-            LogItem(UUID.randomUUID(), "Log 1", now, projectId),
-            LogItem(UUID.randomUUID(), "Log 2", now, projectId)
-        )
+        val projectId = PROJECT_1.id
+        val logs = LOGS_FOR_PROJECT_1
         every { logRepository.viewLogsById(projectId) } returns logs
 
         // When
@@ -46,14 +40,14 @@ class GetProjectLogsUseCaseTest {
     @Test
     fun `should throw ProjectNotFoundException when project does not exist`() {
         // Given
-        val projectId = UUID.randomUUID()
-        every { logRepository.viewLogsById(projectId) } throws PlanMateException.NotFoundException.ProjectNotFoundException
+        val invalidProjectId = UUID.randomUUID()
+        every {
+            logRepository.viewLogsById(invalidProjectId)
+        } throws PlanMateException.NotFoundException.ProjectNotFoundException
 
         // When & Then
         assertThrows<PlanMateException.NotFoundException.ProjectNotFoundException> {
-            viewProjectHistoryUseCase.execute(projectId)
+            viewProjectHistoryUseCase.execute(invalidProjectId)
         }
     }
-
-
 }
