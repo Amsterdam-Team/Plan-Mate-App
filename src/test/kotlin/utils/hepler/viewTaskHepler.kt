@@ -1,4 +1,4 @@
-package utils
+package utils.hepler
 
 import kotlinx.datetime.LocalDateTime
 import logic.entities.LogItem

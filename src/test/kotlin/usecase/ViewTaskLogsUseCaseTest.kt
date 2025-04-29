@@ -8,7 +8,7 @@ import logic.usecases.ViewTaskLogsUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import utils.taskLogs
+import utils.hepler.taskLogs
 import java.util.UUID
 import kotlin.test.assertEquals
 

@@ -9,10 +9,10 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import ui.ViewTaskLogsUIController
-import utils.TASK_ID_NOT_FOUND
-import utils.WRONG_ID_FORMAT
-import utils.readInputFromConsole
-import utils.taskLogs
+import utils.hepler.TASK_ID_NOT_FOUND
+import utils.hepler.WRONG_ID_FORMAT
+import utils.hepler.readInputFromConsole
+import utils.hepler.taskLogs
 import java.util.UUID
 
 class ViewTaskLogsUIControllerTest {
