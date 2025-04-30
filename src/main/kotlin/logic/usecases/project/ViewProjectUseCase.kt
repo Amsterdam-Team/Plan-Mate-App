@@ -4,13 +4,13 @@ import logic.entities.Project
 import logic.repository.ProjectRepository
 import java.util.UUID
 
-class ViewProjectUsecase(
+class ViewProjectUseCase(
     private val projectRepository: ProjectRepository
 ) {
 
     fun viewProject(projectID:UUID):Project{
 
-        return Project(UUID.fromString("2b19ee75-2b4c-430f-bad8-dfa6b14709d9"),"", listOf(), listOf(), listOf())
+        return Project(UUID.fromString("2b19ee75-2b4c-430f-bad8-dfa6b14709d9"),"", listOf(), listOf())
     }
 
 }
