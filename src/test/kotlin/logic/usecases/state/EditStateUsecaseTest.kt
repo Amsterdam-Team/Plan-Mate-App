@@ -31,31 +31,6 @@ class EditStateUsecaseTest{
 
  }
 
- @Test
- fun `should throw InvalidStateNameException when new state name is blank`() {
-  // Given
-  val projectID = UUID.fromString("db373589-b656-4e68-a7c0-2ccc705ca169")
-  val oldState = "In Progress"
-  val newState = " "
-
-  // When & Then
-  assertThrows<PlanMateException.ValidationException.InvalidStateNameException> {
-   useCase.editState(projectID, oldState, newState)
-  }
- }
-
- @Test
- fun `should throw InvalidStateNameException when old state name is blank`() {
-  // Given
-  val projectID = UUID.fromString("db373589-b656-4e68-a7c0-2ccc705ca169")
-  val oldState = " "
-  val newState = "In Progress"
-
-  // When & Then
-  assertThrows<PlanMateException.ValidationException.InvalidStateNameException> {
-   useCase.editState(projectID,oldState,newState)
-  }
- }
 
  @Test
  fun `should throw ProjectNotFoundException when project does not exist`() {

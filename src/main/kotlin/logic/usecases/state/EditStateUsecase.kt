@@ -7,7 +7,7 @@ import java.util.UUID
 class EditStateUsecase(
     val projectRepository: ProjectRepository
 ) {
-    fun editState(projectID:UUID,oldState:String,newState:String){
+    fun editState(projectID:String,oldState:String,newState:String){
 
     }
 }
