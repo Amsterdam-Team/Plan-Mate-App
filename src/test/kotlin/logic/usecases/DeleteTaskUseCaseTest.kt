@@ -4,14 +4,9 @@ import helpers.DeleteTaskTestFactory
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import logic.entities.LogItem
-import logic.entities.Task
-import logic.exception.PlanMateException
-import logic.repository.LogRepository
 import logic.repository.TaskRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import java.util.UUID
 
 class DeleteTaskUseCaseTest {
@@ -40,16 +35,6 @@ class DeleteTaskUseCaseTest {
 
 
 
-    @Test
-    fun `should return TaskNotFoundException when task is not found`() {
-        // Given
-        val taskId = UUID.randomUUID()
-        every { taskRepository.getTaskById(taskId) } throws PlanMateException.NotFoundException.TaskNotFoundException
 
-        // When & Then
-        assertThrows<PlanMateException.NotFoundException.TaskNotFoundException> {
-            deleteTaskUseCase.execute(taskId)
-        }
-    }
 
 }

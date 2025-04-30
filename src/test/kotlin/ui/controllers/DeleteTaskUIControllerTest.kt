@@ -1,12 +1,18 @@
 package ui.controllers
 
 import com.google.common.truth.Truth.assertThat
-import helpers.DeleteTaskTestFactory
+import helpers.DeleteTaskTestFactory.ALL_PROJECTS
+import helpers.DeleteTaskTestFactory.PROJECT_1
+import helpers.DeleteTaskTestFactory.TASK_1
+import helpers.DeleteTaskTestFactory.TASK_2
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.assertThrows
-import logic.exception.PlanMateException
+import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
+import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
+import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
+import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.repository.ProjectRepository
 import logic.repository.TaskRepository
 import logic.usecases.DeleteTaskUseCase
@@ -39,7 +45,7 @@ class DeleteTaskUIControllerTest {
         every { projectRepository.getProjects() } returns emptyList()
 
         // When & Then
-        assertThrows<PlanMateException.NotFoundException.ProjectNotFoundException> {
+        assertThrows<ProjectNotFoundException> {
             controller.deleteTaskUI()
         }
     }
@@ -47,24 +53,23 @@ class DeleteTaskUIControllerTest {
     @Test
     fun `should print all project IDs`() {
         // Given
-        every { projectRepository.getProjects() } returns DeleteTaskTestFactory.ALL_PROJECTS
+        every { projectRepository.getProjects() } returns ALL_PROJECTS
 
         // When
         controller.deleteTaskUI()
 
         // Then
-        assertThat(outContent.toString()).contains(DeleteTaskTestFactory.PROJECT_1.id.toString())
+        assertThat(outContent.toString()).contains(PROJECT_1.id.toString())
     }
 
     @Test
     fun `should throw InvalidProjectIDException when input is not UUID`() {
         // Given
-        every { projectRepository.getProjects() } returns DeleteTaskTestFactory.ALL_PROJECTS
-
-        // When & Then
+        every { projectRepository.getProjects() } returns ALL_PROJECTS
         provideInput("not-a-uuid")
 
-        assertThrows<PlanMateException.ValidationException.InvalidProjectIDException> {
+        // When & Then
+        assertThrows<InvalidProjectIDException> {
             controller.deleteTaskUI()
         }
     }
@@ -72,12 +77,12 @@ class DeleteTaskUIControllerTest {
     @Test
     fun `should throw NoTasksFoundException when there are no tasks in the selected project`() {
         // Given
-        every { projectRepository.getProjects() } returns DeleteTaskTestFactory.ALL_PROJECTS
-        every { taskRepository.getAllTasksByProjectId(DeleteTaskTestFactory.PROJECT_1.id) } returns emptyList()
+        every { projectRepository.getProjects() } returns ALL_PROJECTS
+        every { taskRepository.getAllTasksByProjectId(PROJECT_1.id) } returns emptyList()
+        provideInput(PROJECT_1.id.toString())
 
         // When & Then
-        provideInput(DeleteTaskTestFactory.PROJECT_1.id.toString())
-        assertThrows<PlanMateException.NotFoundException.TaskNotFoundException> {
+        assertThrows<TaskNotFoundException> {
             controller.deleteTaskUI()
         }
     }
@@ -85,46 +90,61 @@ class DeleteTaskUIControllerTest {
     @Test
     fun `should print task IDs when tasks exist for the selected project`() {
         // Given
-        every { projectRepository.getProjects() } returns DeleteTaskTestFactory.ALL_PROJECTS
-        every { taskRepository.getAllTasksByProjectId(DeleteTaskTestFactory.PROJECT_1.id) } returns
-                listOf(DeleteTaskTestFactory.TASK_1, DeleteTaskTestFactory.TASK_2)
+        every { projectRepository.getProjects() } returns ALL_PROJECTS
+        every { taskRepository.getAllTasksByProjectId(PROJECT_1.id) } returns
+                listOf(TASK_1, TASK_2)
+        provideInput(PROJECT_1.id.toString())
 
         // When
-        provideInput(DeleteTaskTestFactory.PROJECT_1.id.toString())
         controller.deleteTaskUI()
 
         // Then
-        assertThat(outContent.toString()).contains(DeleteTaskTestFactory.TASK_1.id.toString())
+        assertThat(outContent.toString()).contains(TASK_1.id.toString())
     }
 
     @Test
     fun `should call deleteTaskUseCase with correct params when task is selected`() {
         // Given
-        every { projectRepository.getProjects() } returns DeleteTaskTestFactory.ALL_PROJECTS
-        every { taskRepository.getAllTasksByProjectId(DeleteTaskTestFactory.PROJECT_1.id) } returns listOf(DeleteTaskTestFactory.TASK_1, DeleteTaskTestFactory.TASK_2)
-        provideInput(DeleteTaskTestFactory.PROJECT_1.id.toString())
-        provideInput(DeleteTaskTestFactory.TASK_1.id.toString())
+        every { projectRepository.getProjects() } returns ALL_PROJECTS
+        every { taskRepository.getAllTasksByProjectId(PROJECT_1.id) } returns listOf(TASK_1, TASK_2)
+        provideInput(PROJECT_1.id.toString())
+        provideInput(TASK_1.id.toString())
 
         // When
         controller.deleteTaskUI()
 
         // Then
-        verify (exactly = 1){ deleteTaskUseCase.execute(DeleteTaskTestFactory.TASK_1.id) }
+        verify (exactly = 1){ deleteTaskUseCase.execute(TASK_1.id) }
     }
 
     @Test
     fun `should throw InvalidTaskIDException when input is not UUID`() {
         // Given
-        every { projectRepository.getProjects() } returns DeleteTaskTestFactory.ALL_PROJECTS
+        every { projectRepository.getProjects() } returns ALL_PROJECTS
         every {
-            taskRepository.getAllTasksByProjectId(DeleteTaskTestFactory.PROJECT_1.id)
-        } returns listOf(DeleteTaskTestFactory.TASK_1)
-
-        // When & Then
-        provideInput(DeleteTaskTestFactory.PROJECT_1.id.toString())
+            taskRepository.getAllTasksByProjectId(PROJECT_1.id)
+        } returns listOf(TASK_1)
+        provideInput(PROJECT_1.id.toString())
         provideInput("not-a-uuid")
 
-        assertThrows<PlanMateException.ValidationException.InvalidTaskIDException> {
+        // When & Then
+        assertThrows<InvalidTaskIDException> {
+            controller.deleteTaskUI()
+        }
+    }
+
+    @Test
+    fun `should throw TaskNotFoundException when task is not found`() {
+        // Given
+        every { projectRepository.getProjects() } returns ALL_PROJECTS
+        every {
+            taskRepository.getAllTasksByProjectId(PROJECT_1.id)
+        } returns  listOf(TASK_1)
+        provideInput(PROJECT_1.id.toString())
+        provideInput(TASK_2.id.toString())
+
+        // When & Then
+        assertThrows<TaskNotFoundException> {
             controller.deleteTaskUI()
         }
     }
