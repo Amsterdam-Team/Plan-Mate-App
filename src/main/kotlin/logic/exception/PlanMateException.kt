@@ -24,6 +24,13 @@ sealed class PlanMateException : Exception() {
         data object CsvFormatException : ParsingException()
     }
 
+    sealed class DataSourceException: PlanMateException(){
+        data object EmptyFileException: DataSourceException()
+        data object ObjectDoesNotExistException: DataSourceException()
+        data object EmptyDataException: DataSourceException()
+
+    }
+
     sealed class NotFoundException : PlanMateException() {
         data object ProjectNotFoundException : ParsingException()
         data object TaskNotFoundException : ParsingException()
