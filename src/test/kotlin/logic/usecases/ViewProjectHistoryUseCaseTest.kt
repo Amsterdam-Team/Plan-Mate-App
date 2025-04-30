@@ -9,6 +9,8 @@ import logic.repository.LogRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import logic.exception.PlanMateException
+import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
+import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
 import org.junit.jupiter.api.assertThrows
 import java.util.UUID
 
@@ -31,10 +33,26 @@ class GetProjectLogsUseCaseTest {
         every { logRepository.viewLogsById(projectId) } returns logs
 
         // When
-        val result = viewProjectHistoryUseCase.execute(projectId)
+        val result = viewProjectHistoryUseCase.execute(projectId.toString())
 
         // Then
         assertThat(result).isEqualTo(logs)
+    }
+
+    @Test
+    fun `should throw InvalidProjectIDException when input is not UUID`(){
+        // When & Then
+        assertThrows<InvalidProjectIDException> {
+            viewProjectHistoryUseCase.execute("not-uuid")
+        }
+    }
+
+    @Test
+    fun `should throw InvalidProjectIDException when input is null`(){
+        // When & Then
+        assertThrows<InvalidProjectIDException> {
+            viewProjectHistoryUseCase.execute(null)
+        }
     }
 
     @Test
@@ -43,11 +61,11 @@ class GetProjectLogsUseCaseTest {
         val invalidProjectId = UUID.randomUUID()
         every {
             logRepository.viewLogsById(invalidProjectId)
-        } throws PlanMateException.NotFoundException.ProjectNotFoundException
+        } throws ProjectNotFoundException
 
         // When & Then
-        assertThrows<PlanMateException.NotFoundException.ProjectNotFoundException> {
-            viewProjectHistoryUseCase.execute(invalidProjectId)
+        assertThrows<ProjectNotFoundException> {
+            viewProjectHistoryUseCase.execute(invalidProjectId.toString())
         }
     }
 }

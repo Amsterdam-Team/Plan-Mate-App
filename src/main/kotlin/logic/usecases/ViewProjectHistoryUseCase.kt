@@ -7,7 +7,7 @@ import java.util.UUID
 class ViewProjectHistoryUseCase(
     private val logRepository: LogRepository
 ) {
-    fun execute(projectId: UUID): List<LogItem> {
+    fun execute(projectId: String?): List<LogItem> {
         return emptyList()
     }
 }

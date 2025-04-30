@@ -7,9 +7,8 @@ import logic.usecases.ViewProjectHistoryUseCase
 class ViewProjectHistoryUIController(
     viewProjectHistoryUseCase: ViewProjectHistoryUseCase,
     projectRepository: ProjectRepository,
-    logRepository: LogRepository
 ) {
-    fun viewProjectHistoryUI(){
+    fun start(){
 
     }
 }
