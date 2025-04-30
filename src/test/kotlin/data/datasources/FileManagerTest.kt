@@ -25,7 +25,7 @@ class FileManagerTest{
     }
 
     @Test
-    fun `when given lines, should write the lines correctly to file`() {
+    fun `should write the lines correctly to file when given lines`() {
         // Given
         val lines = listOf("a,b,c", "1,2,3")
 
@@ -38,7 +38,7 @@ class FileManagerTest{
     }
 
     @Test
-    fun `when given input line should append line to file`() {
+    fun `should append line to file when given input line`() {
         // Given
         val appended = "second,line"
 

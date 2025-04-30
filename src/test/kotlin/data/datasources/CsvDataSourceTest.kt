@@ -1,10 +1,10 @@
 package data.datasources
 
-import com.google.common.truth.Truth
+
 import com.google.common.truth.Truth.assertThat
 import io.mockk.*
 import logic.entities.Task
-import logic.exception.PlanMateException
+import logic.exception.PlanMateException.DataSourceException.*
 import logic.usecases.task.testFactory.CreateTaskTestFactory
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -56,7 +56,7 @@ class CsvDataSourceTest{
         every { fileManager.readLines() } returns emptyList()
 
         // When && Then
-        assertThrows<PlanMateException.DataSourceException.EmptyFileException>{
+        assertThrows<EmptyFileException>{
             csvDataSource.getAll()
         }
     }
@@ -83,7 +83,7 @@ class CsvDataSourceTest{
         every { fileManager.readLines() } returns emptyList()
 
         // When && Then
-        assertThrows<PlanMateException.DataSourceException.ObjectDoesNotExistException>{
+        assertThrows<ObjectDoesNotExistException>{
             csvDataSource.getById(id)
         }
     }
@@ -92,9 +92,6 @@ class CsvDataSourceTest{
     //region add
     @Test
     fun `should add new csv line to file with object`(){
-        // Given
-        every {  }
-
         // When
         csvDataSource.add(task)
 
@@ -123,7 +120,7 @@ class CsvDataSourceTest{
         val saveObjects = emptyList<Task>()
 
         // When && Then
-        assertThrows<PlanMateException.DataSourceException.EmptyDataException> {
+        assertThrows<EmptyDataException> {
             csvDataSource.saveAll(saveObjects)
         }
     }
