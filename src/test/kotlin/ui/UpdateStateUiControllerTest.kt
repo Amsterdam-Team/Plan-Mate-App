@@ -1,28 +1,25 @@
 package ui
 
 import console.ConsoleIO
-import console.ConsoleIoImpl
 import io.mockk.*
-import logic.usecases.state.EditStateUsecase
-import org.junit.Before
-import org.junit.jupiter.api.Assertions.*
+import logic.usecases.state.UpdateStateUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
-import java.util.*
+import java.util.UUID
 
-class EditStateUiControllerTest {
+class UpdateStateUiControllerTest {
 
-    private lateinit var usecase: EditStateUsecase
-    private lateinit var uiController: EditStateUiController
+    private lateinit var usecase: UpdateStateUseCase
+    private lateinit var uiController: UpdateStateUiController
     private lateinit var consoleIO: ConsoleIO
 
     @BeforeEach
     fun setup() {
         consoleIO = mockk(relaxed = true)
         usecase = mockk(relaxed = true)
-        uiController = EditStateUiController(usecase, consoleIO)
+        uiController = UpdateStateUiController(usecase, consoleIO)
     }
 
     @Test
@@ -32,7 +29,7 @@ class EditStateUiControllerTest {
         val oldState = "Done"
         val newState = "Completed"
         every { consoleIO.println(any()) } just Runs
-        every { usecase.editState(projectID,oldState,newState) } just runs
+        every { usecase.editState(UUID.fromString(projectID),oldState,newState) } just runs
         //When
         uiController.execute(projectID,oldState,newState)
         //Then

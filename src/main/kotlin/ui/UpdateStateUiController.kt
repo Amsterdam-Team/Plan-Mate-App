@@ -1,11 +1,10 @@
 package ui
 
 import console.ConsoleIO
-import console.ConsoleIoImpl
-import logic.usecases.state.EditStateUsecase
+import logic.usecases.state.UpdateStateUseCase
 
-class EditStateUiController(
-    editStateUsecase: EditStateUsecase,
+class UpdateStateUiController(
+    editStateUsecase: UpdateStateUseCase,
     consoleIO: ConsoleIO
 ) {
 

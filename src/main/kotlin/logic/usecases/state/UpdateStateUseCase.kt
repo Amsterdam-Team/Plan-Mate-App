@@ -1,13 +1,12 @@
 package logic.usecases.state
 
-import logic.entities.Project
 import logic.repository.ProjectRepository
 import java.util.UUID
 
-class EditStateUsecase(
+class UpdateStateUseCase(
     val projectRepository: ProjectRepository
 ) {
-    fun editState(projectID:String,oldState:String,newState:String){
+    fun editState(projectID:UUID,oldState:String,newState:String){
 
     }
 }

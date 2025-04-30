@@ -6,17 +6,17 @@ import logic.exception.PlanMateException
 import logic.repository.ProjectRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
-import java.util.*
+import java.util.UUID
 import kotlin.test.Test
 
-class EditStateUsecaseTest{
+class UpdateStateUseCaseTest{
  private lateinit var repository: ProjectRepository
- private lateinit var useCase: EditStateUsecase
+ private lateinit var useCase: UpdateStateUseCase
 
  @BeforeEach
  fun setup() {
   repository = mockk(relaxed = true)
-  useCase = EditStateUsecase(repository)
+  useCase = UpdateStateUseCase(repository)
  }
 
  @Test
