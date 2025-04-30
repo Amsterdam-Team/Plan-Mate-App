@@ -1,12 +1,8 @@
 package ui.controllers
 
 import com.google.common.truth.Truth.assertThat
-import io.mockk.every
 import io.mockk.mockk
 import logic.usecases.project.CreateProjectUseCase
-import logic.usecases.testFactories.CreateProjectTestFactory.emptyProjectNameTest
-import logic.usecases.testFactories.CreateProjectTestFactory.emptyProjectStateTest
-import logic.usecases.testFactories.CreateProjectTestFactory.inValidProjectNameTest
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -38,8 +34,6 @@ class CreateProjectUIControllerTest {
         val inputProjectName = "\n"
         System.setIn(ByteArrayInputStream(inputProjectName.toByteArray()))
 
-        every { useCase.createProject(emptyProjectNameTest) }
-
         //when
         controller.createProjectUIController()
 
@@ -54,8 +48,6 @@ class CreateProjectUIControllerTest {
         val inputProjectName = "13515#$%#$"
         System.setIn(ByteArrayInputStream(inputProjectName.toByteArray()))
 
-        every { useCase.createProject(inValidProjectNameTest) }
-
         //when
         controller.createProjectUIController()
 
@@ -69,8 +61,6 @@ class CreateProjectUIControllerTest {
         //given
         val inputProjectState = "\n"
         System.setIn(ByteArrayInputStream(inputProjectState.toByteArray()))
-
-        every { useCase.createProject(emptyProjectStateTest) }
 
         //when
         controller.createProjectUIController()
