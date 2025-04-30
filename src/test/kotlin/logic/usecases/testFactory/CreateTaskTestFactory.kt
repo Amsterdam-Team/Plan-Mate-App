@@ -1,4 +1,4 @@
-package logic.usecases.task.testFactory
+package logic.usecases.testFactory
 
 import logic.entities.Task
 import java.util.*
