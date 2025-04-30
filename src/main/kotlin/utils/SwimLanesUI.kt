@@ -5,11 +5,10 @@ import logic.entities.Task
 
 
 fun printSwimlanesView(
-    projects: List<Project>,
+    project: Project,
 ) {
-    val columnWidth = 50
 
-    for (project in projects) {
+        val columnWidth = 50
         val lanes = project.states
         val data = project.tasks
         val taskFormatter: (Task) -> String = { "${it.id} - ${it.name}" }
@@ -20,7 +19,7 @@ fun printSwimlanesView(
 
         val maxTasks = laneMap.values.maxOfOrNull { it.size } ?: 0
 
-        println("Project: ${project.name} [ID : ${project.id} ]\n")
+        println("\nProject: ${project.name} [ID : ${project.id} ]\n")
 
         println(lanes.joinToString(" | ") { it.padEnd(columnWidth) })
         println("-".repeat((columnWidth + 3) * lanes.size - 3))
@@ -34,5 +33,4 @@ fun printSwimlanesView(
         }
 
         println("\n")
-    }
 }
