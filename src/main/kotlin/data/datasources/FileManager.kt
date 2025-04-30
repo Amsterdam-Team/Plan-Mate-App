@@ -11,15 +11,8 @@ class FileManager<T> {
     fun appendLine(line: String){
 
     }
-    fun fileExists(): Boolean{
-        TODO()
-    }
-    fun deleteFile(){
+
+    private fun createCsvFile(type: T){
 
     }
-
-    fun createCsvFile(type: T){
-
-    }
-
 }
