@@ -5,7 +5,6 @@ import logic.repository.AuthRepository
 
 class AuthRepositoryImpl: AuthRepository {
     override fun createUser(user: User) {
-        TODO("Not yet implemented")
     }
 
     override fun login(username: String, password: String): User {
