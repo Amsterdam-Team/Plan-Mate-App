@@ -10,5 +10,5 @@ class DeleteTaskUIController(
     private val projectRepository: ProjectRepository,
     private val taskRepository: TaskRepository,
 ) {
-     fun deleteTaskUI() {}
+     fun start() {}
 }
