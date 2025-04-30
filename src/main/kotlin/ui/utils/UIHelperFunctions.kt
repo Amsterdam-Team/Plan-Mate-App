@@ -2,6 +2,18 @@ package ui.utils
 
 import logic.exception.PlanMateException
 
+fun String.printAsASuccessState() {
+    val green = "\u001B[32m"
+    val reset = "\u001B[0m"
+    println("$green$this$reset")
+}
+
+fun String.printAsAFailState() {
+    val red = "\u001b[31m"
+    val reset = "\u001B[0m"
+    println("$red$this$reset")
+}
+
 fun getErrorMessageByException(exception: Exception): String {
 
     return when (exception) {
