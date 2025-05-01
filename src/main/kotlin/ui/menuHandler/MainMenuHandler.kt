@@ -1,8 +1,16 @@
-package ui.utils
+package ui.menuHandler
 
 import ui.controller.BaseUIController
+import ui.utils.printAsAFailState
+import ui.utils.printAsASuccessState
 
-fun baseMenuStart(showMenu: () -> Unit, featureControllers: Map<Int, BaseUIController>){
+open class MainMenuHandler {
+
+    protected open fun start() {
+        println("👋 Welcome to PlanMate!\nLet's get things organized.")
+    }
+
+    protected fun baseMenuStart(showMenu: () -> Unit, featureControllers: Map<Int, BaseUIController>){
         while (true) {
             showMenu()
 
@@ -20,3 +28,4 @@ fun baseMenuStart(showMenu: () -> Unit, featureControllers: Map<Int, BaseUIContr
             }
         }
     }
+}

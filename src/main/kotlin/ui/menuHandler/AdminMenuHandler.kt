@@ -1,11 +1,12 @@
 package ui.menuHandler
 
 import ui.controller.BaseUIController
-import ui.utils.baseMenuStart
 
 
-class AdminMenuHandler(private val adminFeatureControllers: Map<Int, BaseUIController>) {
-    fun start() {
+class AdminMenuHandler(private val adminFeatureControllers: Map<Int, BaseUIController>): MainMenuHandler() {
+
+    public override fun start() {
+        super.start()
         baseMenuStart(
             showMenu = ::showAdminMenu,
             featureControllers = adminFeatureControllers

@@ -1,11 +1,10 @@
 package ui.menuHandler
 
 import ui.controller.BaseUIController
-import ui.utils.baseMenuStart
 
-class MateMenuHandler(private val mateFeatureControllers: Map<Int, BaseUIController>){
+class MateMenuHandler(private val mateFeatureControllers: Map<Int, BaseUIController>): MainMenuHandler(){
 
-    fun start() {
+    public override fun start() {
         baseMenuStart(
             showMenu = ::showMateMenu,
             featureControllers = mateFeatureControllers
