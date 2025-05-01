@@ -10,14 +10,10 @@ class CsvDataSource<T : Any>(
     private val parser: CsvParser<T>,
 ) : DataSource {
     override fun getAll(): List<Any> {
-        return try {
-            val items = fileManager.readLines().map {
-                parser.deserialize(it)
-            }
-            items.ifEmpty {
-                throw PlanMateException.DataSourceException.EmptyFileException
-            }
-        } catch (e: PlanMateException.DataSourceException.EmptyFileException){
+        val items = fileManager.readLines().map {
+            parser.deserialize(it)
+        }
+        return items.ifEmpty {
             throw PlanMateException.DataSourceException.EmptyFileException
         }
     }
@@ -26,13 +22,13 @@ class CsvDataSource<T : Any>(
         val item = getAll().find { parser.getId(it as T) == id }
         if (item != null) {
             return item
-        } else{
+        } else {
             throw PlanMateException.DataSourceException.ObjectDoesNotExistException
         }
     }
 
     override fun saveAll(items: List<Any>) {
-        if (items.isEmpty()){
+        if (items.isEmpty()) {
             throw PlanMateException.DataSourceException.EmptyDataException
         } else {
             val lines = items.map { parser.serialize(it as T) }
