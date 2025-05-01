@@ -3,16 +3,17 @@ package uiController
 import io.mockk.every
 import io.mockk.mockk
 import logic.exception.PlanMateException.NotFoundException.TaskIDNotFoundException
+import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.usecases.ViewTaskLogsUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.ValueSource
 import ui.ViewTaskLogsUIController
 import utils.hepler.TASK_ID_NOT_FOUND
-import utils.hepler.WRONG_ID_FORMAT
+import utils.hepler.INVALID_ID_FORMAT
+import utils.hepler.invalidId
 import utils.hepler.readInputFromConsole
 import utils.hepler.taskLogs
+import utils.hepler.validId
 import java.util.UUID
 
 class ViewTaskLogsUIControllerTest {
@@ -26,44 +27,34 @@ class ViewTaskLogsUIControllerTest {
     }
 
     @Test
-    fun `should print logs when task id is valid format of UUID and logs are found`(){
-        val id = "123e4567-e89b-12d3-a456-426614174000"
+    fun `should print logs of task when logs are found`(){
 
-        val output = readInputFromConsole(id)
+        val output = readInputFromConsole(validId.toString())
 
-        every { useCase.viewTaskLogs(UUID.fromString(id)) } returns taskLogs()
+        every { useCase.viewTaskLogs(validId) } returns taskLogs()
         uiController. viewTaskLogsUIController()
 
         assert(output.contains(taskLogs().toString()))
     }
 
     @Test
-    fun `should print TaskIDNotFound message when task id is valid format of UUID but not found`(){
-        val id = "123e4567-e89b-12d3-a456-426614174000"
+    fun `should print Invalid ID Format message when use case throw InvalidTaskIDException`(){
+        val output = readInputFromConsole(invalidId)
 
-        val output = readInputFromConsole(id)
+        every { useCase.viewTaskLogs(UUID.fromString(invalidId)) } throws InvalidTaskIDException
+        uiController. viewTaskLogsUIController()
 
-        every { useCase.viewTaskLogs(UUID.fromString(id)) } throws TaskIDNotFoundException
+        assert(output.contains(INVALID_ID_FORMAT))
+    }
+
+    @Test
+    fun `should print Task ID Not Found message when use case throw TaskIdNotFoundException`(){
+
+        val output = readInputFromConsole(validId.toString())
+
+        every { useCase.viewTaskLogs(validId) } throws TaskIDNotFoundException
         uiController. viewTaskLogsUIController()
 
         assert(output.contains(TASK_ID_NOT_FOUND))
-    }
-
-    @ParameterizedTest
-    @ValueSource(
-        strings = [
-            "123e4567-e89b-12d3-a456" ,
-            " ",
-            "123e4567-e89b-12d3-a456-426614174%@0" ,
-            "kahdjshuffl123"
-        ]
-    )
-    fun `should print wrong id format message when task id is invalid UUID format`(id:String){
-
-        val output = readInputFromConsole(id)
-
-        uiController. viewTaskLogsUIController()
-
-        assert(output.contains(WRONG_ID_FORMAT))
     }
 }

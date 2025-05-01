@@ -21,6 +21,7 @@ fun taskLogs ()= listOf<LogItem>(
         entityId = UUID.fromString("123e4567-e89b-12d3-a456-426614174000"),
     )
 )
+
 fun readInputFromConsole(input : String) : String{
     System.setIn(ByteArrayInputStream(input.toByteArray()))
 
@@ -32,5 +33,8 @@ fun readInputFromConsole(input : String) : String{
     return (output)
 }
 
+val validId = UUID.fromString("123e4567-e89b-12d3-a456-426614174000")
+val invalidId = "123e4567-e89b-12d3-a456-426614174%@0"
+
 const val TASK_ID_NOT_FOUND = " This ID not found, Please enter correct id.."
-const val WRONG_ID_FORMAT = "This Id is invalid format , Please ensure you enter correct format of id "
+const val INVALID_ID_FORMAT = "This Id is invalid format , Please ensure you enter correct format of id "
