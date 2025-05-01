@@ -1,8 +1,8 @@
-package ui.controllers
+package ui.project
 
 import logic.entities.LogItem
 import logic.repository.ProjectRepository
-import logic.usecases.ViewProjectHistoryUseCase
+import logic.usecases.project.ViewProjectHistoryUseCase
 import ui.controller.BaseUIController
 import ui.utils.tryToExecute
 import utils.printSwimlanesView
@@ -10,14 +10,14 @@ import utils.printSwimlanesView
 class ViewProjectHistoryUIController(
     private val viewProjectHistoryUseCase: ViewProjectHistoryUseCase,
     private val projectRepository: ProjectRepository,
-) : BaseUIController{
+) : BaseUIController {
 
     override fun execute() {
         tryToExecute(
             action = {
-                println("hi, please enter the id of the project")
+                print("hi, please enter the id of the project")
                 projectRepository.getProjects().forEach {
-                    printSwimlanesView(project = it )
+                    printSwimlanesView(project = it)
                 }
                 viewProjectHistoryUseCase.execute(readlnOrNull())
             },
