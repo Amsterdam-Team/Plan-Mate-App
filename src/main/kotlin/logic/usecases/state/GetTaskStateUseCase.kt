@@ -5,7 +5,8 @@ import java.util.UUID
 
 class GetTaskStateUseCase(private val repository: TaskRepository) {
 
-    fun getTaskStateByTaskID(id: UUID): String {
-        return ""
+    fun execute(taskID: UUID): String {
+
+        return repository.getTaskById(taskID).state
     }
 }
