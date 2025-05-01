@@ -10,8 +10,7 @@ class FileManager<T>(name: String) {
 
     fun readLines(): List<String> {
         createCsvFile()
-        if (file.readLines().isNotEmpty()
-        ) {
+        if (file.readLines().isNotEmpty()) {
             return file.readLines()
         } else {
             throw PlanMateException.DataSourceException.EmptyFileException
