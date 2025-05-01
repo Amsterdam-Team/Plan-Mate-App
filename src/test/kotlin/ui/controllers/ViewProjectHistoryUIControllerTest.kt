@@ -43,7 +43,7 @@ class ViewProjectHistoryUIControllerTest {
         every { viewProjectHistoryUseCase.execute(projectId) } returns emptyList()
 
         // When
-        controller.start()
+        controller.execute()
 
         // Then
         assertThat(outContent.toString()).contains(projectId.toString())
@@ -59,7 +59,7 @@ class ViewProjectHistoryUIControllerTest {
         provideInput(selectedProjectId.toString())
 
         // When
-        controller.start()
+        controller.execute()
 
         // Then
         verify (exactly = 1) { viewProjectHistoryUseCase.execute(selectedProjectId.toString()) }
