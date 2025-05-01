@@ -8,13 +8,15 @@ fun printSwimlanesView(
     project: Project,
 ) {
 
-        val columnWidth = 50
+
         val lanes = project.states
         val data = project.tasks
         val taskFormatter: (Task) -> String = { "${it.id} - ${it.name}" }
 
+        val columnWidth = data.maxOf {taskFormatter(it).length  }
         val laneMap = lanes.associateWith { lane ->
             data.filter { it.state == lane }
+
         }
 
         val maxTasks = laneMap.values.maxOfOrNull { it.size } ?: 0
