@@ -15,6 +15,8 @@ sealed class PlanMateException : Exception() {
         data object InvalidTaskIDException : ValidationException()
         data object InvalidProjectNameException : ValidationException()
         data object InvalidProjectIDException : ValidationException()
+        data object EmptyDataException : ValidationException()
+
         data object EmptyProjectNameException : ValidationException()
         data object EmptyProjectStatesException : ValidationException()
         data object EmptyProjectTasksException : ValidationException()
@@ -33,9 +35,9 @@ sealed class PlanMateException : Exception() {
     }
 
     sealed class NotFoundException : PlanMateException() {
-        data object ProjectNotFoundException : ParsingException()
-        data object TaskNotFoundException : ParsingException()
-        data object StateNotFoundException : ParsingException()
+        data object ProjectNotFoundException : NotFoundException()
+        data object TaskNotFoundException : NotFoundException()
+        data object StateNotFoundException : NotFoundException()
     }
 
 }
