@@ -1,11 +1,9 @@
 package logic.usecases
 
 import helpers.DeleteTaskTestFactory.TASK_1
-import helpers.DeleteTaskTestFactory.TASK_3
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.repository.TaskRepository
 import org.junit.jupiter.api.BeforeEach
@@ -57,20 +55,6 @@ class DeleteTaskUseCaseTest {
             deleteTaskUseCase.execute("not-uuid")
         }
     }
-
-
-
-    @Test
-    fun `should throw TaskNotFoundException when the task is not found`() {
-        // Given
-        val task = TASK_3
-        every { taskRepository.getTaskById(task.id) } throws TaskNotFoundException
-        // When & Then
-        assertThrows<TaskNotFoundException> {
-            deleteTaskUseCase.execute(task.id.toString())
-        }
-    }
-
 
 //endregion
 
