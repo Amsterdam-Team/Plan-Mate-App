@@ -36,7 +36,7 @@ class GetProjectUIControllerTest {
         every { consoleIO.println(any()) } just Runs
         every { usecase.getProject(UUID.fromString(projectID)) } returns project
         //When
-        uiController.execute(projectID)
+        uiController.execute()
         //Then
         verify { consoleIO.println(project.toString()) }
     }
@@ -48,7 +48,7 @@ class GetProjectUIControllerTest {
         every { consoleIO.println(any()) } just Runs
         every { usecase.getProject(UUID.fromString(projectID)) } throws InvalidProjectIDException
         //When
-        uiController.execute(projectID)
+        uiController.execute()
         //Then
         verify { consoleIO.println("Project not exist") }
     }
@@ -60,7 +60,7 @@ class GetProjectUIControllerTest {
         every { consoleIO.println(any()) } just Runs
         every { usecase.getProject(UUID.fromString(projectID)) } throws EmptyDataException
         //When
-        uiController.execute(projectID)
+        uiController.execute()
         //Then
         verify { consoleIO.println("Projects is empty") }
     }
@@ -80,7 +80,7 @@ class GetProjectUIControllerTest {
         every { consoleIO.println(any()) } just Runs
         every { usecase.getProject(projectID) } throws InvalidProjectIDException
         //When
-        uiController.execute(invalidID)
+        uiController.execute()
         // Then
         verify { consoleIO.println("Projects is empty") }
 

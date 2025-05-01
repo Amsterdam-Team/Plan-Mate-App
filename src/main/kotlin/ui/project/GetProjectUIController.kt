@@ -7,7 +7,7 @@ class GetProjectUIController(
     getProjectUseCase: GetProjectUseCase,
     consoleIO: ConsoleIO
 ) {
-    fun execute(projectID:String){
+    fun execute(){
 
     }
     fun isValidProjectID(projectID: String){
