@@ -1,9 +1,12 @@
 import com.google.common.truth.Truth.assertThat
-import io.mockk.every
 import io.mockk.mockk
-import logic.exception.PlanMateException.ValidationException.ProjectNameAlreadyExistException
+import io.mockk.verify
+import logic.exception.PlanMateException.ValidationException.*
 import logic.repository.ProjectRepository
 import logic.usecases.project.CreateProjectUseCase
+import logic.usecases.testFactories.CreateProjectTestFactory.emptyProjectNameTest
+import logic.usecases.testFactories.CreateProjectTestFactory.emptyProjectStateTest
+import logic.usecases.testFactories.CreateProjectTestFactory.inValidProjectNameTest
 import logic.usecases.testFactories.CreateProjectTestFactory.validProjectTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -22,20 +25,45 @@ class CreateProjectUseCaseTest {
     @Test
     fun `should create project when all inputs are valid`() {
         //given
-        every { repository.createProject(validProjectTest) } returns Unit
+        verify(exactly = 1) { repository.createProject(validProjectTest) }
 
         //when and then
         assertThat(useCase.createProject(validProjectTest)).isTrue()
     }
 
     @Test
-    fun `should throw ProjectNameAlreadyExistException when there is a project added before with the same name`() {
-        //given
-        every { repository.createProject(validProjectTest) } throws ProjectNameAlreadyExistException
+    fun `should throw EmptyProjectNameException when input name is empty`() {
 
-        //when and then
+        //given when and then
+        assertThrows<EmptyProjectNameException> {
+            useCase.createProject(emptyProjectNameTest)
+        }
+    }
+
+    @Test
+    fun `should throw InvalidProjectNameException when input name is invalid`() {
+
+        //given when and then
+        assertThrows<InvalidProjectNameException> {
+            useCase.createProject(inValidProjectNameTest)
+        }
+    }
+
+    @Test
+    fun `should throw ProjectNameAlreadyExistException when there is a project added before with the same name`() {
+
+        //given when and then
         assertThrows<ProjectNameAlreadyExistException> {
             useCase.createProject(validProjectTest)
+        }
+    }
+
+    @Test
+    fun `should throw EmptyProjectStateException when input states is empty`() {
+
+        //given when and then
+        assertThrows<EmptyProjectStatesException> {
+            useCase.createProject(emptyProjectStateTest)
         }
     }
 }

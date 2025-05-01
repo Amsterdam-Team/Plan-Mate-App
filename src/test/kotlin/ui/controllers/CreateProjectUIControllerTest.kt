@@ -39,11 +39,11 @@ class CreateProjectUIControllerTest {
 
         //then
         val output = outContent.toString()
-        assertThat(output).contains("project name shouldn't be empty")
+        assertThat(output).contains("Project name shouldn't be empty,Please enter the project name")
     }
 
     @Test
-    fun `should print invalid project name when the name is invalid`() {
+    fun `should print The project name is not valid when the name is invalid`() {
         //given
         val inputProjectName = "13515#$%#$"
         System.setIn(ByteArrayInputStream(inputProjectName.toByteArray()))
@@ -53,7 +53,7 @@ class CreateProjectUIControllerTest {
 
         //then
         val output = outContent.toString()
-        assertThat(output).contains("invalid project name")
+        assertThat(output).contains("The project name is not valid. Please enter a valid project name.")
     }
 
     @Test
@@ -67,7 +67,7 @@ class CreateProjectUIControllerTest {
 
         //then
         val output = outContent.toString()
-        assertThat(output).contains("project states shouldn't be empty")
+        assertThat(output).contains("Project states shouldn't be empty,Please enter the project states")
     }
 
 }
