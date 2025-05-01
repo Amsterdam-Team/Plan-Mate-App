@@ -12,6 +12,7 @@ import logic.usecases.DeleteTaskUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.io.ByteArrayOutputStream
+import java.io.PrintStream
 
 class DeleteTaskUIControllerTest {
 
@@ -25,7 +26,8 @@ class DeleteTaskUIControllerTest {
         deleteTaskUseCase = mockk(relaxed = true)
         projectRepository = mockk()
         controller = DeleteTaskUIController(deleteTaskUseCase, projectRepository)
-
+        outContent = ByteArrayOutputStream()
+        System.setOut(PrintStream(outContent))
     }
 
 
