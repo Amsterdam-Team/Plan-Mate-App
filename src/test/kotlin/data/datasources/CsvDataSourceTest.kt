@@ -95,7 +95,7 @@ class CsvDataSourceTest{
 
     //region add
     @Test
-    fun `should add new csv line to file with object`(){
+    fun `should add new csv line to file with object when given valid task`(){
         // Given
         mockSerialization()
 

@@ -47,7 +47,7 @@ class FileManagerTest{
     }
 
     @Test
-    fun `should read lines correctly`(){
+    fun `should read lines correctly when given file with lines`(){
         // When
         val result = fileManager.readLines()
 
