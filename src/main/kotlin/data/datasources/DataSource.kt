@@ -2,9 +2,9 @@ package data.datasources
 
 import java.util.UUID
 
-interface DataSource <T>{
-    fun getAll(): List<T>
-    fun getById(id: UUID): T?
-    fun saveAll(items: List<T>)
-    fun add(item: T)
+interface DataSource{
+    fun getAll(): List<Any>
+    fun getById(id: UUID): Any
+    fun saveAll(items: List<Any>)
+    fun add(item: Any)
 }

@@ -15,16 +15,25 @@ sealed class PlanMateException : Exception() {
         data object InvalidTaskIDException : ValidationException()
         data object InvalidProjectNameException : ValidationException()
         data object InvalidProjectIDException : ValidationException()
+        data object EmptyDataException : ValidationException()
+
     }
 
     sealed class ParsingException : PlanMateException() {
         data object CsvFormatException : ParsingException()
     }
 
+    sealed class DataSourceException: PlanMateException(){
+        data object EmptyFileException: DataSourceException()
+        data object ObjectDoesNotExistException: DataSourceException()
+        data object EmptyDataException: DataSourceException()
+
+    }
+
     sealed class NotFoundException : PlanMateException() {
-        data object ProjectNotFoundException : ParsingException()
-        data object TaskNotFoundException : ParsingException()
-        data object StateNotFoundException : ParsingException()
+        data object ProjectNotFoundException : NotFoundException()
+        data object TaskNotFoundException : NotFoundException()
+        data object StateNotFoundException : NotFoundException()
     }
 
     sealed class ExistException : PlanMateException() {
