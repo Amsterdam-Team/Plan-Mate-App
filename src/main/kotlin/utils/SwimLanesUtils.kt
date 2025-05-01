@@ -59,9 +59,16 @@ class SwimLanesUtils {
         println("\n")
     }
 
-    fun showMultipleProjects(projects: List<Project>){
+    fun showDetailedProjects(projects: List<Project>){
         projects.forEach {
             showProject(it)
+        }
+    }
+
+    // TODO: need further improvement to be aligned with swimlanes format
+    fun showListOfProjects(projects: List<Project>){
+        projects.forEachIndexed {
+                index, it  -> println("${index+1}) ${it.name}")
         }
     }
 }
