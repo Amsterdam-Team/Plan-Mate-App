@@ -5,22 +5,19 @@ import logic.entities.Task
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.io.File
 
 class FileManagerTest{
     private lateinit var fileManager: FileManager<Task>
-    private lateinit var tempFile: File
     private val lines = listOf("a,b,c", "1,2,3")
     @BeforeEach
     fun setup(){
         fileManager = FileManager.create<Task>()
-        tempFile = File.createTempFile("${Task::class.simpleName}", ".csv")
-        tempFile.writeText(lines.joinToString("\n"))
+        fileManager.writeLines(lines)
     }
 
     @AfterEach
     fun cleanup(){
-        tempFile.delete()
+        fileManager.deleteFile()
     }
 
     @Test

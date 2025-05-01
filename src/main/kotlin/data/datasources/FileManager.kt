@@ -38,6 +38,10 @@ class FileManager<T>(name: String) {
         }
     }
 
+    fun deleteFile(){
+        file.delete()
+    }
+
     companion object {
         inline fun <reified T> create(): FileManager<T> {
             val name = T::class.simpleName?.lowercase() ?: "unknown"
