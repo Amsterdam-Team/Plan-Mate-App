@@ -5,8 +5,8 @@ import java.util.UUID
 
 class GetProjectStatesUseCase(private val repository: ProjectRepository) {
 
-    fun getProjectStatesByProjectID(id: UUID): List<String> {
+    fun execute(projectID: UUID): List<String> {
 
-        return repository.getProject(id).states
+        return repository.getProject(projectID).states
     }
 }
