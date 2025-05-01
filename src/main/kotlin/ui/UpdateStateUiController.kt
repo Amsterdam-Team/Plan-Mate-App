@@ -8,7 +8,7 @@ class UpdateStateUiController(
     consoleIO: ConsoleIO
 ) {
 
-    fun execute(projectID: String,oldState:String,newString: String){
+    fun execute(){
     }
     fun isValidProjectID(projectID:String){}
     fun isValidStateName(state:String){}
