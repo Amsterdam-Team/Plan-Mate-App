@@ -1,7 +1,6 @@
 package ui.controllers
 
 import logic.entities.LogItem
-import logic.repository.LogRepository
 import logic.repository.ProjectRepository
 import logic.usecases.ViewProjectHistoryUseCase
 import utils.printSwimlanesView

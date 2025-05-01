@@ -26,8 +26,9 @@ class ViewProjectHistoryUIControllerTest {
 
     @BeforeEach
     fun setup() {
-        viewProjectHistoryUseCase = mockk(relaxed = true)
-        projectRepository = mockk()
+        projectRepository = mockk(relaxed = true)
+        logRepository = mockk()
+        viewProjectHistoryUseCase = ViewProjectHistoryUseCase(logRepository)
         controller = ViewProjectHistoryUIController(viewProjectHistoryUseCase, projectRepository)
         outContent = ByteArrayOutputStream()
         System.setOut(PrintStream(outContent))
@@ -36,13 +37,17 @@ class ViewProjectHistoryUIControllerTest {
     @Test
     fun `should print all project IDs`() {
         // Given
+        val projectId = PROJECT_1.id.toString()
         every { projectRepository.getProjects() } returns ALL_PROJECTS
+        provideInput(projectId)
+        every { viewProjectHistoryUseCase.execute(projectId) } returns emptyList()
 
         // When
         controller.start()
 
         // Then
-        assertThat(outContent.toString()).contains(PROJECT_1.id.toString())
+        assertThat(outContent.toString()).contains(projectId.toString())
+        verify { projectRepository.getProjects() }
     }
 
     @Test
@@ -51,7 +56,6 @@ class ViewProjectHistoryUIControllerTest {
         val selectedProjectId = PROJECT_1.id
         every { projectRepository.getProjects() } returns ALL_PROJECTS
         every { logRepository.viewLogsById(selectedProjectId) } returns LOGS_FOR_PROJECT_1
-
         provideInput(selectedProjectId.toString())
 
         // When
