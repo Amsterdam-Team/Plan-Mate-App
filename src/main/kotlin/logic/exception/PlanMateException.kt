@@ -4,8 +4,8 @@ sealed class PlanMateException : Exception() {
     sealed class AuthorizationException : PlanMateException() {
         data object AdminPrivilegesRequiredException : AuthorizationException()
         data object UserNotFoundException : AuthorizationException()
-        data object WrongUsername : AuthorizationException()
-        data object WrongPassword : AuthorizationException()
+        data object WrongUsernameException : AuthorizationException()
+        data object WrongPasswordException : AuthorizationException()
 
 
     }
