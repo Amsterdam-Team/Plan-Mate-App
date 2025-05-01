@@ -11,8 +11,6 @@ import io.mockk.mockk
 import logic.exception.PlanMateException.AuthorizationException.*
 import logic.usecases.LoginUseCase
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.ValueSource
 import ui.LoginUIController
 import kotlin.test.Test
 
@@ -27,7 +25,7 @@ class LoginUIControllerTest {
     }
 
     @Test
-    fun `should print success message when username and password are valid format and useCase return full user data`(){
+    fun `should print success message when useCase return full user data`(){
         val username = "Hend"
         val password = "H123456"
         val input = "$username\n$password"
@@ -42,7 +40,7 @@ class LoginUIControllerTest {
     }
 
     @Test
-    fun `should print user not found message when username and password are valid format but useCase throw UserNotFoundException exception`(){
+    fun `should print user not found message when useCase throw user not found exception`(){
         val username = "nada"
         val password = "H12345"
         val input = "$username\n$password"
@@ -57,13 +55,13 @@ class LoginUIControllerTest {
     }
 
     @Test
-    fun `should print wrong username message when username and password are valid format but useCase throw WrongUserName exception`(){
+    fun `should print wrong username message when useCase throw wrong user name exception`(){
         val username = "Hen"
         val password = "H123456"
 
         val output = readInputFromConsole(username)
 
-        every { useCase.verifyUserState(username,password) } throws WrongUsername
+        every { useCase.verifyUserState(username,password) } throws WrongUsernameException
 
         uiController.loginUIController()
 
@@ -71,51 +69,14 @@ class LoginUIControllerTest {
     }
 
     @Test
-    fun `should print wrong password message when username and password are valid format but useCase throw WrongPassword exception`(){
+    fun `should print wrong password message when useCase throw wrong password exception`(){
         val username = "Hend"
         val password = "12345"
         val input = "$username\n$password"
 
         val output = readInputFromConsole(input)
 
-        every { useCase.verifyUserState(username,password) } throws WrongPassword
-
-        uiController.loginUIController()
-
-        assert(output.contains(WRONG_PASSWORD))
-    }
-
-    @ParameterizedTest
-    @ValueSource(
-        strings = [
-            "H@$",
-            "1325",
-             "",
-             "he" //size less than 3
-        ]
-    )
-    fun `should print wrong username message when username is invalid format`(username:String){
-
-        val output = readInputFromConsole(username)
-
-        uiController.loginUIController()
-
-        assert(output.contains(WRONG_USER_NAME))
-    }
-
-    @ParameterizedTest
-    @ValueSource(
-        strings = [
-            "123456",
-             "",
-            "h1234"
-        ]
-    )
-    fun `should print wrong password message when password is invalid format`(password:String){
-        val username = "Hend"
-        val input = "$username\n$password"
-
-        val output = readInputFromConsole(input)
+        every { useCase.verifyUserState(username,password) } throws WrongPasswordException
 
         uiController.loginUIController()
 
