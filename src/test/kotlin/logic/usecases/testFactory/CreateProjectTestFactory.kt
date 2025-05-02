@@ -25,7 +25,7 @@ object CreateProjectTestFactory {
     )
 
 
-    private fun createProject(
+     fun createProject(
         id: UUID = UUID.randomUUID(),
         name: String = "",
         states: List<String> = emptyList(),

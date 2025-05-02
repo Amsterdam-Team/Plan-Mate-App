@@ -1,47 +1,28 @@
 package data.repository.project
 
 import data.datasources.DataSource
-import kotlinx.datetime.LocalDateTime
-import logic.entities.LogItem
 import logic.entities.Project
-import logic.repository.LogRepository
-import logic.repository.ProjectRepository
-import java.time.LocalDateTime.now
-import java.util.*
+import logic.exception.PlanMateException.ValidationException.ProjectNameAlreadyExistException
 
-class ProjectRepositoryImpl(private val dataSource: DataSource, val logRepository: LogRepository ) : ProjectRepository {
+import logic.repository.ProjectRepository
+import java.util.UUID
+
+class ProjectRepositoryImpl(val dataSource: DataSource) : ProjectRepository {
     override fun createProject(project: Project) {
-        logRepository.addLog(
-            LogItem(
-                id = UUID.randomUUID(),
-                message = "add project with name ${project.name}",
-                date = now(),
-                entityId = project.id,
-            )
-        )
+        val existedProjects = dataSource.getAll().map { it as Project }
+        if (existedProjects.any { it.name.equals(project.name, ignoreCase = true) }) {
+            throw ProjectNameAlreadyExistException
+        }
+        dataSource.add(project)
     }
 
     override fun updateProjectNameById(id: UUID, newName: String) {
-
-        logRepository.addLog(
-            LogItem(
-                id = UUID.randomUUID(),
-                message = "update project name to be ${newName}",
-                date = now(),
-                entityId = id,
-            )
-        )
+        TODO("Not yet implemented")
     }
 
     override fun deleteProject(projectId: UUID) {
-        logRepository.addLog(
-            LogItem(
-                id = UUID.randomUUID(),
-                message = "deletle project with id ${projectId.toString()}",
-                date = now(),
-                entityId = projectId,
-            )
-        )
+        dataSource
+        throw Exception("unimplemented yet")
 
     }
 
@@ -54,36 +35,27 @@ class ProjectRepositoryImpl(private val dataSource: DataSource, val logRepositor
     }
 
     override fun updateProjectStateById(id: UUID, oldState: String, newState: String) {
-        logRepository.addLog(
-            LogItem(
-                id = UUID.randomUUID(),
-                message = "update project state from ${oldState} to be ${newState}",
-                date = now(),
-                entityId = id,
-            )
+        val projects = dataSource.getAll().map { it as Project }
+        val project = projects.find { it.id == id } ?: throw PlanMateException.NotFoundException.ProjectNotFoundException
+
+        val updatedProject = project.copy(
+            states = project.states.map {
+                if (it == oldState) newState else it
+            }
         )
+
+        val updatedProjects = projects.map {
+            if (it.id == id) updatedProject else it
+        }
+        dataSource.saveAll(updatedProjects)
     }
 
-    override fun deleteStateById(id: UUID, oldState: String) {
-        logRepository.addLog(
-            LogItem(
-                id = UUID.randomUUID(),
-                message = "delete project state with name ${oldState}",
-                date = now(),
-                entityId = id,
-            )
-        )
+    override fun deleteStateById(id: UUID, oldState: UUID?) {
+        TODO("Not yet implemented")
     }
 
     override fun addStateById(id: UUID, state: String) {
-        logRepository.addLog(
-            LogItem(
-                id = UUID.randomUUID(),
-                message = "add project state with name ${state}",
-                date = now(),
-                entityId = id,
-            )
-        )
+        TODO("Not yet implemented")
     }
 
 }

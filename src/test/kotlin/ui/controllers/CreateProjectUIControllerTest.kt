@@ -35,7 +35,7 @@ class CreateProjectUIControllerTest {
         System.setIn(ByteArrayInputStream(inputProjectName.toByteArray()))
 
         //when
-        controller.createProjectUIController()
+        controller.execute()
 
         //then
         val output = outContent.toString()
@@ -49,7 +49,7 @@ class CreateProjectUIControllerTest {
         System.setIn(ByteArrayInputStream(inputProjectName.toByteArray()))
 
         //when
-        controller.createProjectUIController()
+        controller.execute()
 
         //then
         val output = outContent.toString()
@@ -63,7 +63,7 @@ class CreateProjectUIControllerTest {
         System.setIn(ByteArrayInputStream(inputProjectState.toByteArray()))
 
         //when
-        controller.createProjectUIController()
+        controller.execute()
 
         //then
         val output = outContent.toString()
