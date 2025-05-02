@@ -2,19 +2,22 @@ package uiController
 
 import io.mockk.every
 import io.mockk.mockk
+
+import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
 import logic.exception.PlanMateException.NotFoundException.TaskIDNotFoundException
+
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.usecases.ViewTaskLogsUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import ui.ViewTaskLogsUIController
-import utils.hepler.TASK_ID_NOT_FOUND
+import utils.hepler.TASK_NOT_FOUND
 import utils.hepler.INVALID_ID_FORMAT
 import utils.hepler.invalidId
-import utils.hepler.readInputFromConsole
+import utils.hepler.simulateConsoleInteraction
 import utils.hepler.taskLogs
 import utils.hepler.validId
-import java.util.UUID
+
 
 class ViewTaskLogsUIControllerTest {
     private lateinit var useCase : ViewTaskLogsUseCase
@@ -29,32 +32,37 @@ class ViewTaskLogsUIControllerTest {
     @Test
     fun `should print logs of task when logs are found`(){
 
-        val output = readInputFromConsole(validId.toString())
+        every { useCase.viewTaskLogs(validId.toString()) } returns taskLogs()
 
-        every { useCase.viewTaskLogs(validId) } returns taskLogs()
-        uiController. viewTaskLogsUIController()
+        val output = simulateConsoleInteraction(validId.toString()) {
+            uiController.execute()
+        }
 
-        assert(output.contains(taskLogs().toString()))
+        assert(output.contains(taskLogs()[0].message))
+        assert(output.contains(taskLogs()[1].message))
+
     }
 
     @Test
     fun `should print Invalid ID Format message when use case throw InvalidTaskIDException`(){
-        val output = readInputFromConsole(invalidId)
 
-        every { useCase.viewTaskLogs(UUID.fromString(invalidId)) } throws InvalidTaskIDException
-        uiController. viewTaskLogsUIController()
+        every { useCase.viewTaskLogs(invalidId) } throws InvalidTaskIDException
+
+        val output = simulateConsoleInteraction(invalidId.toString()) {
+            uiController.execute()
+        }
 
         assert(output.contains(INVALID_ID_FORMAT))
     }
 
     @Test
-    fun `should print Task ID Not Found message when use case throw TaskIdNotFoundException`(){
+    fun `should print Task Not Found message when use case throw TaskNotFoundException`(){
 
-        val output = readInputFromConsole(validId.toString())
+        every { useCase.viewTaskLogs(invalidId.toString()) } throws TaskNotFoundException
 
-        every { useCase.viewTaskLogs(validId) } throws TaskIDNotFoundException
-        uiController. viewTaskLogsUIController()
-
-        assert(output.contains(TASK_ID_NOT_FOUND))
+        val output = simulateConsoleInteraction(invalidId.toString()) {
+            uiController.execute()
+        }
+        assert(output.contains(TASK_NOT_FOUND))
     }
 }

@@ -31,9 +31,18 @@ sealed class PlanMateException : Exception() {
     }
 
     sealed class NotFoundException : PlanMateException() {
-        data object ProjectNotFoundException : ParsingException()
-        data object TaskNotFoundException : ParsingException()
-        data object StateNotFoundException : ParsingException()
+
+        data object ProjectNotFoundException : NotFoundException()
+        data object TaskNotFoundException : NotFoundException()
+        data object StateNotFoundException : NotFoundException()
+        data object TaskLogsNotFound : NotFoundException()
+    }
+
+    sealed class ExistException : PlanMateException() {
+        data object ProjectAlreadyExistsException : ExistException()
+        data object TaskAlreadyExistsException : ExistException()
+        
+    
     }
 
 }
