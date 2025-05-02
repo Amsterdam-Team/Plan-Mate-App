@@ -1,16 +1,22 @@
 package ui.project
 
+
 import logic.usecases.project.GetProjectUseCase
 import ui.console.ConsoleIO
+import ui.controller.BaseUIController
+import ui.utils.tryToExecute
 
 class GetProjectUIController(
-    getProjectUseCase: GetProjectUseCase,
-    consoleIO: ConsoleIO
-) {
-    fun execute(){
+    private val getProjectUseCase: GetProjectUseCase,
+    private val consoleIO: ConsoleIO
+):BaseUIController {
 
+    override fun execute(){
+        consoleIO.println("Enter Project Id :)")
+        val projectID = consoleIO.readFromUser()
+        tryToExecute(action = { getProjectUseCase.getProject(projectID) },
+            onSuccess = { consoleIO.println(it.toString())})
     }
-    fun isValidProjectID(projectID: String){
 
-    }
+
 }

@@ -1,10 +1,11 @@
 package data.repository.project
 
+import data.datasources.CsvDataSource
 import logic.entities.Project
 import logic.repository.ProjectRepository
 import java.util.UUID
 
-class ProjectRepositoryImpl: ProjectRepository {
+class ProjectRepositoryImpl(private val dataSource: CsvDataSource<Project>): ProjectRepository {
     override fun createProject(project: Project) {
         TODO("Not yet implemented")
     }
@@ -22,7 +23,7 @@ class ProjectRepositoryImpl: ProjectRepository {
     }
 
     override fun getProject(id: UUID): Project {
-        TODO("Not yet implemented")
+        return dataSource.getById(id) as Project
     }
 
     override fun updateProjectStateById(id: UUID, oldState: String, newState: String) {
