@@ -2,13 +2,18 @@ package data.repository.project
 
 import data.datasources.DataSource
 import logic.entities.Project
-import logic.exception.PlanMateException
+import logic.exception.PlanMateException.ValidationException.ProjectNameAlreadyExistException
+
 import logic.repository.ProjectRepository
 import java.util.UUID
 
-class ProjectRepositoryImpl(private val dataSource: DataSource) : ProjectRepository {
+class ProjectRepositoryImpl(val dataSource: DataSource) : ProjectRepository {
     override fun createProject(project: Project) {
-        TODO("Not yet implemented")
+        val existedProjects = dataSource.getAll().map { it as Project }
+        if (existedProjects.any { it.name.equals(project.name, ignoreCase = true) }) {
+            throw ProjectNameAlreadyExistException
+        }
+        dataSource.add(project)
     }
 
     override fun updateProjectNameById(id: UUID, newName: String) {
@@ -45,7 +50,7 @@ class ProjectRepositoryImpl(private val dataSource: DataSource) : ProjectReposit
         dataSource.saveAll(updatedProjects)
     }
 
-    override fun deleteStateById(id: UUID, oldState: String) {
+    override fun deleteStateById(id: UUID, oldState: UUID?) {
         TODO("Not yet implemented")
     }
 
