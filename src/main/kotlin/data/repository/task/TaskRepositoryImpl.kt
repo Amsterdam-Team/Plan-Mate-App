@@ -2,7 +2,6 @@ package data.repository.task
 
 import data.datasources.DataSource
 import logic.entities.Task
-import logic.exception.PlanMateException
 import logic.exception.PlanMateException.DataSourceException.ObjectDoesNotExistException
 import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
 import logic.repository.TaskRepository
