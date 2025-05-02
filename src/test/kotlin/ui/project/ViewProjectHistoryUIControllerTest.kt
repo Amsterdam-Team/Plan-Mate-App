@@ -1,13 +1,14 @@
 package ui.project
 
-import com.google.common.truth.Truth
-import logic.usecases.project.helper.ViewProjectHistoryTestFactory
+import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import logic.repository.LogRepository
 import logic.repository.ProjectRepository
 import logic.usecases.project.ViewProjectHistoryUseCase
+import logic.usecases.project.helper.ViewProjectHistoryTestFactory.ALL_PROJECTS
+import logic.usecases.project.helper.ViewProjectHistoryTestFactory.LOGS_FOR_PROJECT_1
+import logic.usecases.project.helper.ViewProjectHistoryTestFactory.PROJECT_1
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.io.ByteArrayOutputStream
@@ -17,15 +18,13 @@ class ViewProjectHistoryUIControllerTest {
 
     private lateinit var viewProjectHistoryUseCase: ViewProjectHistoryUseCase
     private lateinit var projectRepository: ProjectRepository
-    private lateinit var logRepository: LogRepository
     private lateinit var controller: ViewProjectHistoryUIController
     private lateinit var outContent: ByteArrayOutputStream
 
     @BeforeEach
     fun setup() {
         projectRepository = mockk(relaxed = true)
-        logRepository = mockk()
-        viewProjectHistoryUseCase = ViewProjectHistoryUseCase(logRepository)
+        viewProjectHistoryUseCase = mockk(relaxed = true)
         controller = ViewProjectHistoryUIController(viewProjectHistoryUseCase, projectRepository)
         outContent = ByteArrayOutputStream()
         System.setOut(PrintStream(outContent))
@@ -34,25 +33,23 @@ class ViewProjectHistoryUIControllerTest {
     @Test
     fun `should print all project IDs`() {
         // Given
-        val projectId = ViewProjectHistoryTestFactory.PROJECT_1.id.toString()
-        every { projectRepository.getProjects() } returns ViewProjectHistoryTestFactory.ALL_PROJECTS
-        provideInput(projectId)
-        every { viewProjectHistoryUseCase.execute(projectId) } returns emptyList()
+        every { projectRepository.getProjects() } returns ALL_PROJECTS
+
 
         // When
         controller.execute()
 
         // Then
-        Truth.assertThat(outContent.toString()).contains(projectId.toString())
-        verify { projectRepository.getProjects() }
+        ALL_PROJECTS.forEach {
+            assertThat(outContent.toString()).contains(it.id.toString())
+        }
     }
 
     @Test
     fun `should call viewProjectHistoryUseCase with params when project is selected`() {
         // Given
-        val selectedProjectId = ViewProjectHistoryTestFactory.PROJECT_1.id
-        every { projectRepository.getProjects() } returns ViewProjectHistoryTestFactory.ALL_PROJECTS
-        every { logRepository.viewLogsById(selectedProjectId) } returns ViewProjectHistoryTestFactory.LOGS_FOR_PROJECT_1
+        val selectedProjectId = PROJECT_1.id
+        every { projectRepository.getProjects() } returns ALL_PROJECTS
         provideInput(selectedProjectId.toString())
 
         // When
@@ -61,6 +58,24 @@ class ViewProjectHistoryUIControllerTest {
         // Then
         verify(exactly = 1) { viewProjectHistoryUseCase.execute(selectedProjectId.toString()) }
     }
+
+    @Test
+    fun `should print logs for selected project`() {
+        // Given
+        val selectedProjectId = PROJECT_1.id
+        every { projectRepository.getProjects() } returns ALL_PROJECTS
+        provideInput(selectedProjectId.toString())
+        every { viewProjectHistoryUseCase.execute(selectedProjectId.toString())} returns LOGS_FOR_PROJECT_1
+        // When
+        controller.execute()
+
+        // Then
+        LOGS_FOR_PROJECT_1.forEach {
+            assertThat(outContent.toString()).contains(it.message)
+        }
+    }
+
+
 
     private fun provideInput(input: String) {
         val stream = input.byteInputStream()

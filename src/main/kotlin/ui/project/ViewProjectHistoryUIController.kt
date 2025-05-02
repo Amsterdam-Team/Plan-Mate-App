@@ -5,7 +5,6 @@ import logic.repository.ProjectRepository
 import logic.usecases.project.ViewProjectHistoryUseCase
 import ui.controller.BaseUIController
 import ui.utils.tryToExecute
-import utils.printSwimlanesView
 
 class ViewProjectHistoryUIController(
     private val viewProjectHistoryUseCase: ViewProjectHistoryUseCase,
@@ -17,7 +16,7 @@ class ViewProjectHistoryUIController(
             action = {
                 print("hi, please enter the id of the project")
                 projectRepository.getProjects().forEach {
-                    printSwimlanesView(project = it)
+                    println(it)
                 }
                 viewProjectHistoryUseCase.execute(readlnOrNull())
             },
