@@ -5,8 +5,8 @@ import io.mockk.every
 import io.mockk.mockk
 import logic.exception.PlanMateException.NotFoundException.*
 import logic.repository.TaskRepository
-import logic.usecases.task.testFactory.CreateTaskTestFactory.taskWithWrongProjectID
-import logic.usecases.task.testFactory.CreateTaskTestFactory.validTask
+import logic.usecases.testFactory.CreateTaskTestFactory.taskWithWrongProjectID
+import logic.usecases.testFactory.CreateTaskTestFactory.validTask
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
