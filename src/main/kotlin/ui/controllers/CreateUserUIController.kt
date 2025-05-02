@@ -1,0 +1,33 @@
+package ui.controllers
+
+import logic.usecases.user.CreateUserUseCase
+import ui.console.ConsoleIO
+import ui.controller.BaseUIController
+import ui.utils.printAsASuccessState
+import ui.utils.tryToExecute
+import utils.ResultStatus
+
+class CreateUserUIController(
+    private val createUserUseCase: CreateUserUseCase,
+    private val io: ConsoleIO
+) : BaseUIController {
+
+    override fun execute() {
+        io.println("Create New Mate User")
+
+        io.println("Enter Username: ")
+        val username = io.readFromUser()
+
+        io.println("Enter Password: ")
+        val password = io.readFromUser()
+
+        tryToExecute(
+            action = { createUserUseCase.execute(username, password) },
+            onSuccess = { result ->
+                result.takeIf { it is ResultStatus.Success }?.let {
+                    "User created successfully".printAsASuccessState()
+                }
+            }
+        )
+    }
+}

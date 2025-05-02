@@ -5,6 +5,7 @@ import logic.usecases.LoginUseCase
 import org.koin.core.context.startKoin
 import org.koin.java.KoinJavaComponent.getKoin
 import ui.controllers.CreateProjectUIController
+import ui.controllers.CreateUserUIController
 import ui.controllers.UpdateStateUiController
 import ui.menuHandler.AdminMenuHandler
 import ui.menuHandler.MateMenuHandler
@@ -13,13 +14,14 @@ import ui.project.ViewProjectHistoryUIController
 
 
 fun main() {
-    startKoin{
+    startKoin {
         modules(
             appModule
         )
     }
 
     val loginUseCase: LoginUseCase = getKoin().get()
+    val createUserUIController: CreateUserUIController = getKoin().get()
     val createProjectUIController: CreateProjectUIController = getKoin().get()
     val deleteTaskUiController: DeleteProjectUiController = getKoin().get()
     val viewProjectHistoryUIController: ViewProjectHistoryUIController = getKoin().get()
@@ -30,11 +32,11 @@ fun main() {
     val viewTaskLogsUIController: ViewTaskLogsUIController = getKoin().get()
 
 
-
     val adminHandler: AdminMenuHandler = AdminMenuHandler(
         mapOf(
             1 to createProjectUIController,
-            2 to updateStateUiController
+            2 to updateStateUiController,
+            9 to createUserUIController
         )
     )
 
@@ -43,7 +45,6 @@ fun main() {
             1 to getProjectUIController,
         )
     )
-
 
 
     val loginUIController = LoginUIController(loginUseCase, adminHandler, mateHandler)

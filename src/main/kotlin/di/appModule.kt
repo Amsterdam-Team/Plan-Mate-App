@@ -34,22 +34,23 @@ import logic.usecases.task.CreateTaskUseCase
 import logic.usecases.task.EditTaskUseCase
 import logic.usecases.task.GetAllTasksByProjectIdUseCase
 import logic.usecases.task.GetTaskByIdUseCase
+import logic.usecases.user.CreateUserUseCase
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import ui.DeleteProjectUiController
 import ui.EditTaskUiController
-import ui.LoginUIController
 import ui.ViewTaskLogsUIController
 import ui.console.ConsoleIO
 import ui.console.ConsoleIOImpl
 import ui.controllers.CreateProjectUIController
+import ui.controllers.CreateUserUIController
 import ui.controllers.DeleteTaskUIController
 import ui.controllers.UpdateStateUiController
 import ui.menuHandler.AdminMenuHandler
 import ui.menuHandler.MateMenuHandler
 import ui.project.GetProjectUIController
 import ui.project.ViewProjectHistoryUIController
-import java.util.*
+import java.util.UUID
 
 val appModule = module {
 
@@ -71,8 +72,18 @@ val appModule = module {
 
     single<DataSource>(user) { CsvDataSource(get<FileManager<User>>(user), get<UserCsvParser>()) }
     single<DataSource>(task) { CsvDataSource(get<FileManager<Task>>(task), get<TaskCsvParser>()) }
-    single<DataSource>(project) { CsvDataSource(get<FileManager<Project>>(project), get<ProjectCsvParser>()) }
-    single<DataSource>(log) { CsvDataSource(get<FileManager<LogItem>>(log), get<LogItemCsvParser>()) }
+    single<DataSource>(project) {
+        CsvDataSource(
+            get<FileManager<Project>>(project),
+            get<ProjectCsvParser>()
+        )
+    }
+    single<DataSource>(log) {
+        CsvDataSource(
+            get<FileManager<LogItem>>(log),
+            get<LogItemCsvParser>()
+        )
+    }
 
 
     single<AuthRepository> { AuthRepositoryImpl(get(user)) }
@@ -80,7 +91,13 @@ val appModule = module {
     single<ProjectRepository> { ProjectRepositoryImpl(get(project)) }
     single<LogRepository> { LogRepositoryImpl(get(log)) }
 
-    single { CreateProjectUseCase(get(), User(id = UUID.randomUUID(), username = "fsef", password = "fsefs", isAdmin = true)) }
+    single { CreateUserUseCase(get()) }
+    single {
+        CreateProjectUseCase(
+            get(),
+            User(id = UUID.randomUUID(), username = "fsef", password = "fsefs", isAdmin = true)
+        )
+    }
     single { DeleteProjectUseCase(get()) }
     single { GetProjectsUseCase(get(), get()) }
 
@@ -101,6 +118,7 @@ val appModule = module {
 
     single<ConsoleIO> { ConsoleIOImpl() }
 
+    single { CreateUserUIController(get(), get()) }
     single { CreateProjectUIController(get()) }
     single { DeleteTaskUIController(get(), get()) }
     single { UpdateStateUiController(get(), get()) }
