@@ -25,6 +25,7 @@ sealed class PlanMateException : Exception() {
         data object SameStateNameException: ValidationException()
         data object ProjectNameAlreadyExistException: ValidationException()
 
+
     }
 
     sealed class ParsingException : PlanMateException() {

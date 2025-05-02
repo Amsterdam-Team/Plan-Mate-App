@@ -5,7 +5,7 @@ import io.mockk.*
 import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
 import logic.exception.PlanMateException.ValidationException.EmptyDataException
 import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
-import logic.usecases.project.GetProjectUseCase
+import logic.usecases.project.GetProjectsUseCase
 import logic.usecases.project.helper.createProject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.params.ParameterizedTest
@@ -16,7 +16,7 @@ import java.util.*
 import kotlin.test.Test
 
 class GetProjectUIControllerTest {
-    private lateinit var usecase: GetProjectUseCase
+    private lateinit var usecase: GetProjectsUseCase
     private lateinit var uiController: GetProjectUIController
     private lateinit var consoleIO: ConsoleIO
 
