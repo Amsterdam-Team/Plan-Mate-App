@@ -7,7 +7,7 @@ import io.mockk.verify
 import logic.exception.PlanMateException
 import logic.exception.PlanMateException.NotFoundException
 import logic.repository.TaskRepository
-import logic.usecases.testFactory.CreateTaskTestFactory.createTaskWithProjectID
+import logic.usecases.testFactory.CreateTasksWithProjectID.createTaskWithProjectID
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
