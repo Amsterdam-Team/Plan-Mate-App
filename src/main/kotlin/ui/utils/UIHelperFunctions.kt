@@ -24,6 +24,13 @@ fun getErrorMessageByException(exception: Exception): String {
     return when (exception) {
         is AdminPrivilegesRequiredException -> "You need admin privileges to perform this action."
 
+
+        is PlanMateException.AuthorizationException.WrongPasswordException ->
+               "The password you entered is wrong , Please enter correct password"
+
+        is PlanMateException.AuthorizationException.WrongUsernameException ->
+            "The user name you entered is wrong , Please enter correct user name"
+
         is UserNotFoundException -> "User not found. Please check the user ID or try again."
 
         is InvalidUsernameException -> "The username you entered is not valid. Please try a different one."
@@ -52,7 +59,10 @@ fun getErrorMessageByException(exception: Exception): String {
 
         is EmptyProjectStatesException -> "Project states shouldn't be empty,Please enter the project states"
 
+
+        is SameStateNameException -> "Current state and new state are identical. No changes applied."
         is TaskLogsNotFound -> "This task not have any logs till now..."
+
 
         is PlanMateException -> "Something went wrong with your request. Please try again."
 
