@@ -20,8 +20,11 @@ fun getErrorMessageByException(exception: Exception): String {
         is PlanMateException.AuthorizationException.AdminPrivilegesRequiredException ->
             "You need admin privileges to perform this action."
 
-        is PlanMateException.AuthorizationException.UserNotFoundException ->
-            "User not found. Please check the user ID or try again."
+        is PlanMateException.AuthorizationException.WrongPasswordException ->
+               "The password you entered is wrong , Please enter correct password"
+
+        is PlanMateException.AuthorizationException.WrongUsernameException ->
+            "The user name you entered is wrong , Please enter correct user name"
 
         is PlanMateException.ValidationException.InvalidUsernameException ->
             "The username you entered is not valid. Please try a different one."
