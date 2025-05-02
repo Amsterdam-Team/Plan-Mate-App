@@ -15,7 +15,7 @@ import logic.exception.PlanMateException.NotFoundException.*
 import logic.exception.PlanMateException.ValidationException.InvalidProjectNameException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskNameException
-import logic.usecases.task.testFactory.CreateTaskTestFactory
+import logic.usecases.testFactory.CreateTaskTestFactory
 import java.util.*
 
 class EditTaskUseCaseTest {

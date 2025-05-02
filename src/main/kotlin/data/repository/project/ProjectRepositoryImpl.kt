@@ -2,6 +2,9 @@ package data.repository.project
 
 import data.datasources.DataSource
 import logic.entities.Project
+import logic.exception.PlanMateException
+import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
+import logic.exception.PlanMateException.ValidationException.EmptyDataException
 import logic.exception.PlanMateException.ValidationException.ProjectNameAlreadyExistException
 import logic.repository.ProjectRepository
 import java.util.*
@@ -20,15 +23,12 @@ class ProjectRepositoryImpl(val dataSource: DataSource) : ProjectRepository {
     }
 
     override fun deleteProject(projectId: UUID) {
-        val allProject= dataSource.getAll().map { it as Project }
+        val allProject = dataSource.getAll().map { it as Project }
         if (allProject.isEmpty()) throw EmptyDataException
-        if(allProject.find { it.id== projectId } == null) throw ProjectNotFoundException
-        try {
-            val newProjectsList = allProject.filterNot { it.id == projectId }
-            dataSource.saveAll(newProjectsList)
-        }catch (e: Exception){
-            throw Exception("Error Saving projects")
-        }
+        allProject.find { it.id == projectId } ?: throw ProjectNotFoundException
+        val newProjectsList = allProject.filterNot { it.id == projectId }
+        dataSource.saveAll(newProjectsList)
+
     }
 
     override fun getProjects(): List<Project> {
@@ -42,7 +42,7 @@ class ProjectRepositoryImpl(val dataSource: DataSource) : ProjectRepository {
     override fun updateProjectStateById(id: UUID, oldState: String, newState: String) {
         val projects = dataSource.getAll().map { it as Project }
         val project =
-            projects.find { it.id == id } ?: throw PlanMateException.NotFoundException.ProjectNotFoundException
+            projects.find { it.id == id } ?: throw ProjectNotFoundException
 
         val updatedProject = project.copy(
             states = project.states.map {
