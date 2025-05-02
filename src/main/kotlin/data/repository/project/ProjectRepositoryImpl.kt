@@ -26,7 +26,7 @@ class ProjectRepositoryImpl(private val dataSource: DataSource) : ProjectReposit
     }
 
     override fun getProject(id: UUID): Project {
-        TODO("Not yet implemented")
+        return dataSource.getById(id) as Project
     }
 
     override fun updateProjectStateById(id: UUID, oldState: String, newState: String) {

@@ -34,7 +34,7 @@ fun getErrorMessageByException(exception: Exception): String {
 
         is InvalidTaskNameException -> "The task name is not valid. Please enter a proper task name."
 
-        is InvalidTaskIDException -> "The task ID is invalid. Please check and try again."
+        is InvalidTaskIDException -> "This Id is invalid format , Please ensure you enter correct format of id"
 
         is InvalidProjectNameException -> "The project name is not valid. Please enter a valid project name."
 
@@ -52,7 +52,11 @@ fun getErrorMessageByException(exception: Exception): String {
 
         is EmptyProjectStatesException -> "Project states shouldn't be empty,Please enter the project states"
 
+
         is SameStateNameException -> "Current state and new state are identical. No changes applied."
+        is TaskLogsNotFound -> "This task not have any logs till now..."
+
+
         is PlanMateException -> "Something went wrong with your request. Please try again."
 
         else -> "An unexpected error occurred. Please try again later."

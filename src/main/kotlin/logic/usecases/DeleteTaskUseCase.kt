@@ -1,13 +1,19 @@
 package logic.usecases
 
+import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.repository.TaskRepository
+import java.util.UUID
 
 class DeleteTaskUseCase(
     private val taskRepository: TaskRepository,
 ) {
     fun execute(taskId: String?) {
-        //verifying id's
-        //verifying if this task is exist
-        //if the task exist will delete it
+        if(taskId.isNullOrEmpty()) throw InvalidTaskIDException
+        val taskUUID = try {
+            UUID.fromString(taskId)
+        }catch (_:IllegalArgumentException){
+            throw InvalidTaskIDException
+        }
+        taskRepository.deleteTask(taskUUID)
     }
 }

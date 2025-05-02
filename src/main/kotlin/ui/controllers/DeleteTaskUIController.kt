@@ -2,10 +2,26 @@ package ui.controllers
 
 import logic.repository.ProjectRepository
 import logic.usecases.DeleteTaskUseCase
+import ui.controller.BaseUIController
+import ui.utils.tryToExecute
+import utils.printSwimlanesView
 
 class DeleteTaskUIController(
     private val deleteTaskUseCase: DeleteTaskUseCase,
     private val projectRepository: ProjectRepository,
-) {
-     fun start() {}
+): BaseUIController {
+    override fun execute() {
+        tryToExecute (
+            action = {
+                println("🗂 Available Projects and Tasks:\n")
+                projectRepository.getProjects().forEach {
+                    printSwimlanesView(it)
+                }
+                deleteTaskUseCase.execute(readlnOrNull())
+            },
+            onSuccess = {
+                println("✅ Task deleted successfully.")
+            }
+        )
+    }
 }
