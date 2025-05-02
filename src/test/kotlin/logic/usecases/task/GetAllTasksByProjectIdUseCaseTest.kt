@@ -26,12 +26,15 @@ class GetAllTasksByProjectIdUseCaseTest {
 
     @Test
     fun `getAllTasksByProjectId should  get all tasks by projectId  from repository when called`() {
-        //When
-        val anotherProjectID = UUID.fromString("123e4567-e89b-12d3-a456-426614174000")
-
-        useCase(anotherProjectID)
+        // given
+        val projectId = UUID.randomUUID()
+        val taskOne = CreateTaskTestFactory.validTask.copy(projectId = projectId)
+        val taskTwo = CreateTaskTestFactory.validTask.copy(projectId = projectId)
+        every { repository.getAllTasksByProjectId(projectId) } returns listOf(taskOne, taskTwo)
+        // when
+        useCase(projectId)
         // Then
-        verify(exactly = 1) { repository.getAllTasksByProjectId(anotherProjectID) }
+        verify(exactly = 1) { repository.getAllTasksByProjectId(projectId) }
     }
 
     @Test
@@ -74,8 +77,8 @@ class GetAllTasksByProjectIdUseCaseTest {
         every { repository.getAllTasksByProjectId(projectId) } throws NotFoundException.TaskNotFoundException
 
         // when && then
-        assertThrows<PlanMateException.NotFoundException.ProjectNotFoundException> {
-            useCase(anotherProjectID)
+        assertThrows<PlanMateException.NotFoundException.TaskNotFoundException> {
+            useCase(projectId)
         }
     }
 
