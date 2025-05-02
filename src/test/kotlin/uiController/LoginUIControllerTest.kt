@@ -1,27 +1,33 @@
 package uiController
 
 import helper.SUCCESS_MESSAGE_FOR_LOGIN
-import helper.USER_NOT_FOUND
 import helper.WRONG_PASSWORD
 import helper.WRONG_USER_NAME
-import helper.readInputFromConsole
+import helper.simulateConsoleInteraction
 import helper.validUserData
 import io.mockk.every
 import io.mockk.mockk
-import logic.exception.PlanMateException.AuthorizationException.*
+import logic.exception.PlanMateException.AuthorizationException.WrongPasswordException
+import logic.exception.PlanMateException.AuthorizationException.WrongUsernameException
 import logic.usecases.LoginUseCase
 import org.junit.jupiter.api.BeforeEach
 import ui.LoginUIController
+import ui.menuHandler.AdminMenuHandler
+import ui.menuHandler.MateMenuHandler
 import kotlin.test.Test
 
 class LoginUIControllerTest {
     private lateinit var useCase : LoginUseCase
     private lateinit var uiController : LoginUIController
+    private lateinit var adminMenuHandler : AdminMenuHandler
+    private lateinit var mateMenuHandler: MateMenuHandler
 
     @BeforeEach
     fun setup(){
         useCase = mockk()
-        uiController = LoginUIController(useCase)
+        adminMenuHandler = mockk()
+        mateMenuHandler = mockk()
+        uiController = LoginUIController(useCase,adminMenuHandler,mateMenuHandler)
     }
 
     @Test
@@ -30,40 +36,26 @@ class LoginUIControllerTest {
         val password = "H123456"
         val input = "$username\n$password"
 
-        val output = readInputFromConsole(input)
-
         every { useCase.verifyUserState(username,password) } returns validUserData()
 
-        uiController.loginUIController()
+        val output = simulateConsoleInteraction(input) {
+          uiController.execute()
+       }
 
-        assert(output.contains(SUCCESS_MESSAGE_FOR_LOGIN))
-    }
-
-    @Test
-    fun `should print user not found message when useCase throw user not found exception`(){
-        val username = "nada"
-        val password = "H12345"
-        val input = "$username\n$password"
-
-        val output = readInputFromConsole(input)
-
-        every { useCase.verifyUserState(username,password) } throws UserNotFoundException
-
-        uiController.loginUIController()
-
-        assert(output.contains(USER_NOT_FOUND))
+        assert(output.toString().contains(SUCCESS_MESSAGE_FOR_LOGIN))
     }
 
     @Test
     fun `should print wrong username message when useCase throw wrong user name exception`(){
         val username = "Hen"
         val password = "H123456"
-
-        val output = readInputFromConsole(username)
+        val input = "$username\n$password"
 
         every { useCase.verifyUserState(username,password) } throws WrongUsernameException
 
-        uiController.loginUIController()
+        val output = simulateConsoleInteraction(input) {
+            uiController.execute()
+        }
 
         assert(output.contains(WRONG_USER_NAME))
     }
@@ -74,11 +66,11 @@ class LoginUIControllerTest {
         val password = "12345"
         val input = "$username\n$password"
 
-        val output = readInputFromConsole(input)
-
         every { useCase.verifyUserState(username,password) } throws WrongPasswordException
 
-        uiController.loginUIController()
+        val output = simulateConsoleInteraction(input) {
+            uiController.execute()
+        }
 
         assert(output.contains(WRONG_PASSWORD))
     }

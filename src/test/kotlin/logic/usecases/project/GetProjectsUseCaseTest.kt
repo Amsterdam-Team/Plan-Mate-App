@@ -2,6 +2,7 @@ package logic.usecases.project
 
 import com.google.common.truth.Truth.assertThat
 import io.mockk.*
+import logic.entities.Task
 import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
 import logic.exception.PlanMateException.ValidationException.EmptyDataException
 import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
@@ -9,6 +10,7 @@ import logic.exception.PlanMateException.ValidationException.InvalidProjectIDExc
 import logic.repository.ProjectRepository
 import logic.repository.TaskRepository
 import logic.usecases.project.helper.createProject
+import logic.usecases.testFactory.CreateTaskTestFactory
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -16,17 +18,44 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import java.util.UUID
 
-class GetProjectUseCaseTest() {
+class GetProjectsUseCaseTest() {
 
     private lateinit var repository: ProjectRepository
     private lateinit var taskRepo:TaskRepository
-    private lateinit var usecase: GetProjectUseCase
+    private lateinit var useCase: GetProjectsUseCase
+
+
+    private val projectOneId = UUID.randomUUID()
+    private val projectTwoId = UUID.randomUUID()
+
+    private val projects = listOf(
+        createProject(
+            id = projectOneId,
+            name = "project 1",
+            states = listOf("to do", "in progress"),
+            tasks = emptyList()
+        ),
+        createProject(
+            id = projectTwoId,
+            name = "project 2",
+            states = listOf("to do", "in progress"),
+            tasks = emptyList()
+        )
+    )
+
+    private val tasksForProjectOne = listOf(
+        CreateTaskTestFactory.validTask.copy(id = projectOneId),
+        CreateTaskTestFactory.validTask.copy(id = projectOneId),
+        CreateTaskTestFactory.validTask.copy(id = projectOneId),
+        CreateTaskTestFactory.validTask.copy(id = projectOneId),
+    )
 
     @BeforeEach
     fun setUp() {
         repository = mockk(relaxed = true)
         taskRepo = mockk(relaxed = true)
-        usecase = GetProjectUseCase(repository,taskRepo)
+        useCase = GetProjectsUseCase(repository,taskRepo)
+        every { repository.getProjects() } returns projects
     }
 
     @Test
@@ -41,7 +70,7 @@ class GetProjectUseCaseTest() {
         //Given
         every { repository.getProjects() } returns projects
         //When
-        val result = usecase.getProject(projectID)
+        val result = useCase.getProject(projectID)
         //Then
         assertThat(result).isIn(projects)
     }
@@ -59,7 +88,7 @@ class GetProjectUseCaseTest() {
         every { repository.getProjects() } returns projects
         //When&Then
         assertThrows<ProjectNotFoundException> {
-            usecase.getProject(projectID)
+            useCase.getProject(projectID)
         }
     }
 
@@ -70,7 +99,7 @@ class GetProjectUseCaseTest() {
         every { repository.getProjects() } returns emptyList()
         //When&Then
         assertThrows<EmptyDataException> {
-            usecase.getProject(projectID)
+            useCase.getProject(projectID)
         }
     }
 
@@ -89,9 +118,47 @@ class GetProjectUseCaseTest() {
 
         //When & Then
         assertThrows<InvalidProjectIDException> {
-            usecase.getProject(projectID)
+            useCase.getProject(projectID)
         }
 
+    }
+
+
+    @Test
+    fun `should link projectOne with matching tests when given tasks with projectOneId`(){
+        // Given
+        every { taskRepo.getAllTasksByProjectId(projectOneId) } returns tasksForProjectOne
+
+        // When
+        val result = useCase.getAllProjects()
+
+        // Then
+        val projectOne = result.find { it.id == projectOneId }
+        assertThat(tasksForProjectOne.toSet()).isEqualTo(projectOne?.tasks?.toSet())
+    }
+
+    @Test
+    fun `should link projectTwo with empty list when no tasks exist with this project id`(){
+        // Given
+        every { taskRepo.getAllTasksByProjectId(projectTwoId) } returns emptyList()
+
+        // When
+        val result = useCase.getAllProjects()
+
+        // Then
+        val projectTwo = result.find { it.id == projectTwoId }
+        assertThat(emptyList<Task>()).isEqualTo(projectTwo?.tasks)
+    }
+
+    @Test
+    fun `should return all projects even when no tasks can be linked`(){
+        // When
+        val result = useCase.getAllProjects()
+
+        // Then
+        val returnedIds = result.map { it.id }.toSet()
+        val expectedIds = projects.map { it.id }.toSet()
+        assertThat(expectedIds).isEqualTo(returnedIds)
     }
 
 }

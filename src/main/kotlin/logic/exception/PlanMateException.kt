@@ -4,6 +4,9 @@ sealed class PlanMateException : Exception() {
     sealed class AuthorizationException : PlanMateException() {
         data object AdminPrivilegesRequiredException : AuthorizationException()
         data object UserNotFoundException : AuthorizationException()
+        data object WrongUsernameException : AuthorizationException()
+        data object WrongPasswordException : AuthorizationException()
+
 
     }
 
@@ -19,6 +22,8 @@ sealed class PlanMateException : Exception() {
 
         data object EmptyProjectStatesException : ValidationException()
         data object EmptyProjectNameException : ValidationException()
+        data object SameStateNameException: ValidationException()
+        data object ProjectNameAlreadyExistException: ValidationException()
 
     }
 
