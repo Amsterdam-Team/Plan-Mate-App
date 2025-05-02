@@ -18,17 +18,17 @@ import java.io.PrintStream
 
 class ViewProjectHistoryUIControllerTest {
 
-    private lateinit var viewProjectHistoryUseCase: ViewProjectHistoryUseCase
-    private lateinit var projectRepository: ProjectRepository
+    private lateinit var useCase: ViewProjectHistoryUseCase
+    private lateinit var repository: ProjectRepository
     private lateinit var logRepository: LogRepository
     private lateinit var controller: ViewProjectHistoryUIController
     private lateinit var outContent: ByteArrayOutputStream
 
     @BeforeEach
     fun setup() {
-        viewProjectHistoryUseCase = mockk(relaxed = true)
-        projectRepository = mockk()
-        controller = ViewProjectHistoryUIController(viewProjectHistoryUseCase, projectRepository)
+        useCase = mockk(relaxed = true)
+        repository = mockk()
+        controller = ViewProjectHistoryUIController(useCase, repository)
         outContent = ByteArrayOutputStream()
         System.setOut(PrintStream(outContent))
     }
@@ -36,7 +36,7 @@ class ViewProjectHistoryUIControllerTest {
     @Test
     fun `should print all project IDs`() {
         // Given
-        every { projectRepository.getProjects() } returns ALL_PROJECTS
+        every { repository.getProjects() } returns ALL_PROJECTS
 
         // When
         controller.start()
@@ -49,7 +49,7 @@ class ViewProjectHistoryUIControllerTest {
     fun `should call viewProjectHistoryUseCase with params when project is selected`() {
         // Given
         val selectedProjectId = PROJECT_1.id
-        every { projectRepository.getProjects() } returns ALL_PROJECTS
+        every { repository.getProjects() } returns ALL_PROJECTS
         every { logRepository.viewLogsById(selectedProjectId) } returns LOGS_FOR_PROJECT_1
 
         provideInput(selectedProjectId.toString())
@@ -58,7 +58,7 @@ class ViewProjectHistoryUIControllerTest {
         controller.start()
 
         // Then
-        verify (exactly = 1) { viewProjectHistoryUseCase.execute(selectedProjectId.toString()) }
+        verify (exactly = 1) { useCase.execute(selectedProjectId.toString()) }
     }
 
     private fun provideInput(input: String) {

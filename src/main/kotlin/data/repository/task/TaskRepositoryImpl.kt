@@ -1,16 +1,19 @@
 package data.repository.task
 
+import data.datasources.DataSource
 import logic.entities.Task
+import logic.exception.PlanMateException.DataSourceException.ObjectDoesNotExistException
+import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
 import logic.repository.TaskRepository
-import java.util.UUID
+import java.util.*
 
-class TaskRepositoryImpl: TaskRepository {
+class TaskRepositoryImpl(val dataSource: DataSource): TaskRepository {
     override fun createTask(task: Task) {
         TODO("Not yet implemented")
     }
 
     override fun updateTask(task: Task) {
-        TODO("Not yet implemented")
+        throw Exception("unimplemented yet")
     }
 
     override fun updateTaskNameByID(taskId: UUID, newName: String) {
@@ -22,15 +25,21 @@ class TaskRepositoryImpl: TaskRepository {
     }
 
     override fun deleteTask(taskId: UUID) {
-        TODO("Not yet implemented")
+        val task = try {
+            dataSource.getById(taskId) as Task
+        }catch (_: ObjectDoesNotExistException){
+            throw TaskNotFoundException
+        }
+        val allTasks = dataSource.getAll() as List<Task>
+        dataSource.saveAll(allTasks.filterNot { it.id == task.id })
     }
 
     override fun getTaskById(taskId: UUID): Task {
         TODO("Not yet implemented")
     }
 
-    override fun getAllTasksByProjectId(projectId: String): List<Task> {
-        TODO("Not yet implemented")
+    override fun getAllTasksByProjectId(projectId: UUID): List<Task> {
+        return dataSource.getAll().map { it as Task }.filter { it.projectId == projectId }
     }
 
 
