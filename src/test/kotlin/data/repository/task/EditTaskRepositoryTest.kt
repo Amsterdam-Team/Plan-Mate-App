@@ -1,20 +1,19 @@
 package data.repository.task
 
 import data.datasources.CsvDataSource
-import data.repository.project.ProjectRepositoryImpl
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
-import logic.entities.Project
+import io.mockk.runs
 import logic.entities.Task
-import logic.exception.PlanMateException
 import logic.exception.PlanMateException.DataSourceException.EmptyDataException
 import logic.exception.PlanMateException.DataSourceException.EmptyFileException
 import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
+import logic.usecases.task.testFactory.CreateTaskTestFactory
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
-import java.util.*
 import java.util.UUID.randomUUID
 
 class EditTasKRepositoryTest {
@@ -39,8 +38,11 @@ class EditTasKRepositoryTest {
     @Test
     fun `should edit task successfully when editing function complete successfully`() {
 
+        every {dataSource.getAll()} returns listOf(authTask)
+        every { dataSource.saveAll(any())} returns Unit
+
         assertDoesNotThrow {
-            repository.updateTask(authTask)
+            repository.updateTask(authTask.copy(name= "implement authentication"))
         }
     }
 

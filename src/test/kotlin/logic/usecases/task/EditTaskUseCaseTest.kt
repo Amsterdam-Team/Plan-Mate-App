@@ -2,13 +2,20 @@ package logic.usecases.task
 
 import com.google.common.truth.Truth.assertThat
 import data.repository.task.TaskRepositoryImpl
+import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.runs
+import logic.entities.Task
 import logic.exception.PlanMateException
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 import logic.exception.PlanMateException.NotFoundException.*
 import logic.exception.PlanMateException.ValidationException.InvalidProjectNameException
+import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
+import logic.exception.PlanMateException.ValidationException.InvalidTaskNameException
+import logic.usecases.task.testFactory.CreateTaskTestFactory
 import java.util.*
 
 class EditTaskUseCaseTest {
@@ -27,36 +34,52 @@ class EditTaskUseCaseTest {
     fun `should return true when editing task function complete successfully`() {
 
         // when
-        val result = usecase.editTask(taskId, "new name")
+        val result = usecase.editTaskName(taskId, "new name")
 
         assertThat(result).isTrue()
     }
 
     @Test
     fun `should throw not found task exception when trying to update not existed task`() {
+        val task = CreateTaskTestFactory.validTask
+        every { repository.getTaskById(task.id)} throws TaskNotFoundException
+
 
         assertThrows<TaskNotFoundException> {
-            usecase.editTask(taskId, "new name")
+            usecase.editTaskName(task.id.toString(), "new name")
         }
     }
 
     @Test
-    fun `should throw not valid uuid when trying to parse not valid uuid`() {
-        //TODO: refactor name to better name
+    fun `should throw not valid uuid when user enter not valid id `() {
+
+        val task = CreateTaskTestFactory.validTask
+        every { repository.getTaskById(any())} returns task
 
 
-        assertThrows<IllegalFormatException> {
-            usecase.editTask(taskId, "new name")
+        assertThrows<InvalidTaskIDException> {
+            usecase.editTaskName("invalidId", "new name")
         }
     }
 
     @Test
     fun `should throw invalid task name when trying to add name contain not alphabet characters`() {
-        //TODO: refactor name to better name
+        val task = CreateTaskTestFactory.validTask
+        every { repository.getTaskById(any())} returns task
 
 
-        assertThrows<InvalidProjectNameException> {
-            usecase.editTask(taskId, "new name@#$%%#")
+        assertThrows<InvalidTaskNameException> {
+            usecase.editTaskName(taskId, "new name $%")
+        }
+    }
+    @Test
+    fun `should throw invalid task name when trying to add name contain numbers`() {
+//        val task = CreateTaskTestFactory.validTask
+//        every { repository.getTaskById(any())} returns task
+
+
+        assertThrows<InvalidTaskNameException> {
+            usecase.editTaskName(taskId, "new name3")
         }
     }
 
