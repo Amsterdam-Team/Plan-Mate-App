@@ -1,4 +1,4 @@
-package logic.usecases.task.testFactory
+package logic.usecases.testFactory
 
 import logic.entities.Task
 import java.util.*
@@ -19,7 +19,9 @@ object CreateTaskTestFactory {
             name = name,
             projectId = projectID,
             state = state,
-            )
+        )
     }
+
+    fun createTaskWithProjectID(projectId: UUID) = createTask(projectID = projectId)
 
 }

@@ -1,7 +1,7 @@
 package logic.repository
 
 import logic.entities.Project
-import java.util.UUID
+import java.util.*
 
 interface ProjectRepository {
     fun createProject(project: Project)

@@ -1,7 +1,7 @@
 package logic.repository
 
 import logic.entities.LogItem
-import java.util.UUID
+import java.util.*
 
 interface LogRepository {
     fun viewLogsById(id : UUID) : List<LogItem>
