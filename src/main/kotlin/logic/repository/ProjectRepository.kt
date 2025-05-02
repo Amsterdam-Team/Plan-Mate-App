@@ -11,7 +11,7 @@ interface ProjectRepository {
     fun getProject(id: UUID): Project
 
     fun updateProjectStateById(id: UUID, oldState: String, newState: String)
-    fun deleteStateById(projectId: UUID, oldState: String)
+    fun deleteStateById(projectId: UUID, oldState: String): Boolean
     fun addStateById(id: UUID, state: String)
 
 }
