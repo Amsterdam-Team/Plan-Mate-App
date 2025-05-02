@@ -1,10 +1,11 @@
 package data.repository.project
 
+import data.datasources.CsvDataSource
 import logic.entities.Project
 import logic.repository.ProjectRepository
 import java.util.UUID
 
-class ProjectRepositoryImpl: ProjectRepository {
+class ProjectRepositoryImpl(private val dataSource: CsvDataSource<Project>) : ProjectRepository {
     override fun createProject(project: Project) {
         TODO("Not yet implemented")
     }
@@ -26,7 +27,19 @@ class ProjectRepositoryImpl: ProjectRepository {
     }
 
     override fun updateProjectStateById(id: UUID, oldState: String, newState: String) {
-        TODO("Not yet implemented")
+        val projects = dataSource.getAll() as List<Project>
+        val project = dataSource.getById(id) as Project
+
+        val updatedProject = project.copy(
+            states = project.states.map {
+                if (it == oldState) newState else it
+            }
+        )
+
+        val updatedProjects = projects.map {
+            if (it.id == id) updatedProject else it
+        }
+        dataSource.saveAll(updatedProjects)
     }
 
     override fun deleteStateById(id: UUID, oldState: String) {
