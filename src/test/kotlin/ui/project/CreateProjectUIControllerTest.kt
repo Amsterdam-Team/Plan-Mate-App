@@ -1,12 +1,13 @@
 package ui.controllers
 
 import com.google.common.truth.Truth.assertThat
+import io.mockk.every
 import io.mockk.mockk
+import logic.exception.PlanMateException.ValidationException.*
 import logic.usecases.project.CreateProjectUseCase
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
 
@@ -31,8 +32,7 @@ class CreateProjectUIControllerTest {
     @Test
     fun `should print project name shouldn't be empty when the name is empty`() {
         //given
-        val inputProjectName = "\n"
-        System.setIn(ByteArrayInputStream(inputProjectName.toByteArray()))
+        every { useCase.createProject(any()) } throws EmptyProjectNameException
 
         //when
         controller.execute()
@@ -45,8 +45,7 @@ class CreateProjectUIControllerTest {
     @Test
     fun `should print The project name is not valid when the name is invalid`() {
         //given
-        val inputProjectName = "13515#$%#$"
-        System.setIn(ByteArrayInputStream(inputProjectName.toByteArray()))
+        every { useCase.createProject(any()) } throws InvalidProjectNameException
 
         //when
         controller.execute()
@@ -59,8 +58,7 @@ class CreateProjectUIControllerTest {
     @Test
     fun `should print project states shouldn't be empty when the state is empty`() {
         //given
-        val inputProjectState = "\n"
-        System.setIn(ByteArrayInputStream(inputProjectState.toByteArray()))
+        every { useCase.createProject(any()) } throws EmptyProjectStatesException
 
         //when
         controller.execute()
@@ -70,4 +68,16 @@ class CreateProjectUIControllerTest {
         assertThat(output).contains("Project states shouldn't be empty,Please enter the project states")
     }
 
+    @Test
+    fun `should print The state name is not valid Please enter a valid name when the state is invalid`() {
+        //given
+        every { useCase.createProject(any()) } throws InvalidStateNameException
+
+        //when
+        controller.execute()
+
+        //then
+        val output = outContent.toString()
+        assertThat(output).contains("The state name is not valid. Please enter a valid name.")
+    }
 }
