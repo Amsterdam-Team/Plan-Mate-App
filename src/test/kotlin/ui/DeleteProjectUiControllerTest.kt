@@ -1,6 +1,9 @@
 package ui
 
+import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.runs
 import io.mockk.verify
 import logic.usecases.project.DeleteProjectUseCase
 import logic.usecases.task.EditTaskUseCase
@@ -9,6 +12,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import ui.console.ConsoleIO
 import ui.console.ConsoleIOImpl
+import java.io.ByteArrayInputStream
+import java.util.UUID
 
 class DeleteProjectUiControllerTest {
     lateinit var useCase: DeleteProjectUseCase
@@ -23,14 +28,21 @@ class DeleteProjectUiControllerTest {
     }
 
     @Test
-    fun `should take input from user when execute`() {
+    fun `should call delete project usecase when try to delete project`() {
+        val projectId = UUID.randomUUID()
+        every { uiController.consoleIO.readFromUser()} returns projectId.toString()
         uiController.execute()
-        verify { consoleIO.readFromUser() }
+
+
+        verify(exactly = 1) { useCase.deleteProject(projectId.toString()) }
     }
 
     @Test
-    fun `should print result to user when complete executing`() {
+    fun `should print success message to user when deleting project complete successfully`() {
+        val projectId = UUID.randomUUID()
+        every { uiController.consoleIO.readFromUser()} returns projectId.toString()
+        every { useCase.deleteProject(projectId.toString())} returns true
         uiController.execute()
-        verify { consoleIO.println(any()) }
+        verify { consoleIO.println("Project deleted successfully") }
     }
 }
