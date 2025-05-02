@@ -7,7 +7,7 @@ import io.mockk.verify
 import logic.exception.PlanMateException
 import logic.exception.PlanMateException.NotFoundException
 import logic.repository.TaskRepository
-import logic.usecases.task.testFactory.CreateTaskTestFactory.createTaskWithProjectID
+import logic.usecases.testFactory.CreateTaskTestFactory
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -27,20 +27,22 @@ class GetAllTasksByProjectIdUseCaseTest {
     @Test
     fun `getAllTasksByProjectId should  get all tasks by projectId  from repository when called`() {
         //When
-        useCase("1")
+        val anotherProjectID = UUID.fromString("123e4567-e89b-12d3-a456-426614174000")
+
+        useCase(anotherProjectID)
         // Then
-        verify(exactly = 1) { repository.getAllTasksByProjectId("1") }
+        verify(exactly = 1) { repository.getAllTasksByProjectId(anotherProjectID) }
     }
 
     @Test
     fun `should get tasks by project id when project is exists`() {
         // given
         val projectId = UUID.randomUUID()
-        val taskOne = createTaskWithProjectID(projectId = projectId)
-        val taskTwo = createTaskWithProjectID(projectId = projectId)
-        every { repository.getAllTasksByProjectId("$projectId") } returns listOf(taskOne, taskTwo)
+        val taskOne = CreateTaskTestFactory.validTask.copy(projectId = projectId)
+        val taskTwo = CreateTaskTestFactory.validTask.copy(projectId = projectId)
+        every { repository.getAllTasksByProjectId(projectId) } returns listOf(taskOne, taskTwo)
         // when
-        val result = useCase("$projectId")
+        val result = useCase(projectId)
         // then
         assertThat(result).containsExactly(taskOne, taskTwo)
     }
@@ -50,13 +52,14 @@ class GetAllTasksByProjectIdUseCaseTest {
     fun `should return tasks filtered by project ID`() {
         // given
         val projectId = UUID.randomUUID()
-        val taskOne = createTaskWithProjectID(projectId = projectId)
-        val taskTwo = createTaskWithProjectID(projectId = projectId)
+        val taskOne = CreateTaskTestFactory.validTask.copy(projectId = projectId)
+        val taskTwo = CreateTaskTestFactory.validTask.copy(projectId = projectId)
 
-        every { repository.getAllTasksByProjectId("$projectId") } returns listOf(taskOne, taskTwo)
+
+        every { repository.getAllTasksByProjectId(projectId) } returns listOf(taskOne, taskTwo)
 
         // when
-        val result = useCase(projectId.toString())
+        val result = useCase(projectId)
 
         // then
         assertThat(result).containsExactly(taskOne, taskTwo)
@@ -68,11 +71,11 @@ class GetAllTasksByProjectIdUseCaseTest {
         val projectId = UUID.randomUUID()
         val anotherProjectID = UUID.fromString("123e4567-e89b-12d3-a456-426614174000")
 
-        every { repository.getAllTasksByProjectId("$projectId") } throws NotFoundException.TaskNotFoundException
+        every { repository.getAllTasksByProjectId(projectId) } throws NotFoundException.TaskNotFoundException
 
         // when && then
         assertThrows<PlanMateException.NotFoundException.ProjectNotFoundException> {
-            useCase("$anotherProjectID")
+            useCase(anotherProjectID)
         }
     }
 
@@ -81,9 +84,9 @@ class GetAllTasksByProjectIdUseCaseTest {
         val anotherProjectID = UUID.fromString("123e4567-e89b-12d3-a456-426614174000")
 
         // Given
-        every { repository.getAllTasksByProjectId("$anotherProjectID") } throws NotFoundException.ProjectNotFoundException
+        every { repository.getAllTasksByProjectId(anotherProjectID) } throws NotFoundException.ProjectNotFoundException
 
         //When & Then
-        assertThrows<NotFoundException.ProjectNotFoundException> { useCase("$anotherProjectID") }
+        assertThrows<NotFoundException.ProjectNotFoundException> { useCase(anotherProjectID) }
     }
 }

@@ -4,9 +4,9 @@ import logic.repository.ProjectRepository
 import java.util.*
 
 class DeleteStateUseCase(private val repository: ProjectRepository) {
-    operator fun invoke(stateId: UUID, projectId: UUID): Boolean {
+    operator fun invoke(projectId: UUID, oldState: String): Boolean {
 //        throw  ProjectNotFoundException
-        return repository.deleteStateById(stateId, projectId)
+        return repository.deleteStateById(projectId, oldState)
 
     }
 }

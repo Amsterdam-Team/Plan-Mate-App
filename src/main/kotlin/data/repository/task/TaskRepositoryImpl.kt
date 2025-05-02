@@ -39,7 +39,7 @@ class TaskRepositoryImpl(val dataSource: DataSource): TaskRepository {
     }
 
     override fun getAllTasksByProjectId(projectId: UUID): List<Task> {
-        TODO("Not yet implemented")
+        return dataSource.getAll().map { it as Task }.filter { it.projectId == projectId }
     }
 
 
