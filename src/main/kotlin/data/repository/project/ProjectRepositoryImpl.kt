@@ -12,6 +12,7 @@ class ProjectRepositoryImpl(val dataSource: DataSource) : ProjectRepository {
         if (existedProjects.any { it.name.equals(project.name, ignoreCase = true) }) {
             throw ProjectNameAlreadyExistException
         }
+        dataSource.add(project)
     }
 
     override fun updateProjectNameById(id: UUID, newName: String) {
