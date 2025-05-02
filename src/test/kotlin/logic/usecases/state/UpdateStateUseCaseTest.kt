@@ -1,11 +1,16 @@
 package logic.usecases.state
 
+import data.datasources.DataSource
+import data.repository.project.ProjectRepositoryImpl
 import io.mockk.*
+import logic.exception.PlanMateException
 import logic.repository.ProjectRepository
 import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
 import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
 import logic.exception.PlanMateException.ValidationException.InvalidStateNameException
 import logic.exception.PlanMateException.ValidationException.SameStateNameException
+import logic.exception.PlanMateException.ValidationException.EmptyDataException
+import logic.usecases.project.helper.createProject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
@@ -16,44 +21,82 @@ import kotlin.test.Test
 class UpdateStateUseCaseTest {
     private lateinit var repository: ProjectRepository
     private lateinit var useCase: UpdateStateUseCase
+    private lateinit var dataSource: DataSource
 
     @BeforeEach
     fun setup() {
-        repository = mockk(relaxed = true)
+        dataSource = mockk(relaxed = true)
+        repository = ProjectRepositoryImpl(dataSource)
         useCase = UpdateStateUseCase(repository)
     }
 
     @Test
     fun `should update state name when inputs are valid`() {
         // Given
-        val projectID = UUID.fromString("db373589-b656-4e68-a7c0-2ccc705ca169")
+        val projectID ="db373589-b656-4e68-a7c0-2ccc705ca169"
         val oldState = "In Progress"
         val newState = "In Review"
+        val project = createProject(UUID.fromString(projectID), "", listOf(oldState), listOf())
 
-        // When & Then
-        verify(exactly = 1) { useCase.updateState(projectID, newState, oldState) }
+        every { dataSource.getAll() } returns listOf(project)
+        //every { repository.updateProjectStateById(UUID.fromString(projectID),oldState,newState) } just Runs
+
+        // When
+       useCase.updateState(projectID,oldState,newState)
+        // Then
+
+        verify{ dataSource.getAll() }
 
     }
 
     @Test
     fun `should throw ProjectNotFoundException when project does not exist`() {
         // Given
-        val projectId = UUID.randomUUID()
+        val projectId = "db373589-b656-4e68-a7c1-2ccc705ca169"
         val oldState = "Done"
         val newState = "Finished"
+        val project = createProject(UUID.randomUUID(), "", listOf(oldState), listOf())
+
+        every { dataSource.getAll() } returns listOf(project)
 
         // When & Then
         assertThrows<ProjectNotFoundException> {
             useCase.updateState(projectId, oldState, newState)
         }
     }
+    @Test
+    fun `should throw EmptyDataException when projects is empty`() {
+        // Given
+        val projectId = "db373589-b656-4e68-a7c1-2ccc705ca169"
+        val oldState = "Done"
+        val newState = "Finished"
+        val project = createProject(UUID.randomUUID(), "", listOf(oldState), listOf())
+
+        every { dataSource.getAll() } returns emptyList()
+
+        // When & Then
+        assertThrows<EmptyDataException> {
+            useCase.updateState(projectId, oldState, newState)
+        }
+    }
 
     @Test
-    fun `should throw InvalidStateNameException when new state name or old state name is blank`() {
+    fun `should throw InvalidStateNameException when new state name is blank`() {
         // Given
-        val projectId = UUID.randomUUID()
+        val projectId = "db373589-b656-4e68-a7c0-2ccc705ca169"
         val oldState = "Done"
         val newState = " "
+        // When & Then
+        assertThrows<InvalidStateNameException> {
+            useCase.updateState(projectId, oldState, newState)
+        }
+    }
+    @Test
+    fun `should throw InvalidStateNameException when old state name is blank`() {
+        // Given
+        val projectId = "db373589-b656-4e68-a7c0-2ccc705ca169"
+        val oldState = " "
+        val newState = "Done"
         // When & Then
         assertThrows<InvalidStateNameException> {
             useCase.updateState(projectId, oldState, newState)
@@ -63,7 +106,7 @@ class UpdateStateUseCaseTest {
     @Test
     fun `should throw SameStateNameException when old state is equal to new state`() {
         // Given
-        val projectId = UUID.randomUUID()
+        val projectId = "db373589-b656-4e68-a7c0-2ccc705ca169"
         val oldState = "Done"
         val newState = "Done"
         // When & Then
@@ -83,12 +126,11 @@ class UpdateStateUseCaseTest {
     )
     fun `should throw InvalidProjectID when project ID is not a valid UUID`(invalidID: String) {
         // Given
-        val projectId = UUID.fromString(invalidID)
         val oldState = "Done"
         val newState = "Completed"
         // When & Then
         assertThrows<InvalidProjectIDException> {
-            useCase.updateState(projectId, oldState, newState)
+            useCase.updateState(invalidID, oldState, newState)
         }
 
     }

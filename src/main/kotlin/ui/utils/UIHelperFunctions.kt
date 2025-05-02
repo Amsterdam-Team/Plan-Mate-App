@@ -52,7 +52,10 @@ fun getErrorMessageByException(exception: Exception): String {
 
         is EmptyProjectStatesException -> "Project states shouldn't be empty,Please enter the project states"
 
+
+        is SameStateNameException -> "Current state and new state are identical. No changes applied."
         is TaskLogsNotFound -> "This task not have any logs till now..."
+
 
         is PlanMateException -> "Something went wrong with your request. Please try again."
 
