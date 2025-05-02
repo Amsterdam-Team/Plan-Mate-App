@@ -7,14 +7,94 @@ import data.datasources.parser.LogItemCsvParser
 import data.datasources.parser.ProjectCsvParser
 import data.datasources.parser.TaskCsvParser
 import data.datasources.parser.UserCsvParser
-import data.repository.auth.AuthRepositoryImpl
-import data.repository.log.LogRepositoryImpl
 import data.repository.project.ProjectRepositoryImpl
 import data.repository.task.TaskRepositoryImpl
 import logic.entities.LogItem
 import logic.entities.Project
 import logic.entities.Task
 import logic.entities.User
+import logic.usecases.*
+import logic.usecases.project.CreateProjectUseCase
+import logic.usecases.project.DeleteProjectUseCase
+import logic.usecases.project.GetProjectUseCase
+import logic.usecases.state.DeleteStateUseCase
+import logic.usecases.state.UpdateStateUseCase
+import logic.usecases.task.CreateTaskUseCase
+import logic.usecases.task.EditTaskUseCase
+import logic.usecases.task.GetAllTasksByProjectIdUseCase
+import logic.usecases.task.GetTaskByIdUseCase
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import ui.DeleteProjectUiController
+import ui.EditTaskUiController
+import ui.LoginUIController
+import ui.ViewTaskLogsUIController
+import ui.controller.CreateProjectUiController
+import ui.controllers.DeleteTaskUIController
+import ui.controllers.ViewProjectHistoryUIController
+import ui.menuHandler.AdminMenuHandler
+import ui.menuHandler.MateMenuHandler
+import ui.project.GetProjectUIController
 
+val appModule = module {
+
+    val task = named("task")
+    val user = named("user")
+    val project = named("project")
+    val log = named("log")
+
+    single { UserCsvParser() }
+    single { TaskCsvParser() }
+    single { ProjectCsvParser() }
+    single { LogItemCsvParser() }
+
+    single(user) { FileManager.create<User>() }
+    single(task) { FileManager.create<Task>() }
+    single(project) { FileManager.create<Project>() }
+    single(log) { FileManager.create<LogItem>() }
+
+    single<DataSource>(user) { CsvDataSource(get<FileManager<User>>(user), get<UserCsvParser>()) }
+    single<DataSource>(task) { CsvDataSource(get<FileManager<Task>>(task), get<TaskCsvParser>()) }
+    single<DataSource>(project) { CsvDataSource(get<FileManager<Project>>(project), get<ProjectCsvParser>()) }
+    single<DataSource>(log) { CsvDataSource(get<FileManager<LogItem>>(log), get<LogItemCsvParser>()) }
+
+
+//    single { AuthRepositoryImpl(get(user)) }
+    single { TaskRepositoryImpl(get(task)) }
+    single { ProjectRepositoryImpl(get(project)) }
+//    single { LogRepositoryImpl(get(log)) }
+
+    single { CreateProjectUseCase(get()) }
+    single { DeleteProjectUseCase(get()) }
+    single { GetProjectUseCase(get(), get()) }
+
+    single { DeleteStateUseCase(get()) }
+    single { UpdateStateUseCase(get()) }
+
+    single { CreateTaskUseCase(get()) }
+    single { EditTaskUseCase(get()) }
+    single { GetAllTasksByProjectIdUseCase(get()) }
+    single { GetTaskByIdUseCase(get()) }
+    single { DeleteTaskUseCase(get()) }
+    single { GetProjectsWithTasksUseCase(get(), get()) }
+
+    single { LoginUseCase(get()) }
+    single { ViewProjectHistoryUseCase(get()) }
+    single { ViewTaskLogsUseCase(get()) }
+
+
+
+    single { CreateProjectUiController() }
+    single { DeleteTaskUIController(get(), get()) }
+    single { ViewProjectHistoryUIController(get(), get()) }
+
+    single { AdminMenuHandler(get()) }
+    single { MateMenuHandler(get()) }
+    single { GetProjectUIController(get(), get()) }
+
+    single { DeleteProjectUiController(get(), get()) }
+    single { EditTaskUiController(get(), get()) }
+    single { LoginUIController(get()) }
+    single { ViewTaskLogsUIController(get()) }
+
+}
