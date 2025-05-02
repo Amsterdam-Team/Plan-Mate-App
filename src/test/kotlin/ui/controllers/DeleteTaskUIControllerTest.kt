@@ -16,16 +16,16 @@ import java.io.PrintStream
 
 class DeleteTaskUIControllerTest {
 
-    private lateinit var deleteTaskUseCase: DeleteTaskUseCase
-    private lateinit var projectRepository: ProjectRepository
+    private lateinit var useCase: DeleteTaskUseCase
+    private lateinit var repository: ProjectRepository
     private lateinit var controller: DeleteTaskUIController
     private lateinit var outContent: ByteArrayOutputStream
 
     @BeforeEach
     fun setup() {
-        deleteTaskUseCase = mockk(relaxed = true)
-        projectRepository = mockk()
-        controller = DeleteTaskUIController(deleteTaskUseCase, projectRepository)
+        useCase = mockk(relaxed = true)
+        repository = mockk()
+        controller = DeleteTaskUIController(useCase, repository)
         outContent = ByteArrayOutputStream()
         System.setOut(PrintStream(outContent))
     }
@@ -34,7 +34,7 @@ class DeleteTaskUIControllerTest {
     @Test
     fun `should print all project IDs`() {
         // Given
-        every { projectRepository.getProjects() } returns ALL_PROJECTS
+        every { repository.getProjects() } returns ALL_PROJECTS
 
         // When
         controller.start()
@@ -46,14 +46,14 @@ class DeleteTaskUIControllerTest {
     @Test
     fun `should call deleteTaskUseCase with params when task is selected`() {
         // Given
-        every { projectRepository.getProjects() } returns ALL_PROJECTS
+        every { repository.getProjects() } returns ALL_PROJECTS
         provideInput(TASK_1.id.toString())
 
         // When
         controller.start()
 
         // Then
-        verify (exactly = 1){ deleteTaskUseCase.execute(TASK_1.id.toString()) }
+        verify (exactly = 1){ useCase.execute(TASK_1.id.toString()) }
     }
 
 
