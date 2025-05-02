@@ -3,6 +3,7 @@ package usecase
 import io.mockk.every
 import io.mockk.mockk
 import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
+
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.repository.LogRepository
 import logic.usecases.ViewTaskLogsUseCase
@@ -13,6 +14,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import utils.hepler.taskLogs
 import utils.hepler.validId
+import java.util.UUID
 import kotlin.test.assertEquals
 
 class ViewTaskLogsUseCaseTest {
@@ -31,6 +33,7 @@ class ViewTaskLogsUseCaseTest {
         every { repository.viewLogsById(validId) } returns taskLogs()
 
         val returnedLogs = useCase.viewTaskLogs(validId.toString())
+
         assertEquals(taskLogs(), returnedLogs)
     }
 
@@ -56,6 +59,7 @@ class ViewTaskLogsUseCaseTest {
 
         assertThrows<TaskNotFoundException> {
             useCase.viewTaskLogs(validId.toString())
+
         }
     }
 }

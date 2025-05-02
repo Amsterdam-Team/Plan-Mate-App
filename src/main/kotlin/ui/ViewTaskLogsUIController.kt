@@ -3,6 +3,7 @@ package ui
 import logic.usecases.ViewTaskLogsUseCase
 import ui.controller.BaseUIController
 import ui.utils.tryToExecute
+
 import java.util.UUID
 
 class ViewTaskLogsUIController(

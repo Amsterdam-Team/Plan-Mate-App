@@ -2,7 +2,10 @@ package uiController
 
 import io.mockk.every
 import io.mockk.mockk
+
 import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
+import logic.exception.PlanMateException.NotFoundException.TaskIDNotFoundException
+
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.usecases.ViewTaskLogsUseCase
 import org.junit.jupiter.api.BeforeEach
@@ -14,6 +17,7 @@ import utils.hepler.invalidId
 import utils.hepler.simulateConsoleInteraction
 import utils.hepler.taskLogs
 import utils.hepler.validId
+
 
 class ViewTaskLogsUIControllerTest {
     private lateinit var useCase : ViewTaskLogsUseCase
@@ -36,6 +40,7 @@ class ViewTaskLogsUIControllerTest {
 
         assert(output.contains(taskLogs()[0].message))
         assert(output.contains(taskLogs()[1].message))
+
     }
 
     @Test
