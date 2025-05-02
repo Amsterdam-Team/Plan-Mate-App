@@ -1,14 +1,14 @@
 package data.repository.log
 
-import data.datasources.CsvDataSource
+import data.datasources.DataSource
 import logic.entities.LogItem
 import logic.exception.PlanMateException.DataSourceException.EmptyDataException
 import logic.repository.LogRepository
 import java.util.*
 
-class LogRepositoryImpl(private val csvDataSource: CsvDataSource<LogItem>): LogRepository {
+class LogRepositoryImpl(private val dataSource: DataSource): LogRepository {
     override fun viewLogsById(id: UUID): List<LogItem> {
-        val logs = csvDataSource.getById(id) as List<LogItem>
+        val logs = (dataSource.getAll() as List<LogItem>).filter { it.entityId == id }
         if(logs.isNullOrEmpty()) throw EmptyDataException
         return logs
     }
