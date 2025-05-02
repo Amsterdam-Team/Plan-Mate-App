@@ -4,6 +4,7 @@ import data.datasources.DataSource
 import logic.entities.LogItem
 import logic.entities.User
 import logic.exception.PlanMateException.NotFoundException.TaskLogsNotFound
+import logic.exception.PlanMateException.DataSourceException.EmptyDataException
 import logic.repository.LogRepository
 import java.time.LocalDateTime
 import java.util.*
@@ -11,8 +12,8 @@ import java.util.*
 class LogRepositoryImpl(private val dataSource : DataSource, private val user : User): LogRepository {
 
     override fun viewLogsById(id: UUID): List<LogItem> {
-        val logs = dataSource.getAll().map { it as LogItem }.filter { it.id == id }
-        if(logs.isEmpty()) throw TaskLogsNotFound
+        val logs = (dataSource.getAll() as List<LogItem>).filter { it.entityId == id }
+        if(logs.isNullOrEmpty()) throw TaskLogsNotFound
         return logs
     }
 

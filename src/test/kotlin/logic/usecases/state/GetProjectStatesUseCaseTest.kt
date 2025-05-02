@@ -3,13 +3,12 @@ package logic.usecases.state
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
-import logic.exception.PlanMateException.NotFoundException.*
-import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
+import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
+import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
 import logic.repository.ProjectRepository
 import logic.usecases.state.testFactory.GetProjectStatesUseCaseTestFactory.dummyProject
 import logic.usecases.state.testFactory.GetProjectStatesUseCaseTestFactory.EXISTING_PROJECT_ID
 import logic.usecases.state.testFactory.GetProjectStatesUseCaseTestFactory.INVALID_PROJECT_ID
-import logic.usecases.state.testFactory.GetProjectStatesUseCaseTestFactory.NOT_EXISTING_PROJECT_ID
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -40,7 +39,7 @@ class GetProjectStatesUseCaseTest{
     @Test
     fun `should throw InvalidProjectIDException when the project ID is invalid`() {
         //Given & When & Then
-        assertThrows<InvalidTaskIDException> { useCase.execute(INVALID_PROJECT_ID) }
+        assertThrows<InvalidProjectIDException> { useCase.execute(INVALID_PROJECT_ID) }
     }
 
     @Test
@@ -49,6 +48,6 @@ class GetProjectStatesUseCaseTest{
         every { repository.getProject(any()) } throws  ProjectNotFoundException
 
         //When & Then
-        assertThrows<ProjectNotFoundException> { useCase.execute(NOT_EXISTING_PROJECT_ID) }
+        assertThrows<InvalidProjectIDException> { useCase.execute(INVALID_PROJECT_ID) }
     }
 }

@@ -2,10 +2,12 @@ package data.repository.project
 
 import data.datasources.DataSource
 import logic.entities.Project
+import logic.exception.PlanMateException
+import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
+import logic.exception.PlanMateException.ValidationException.EmptyDataException
 import logic.exception.PlanMateException.ValidationException.ProjectNameAlreadyExistException
-
 import logic.repository.ProjectRepository
-import java.util.UUID
+import java.util.*
 
 class ProjectRepositoryImpl(val dataSource: DataSource) : ProjectRepository {
     override fun createProject(project: Project) {
@@ -21,8 +23,11 @@ class ProjectRepositoryImpl(val dataSource: DataSource) : ProjectRepository {
     }
 
     override fun deleteProject(projectId: UUID) {
-        dataSource
-        throw Exception("unimplemented yet")
+        val allProject = dataSource.getAll().map { it as Project }
+        if (allProject.isEmpty()) throw EmptyDataException
+        allProject.find { it.id == projectId } ?: throw ProjectNotFoundException
+        val newProjectsList = allProject.filterNot { it.id == projectId }
+        dataSource.saveAll(newProjectsList)
 
     }
 
@@ -36,7 +41,8 @@ class ProjectRepositoryImpl(val dataSource: DataSource) : ProjectRepository {
 
     override fun updateProjectStateById(id: UUID, oldState: String, newState: String) {
         val projects = dataSource.getAll().map { it as Project }
-        val project = projects.find { it.id == id } ?: throw PlanMateException.NotFoundException.ProjectNotFoundException
+        val project =
+            projects.find { it.id == id } ?: throw ProjectNotFoundException
 
         val updatedProject = project.copy(
             states = project.states.map {
@@ -50,7 +56,7 @@ class ProjectRepositoryImpl(val dataSource: DataSource) : ProjectRepository {
         dataSource.saveAll(updatedProjects)
     }
 
-    override fun deleteStateById(id: UUID, oldState: UUID?) {
+    override fun deleteStateById(projectId: UUID, oldState: String): Boolean {
         TODO("Not yet implemented")
     }
 

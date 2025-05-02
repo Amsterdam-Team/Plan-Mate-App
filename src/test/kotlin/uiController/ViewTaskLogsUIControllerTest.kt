@@ -4,7 +4,6 @@ import io.mockk.every
 import io.mockk.mockk
 
 import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
-import logic.exception.PlanMateException.NotFoundException.TaskIDNotFoundException
 
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.usecases.ViewTaskLogsUseCase

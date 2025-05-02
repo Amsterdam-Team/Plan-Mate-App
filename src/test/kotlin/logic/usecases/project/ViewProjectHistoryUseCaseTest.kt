@@ -1,14 +1,13 @@
-package logic.usecases
+package logic.usecases.project
 
 import com.google.common.truth.Truth.assertThat
-import helpers.ViewProjectHistoryTestFactory.LOGS_FOR_PROJECT_1
-import helpers.ViewProjectHistoryTestFactory.PROJECT_1
+import logic.usecases.project.helper.ViewProjectHistoryTestFactory.LOGS_FOR_PROJECT_1
+import logic.usecases.project.helper.ViewProjectHistoryTestFactory.PROJECT_1
 import io.mockk.every
 import io.mockk.mockk
 import logic.repository.LogRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import logic.exception.PlanMateException
 import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
 import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
 import org.junit.jupiter.api.assertThrows

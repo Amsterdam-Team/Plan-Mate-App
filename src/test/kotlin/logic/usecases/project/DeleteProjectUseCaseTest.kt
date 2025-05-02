@@ -31,8 +31,8 @@ class DeleteProjectUseCaseTest {
 
     @Test
     fun `should call delete project repo function when try to delete project`() {
-
-        verify(exactly = 1) { repository.deleteProject(dummyProjectId) }
+        usecase.deleteProject(dummyProjectId.toString())
+        verify(exactly = 1) { repository.deleteProject(any()) }
 
     }
 
