@@ -5,7 +5,7 @@ import logic.entities.Project
 import logic.repository.ProjectRepository
 import java.util.*
 
-class ProjectRepositoryImpl(val dataSource: DataSource<Project>) : ProjectRepository {
+class ProjectRepositoryImpl(private val dataSource: DataSource) : ProjectRepository {
     override fun createProject(project: Project) {
         TODO("Not yet implemented")
     }
@@ -21,11 +21,11 @@ class ProjectRepositoryImpl(val dataSource: DataSource<Project>) : ProjectReposi
     }
 
     override fun getProjects(): List<Project> {
-        TODO("Not yet implemented")
+        return dataSource.getAll().map { it as Project }
     }
 
     override fun getProject(id: UUID): Project {
-        TODO("Not yet implemented")
+        return dataSource.getById(id) as Project
     }
 
     override fun updateProjectStateById(id: UUID, oldState: String, newState: String) {

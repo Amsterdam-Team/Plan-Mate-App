@@ -4,9 +4,6 @@ sealed class PlanMateException : Exception() {
     sealed class AuthorizationException : PlanMateException() {
         data object AdminPrivilegesRequiredException : AuthorizationException()
         data object UserNotFoundException : AuthorizationException()
-        data object WrongUsernameException : AuthorizationException()
-        data object WrongPasswordException : AuthorizationException()
-
 
     }
 
@@ -19,12 +16,7 @@ sealed class PlanMateException : Exception() {
         data object InvalidProjectNameException : ValidationException()
         data object InvalidProjectIDException : ValidationException()
         data object EmptyDataException : ValidationException()
-        data object SameStateNameException:ValidationException()
 
-        data object EmptyProjectNameException : ValidationException()
-        data object EmptyProjectStatesException : ValidationException()
-        data object EmptyProjectTasksException : ValidationException()
-        data object ProjectNameAlreadyExistException : ValidationException()
     }
 
     sealed class ParsingException : PlanMateException() {
@@ -39,14 +31,18 @@ sealed class PlanMateException : Exception() {
     }
 
     sealed class NotFoundException : PlanMateException() {
+
         data object ProjectNotFoundException : NotFoundException()
         data object TaskNotFoundException : NotFoundException()
         data object StateNotFoundException : NotFoundException()
+        data object TaskLogsNotFound : NotFoundException()
     }
 
     sealed class ExistException : PlanMateException() {
         data object ProjectAlreadyExistsException : ExistException()
         data object TaskAlreadyExistsException : ExistException()
+        
+    
     }
 
 }

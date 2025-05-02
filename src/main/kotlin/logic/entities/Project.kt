@@ -7,4 +7,9 @@ data class Project(
     val name: String,
     val states: List<String>,
     val tasks: List<Task>,
-)
+){
+    override fun toString(): String {
+        return "projectID:$id"
+
+    }
+}
