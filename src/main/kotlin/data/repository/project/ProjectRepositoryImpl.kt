@@ -2,6 +2,7 @@ package data.repository.project
 
 import data.datasources.DataSource
 import logic.entities.Project
+import logic.exception.PlanMateException
 import logic.exception.PlanMateException.ValidationException.ProjectNameAlreadyExistException
 
 import logic.repository.ProjectRepository
@@ -17,7 +18,19 @@ class ProjectRepositoryImpl(val dataSource: DataSource) : ProjectRepository {
     }
 
     override fun updateProjectNameById(id: UUID, newName: String) {
-        TODO("Not yet implemented")
+        val allProjects = dataSource.getAll().map { it as Project }
+
+        val existingProject = dataSource.getById(id) as Project
+
+
+        val updatedProject = existingProject.copy(name = newName)
+
+        val updatedProjects = allProjects
+            .filterNot { it.id == id }
+            .toMutableList()
+            .apply { add(updatedProject) }
+
+        dataSource.saveAll(updatedProjects)
     }
 
     override fun deleteProject(projectId: UUID) {
@@ -36,7 +49,8 @@ class ProjectRepositoryImpl(val dataSource: DataSource) : ProjectRepository {
 
     override fun updateProjectStateById(id: UUID, oldState: String, newState: String) {
         val projects = dataSource.getAll().map { it as Project }
-        val project = projects.find { it.id == id } ?: throw PlanMateException.NotFoundException.ProjectNotFoundException
+        val project =
+            projects.find { it.id == id } ?: throw PlanMateException.NotFoundException.ProjectNotFoundException
 
         val updatedProject = project.copy(
             states = project.states.map {
@@ -50,9 +64,10 @@ class ProjectRepositoryImpl(val dataSource: DataSource) : ProjectRepository {
         dataSource.saveAll(updatedProjects)
     }
 
-    override fun deleteStateById(id: UUID, oldState: UUID?) {
+    override fun deleteStateById(projectId: UUID, oldState: String) {
         TODO("Not yet implemented")
     }
+
 
     override fun addStateById(id: UUID, state: String) {
         TODO("Not yet implemented")
