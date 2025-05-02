@@ -1,11 +1,15 @@
 package data.repository.project
 
+import data.datasources.CsvDataSource
 import data.datasources.DataSource
 import logic.entities.Project
+import logic.exception.PlanMateException
+import logic.exception.PlanMateException.DataSourceException.EmptyDataException
+import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
 import logic.repository.ProjectRepository
 import java.util.*
 
-class ProjectRepositoryImpl(val dataSource: DataSource<Project>) : ProjectRepository {
+class ProjectRepositoryImpl(val dataSource: DataSource) : ProjectRepository {
     override fun createProject(project: Project) {
         TODO("Not yet implemented")
     }
@@ -15,9 +19,15 @@ class ProjectRepositoryImpl(val dataSource: DataSource<Project>) : ProjectReposi
     }
 
     override fun deleteProject(projectId: UUID) {
-        dataSource
-        throw Exception("unimplemented yet")
-
+        val allProject= dataSource.getAll() as List<Project>
+        if (allProject.isEmpty()) throw EmptyDataException
+        if(allProject.find { it.id== projectId } == null) throw ProjectNotFoundException
+        try {
+            val newProjectsList = allProject.filterNot { it.id == projectId }
+            dataSource.saveAll(newProjectsList)
+        }catch (e: Exception){
+            throw Exception("Error Saving projects")
+        }
     }
 
     override fun getProjects(): List<Project> {

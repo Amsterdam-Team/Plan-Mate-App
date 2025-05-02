@@ -7,12 +7,16 @@ import ui.utils.tryToExecute
 
 class DeleteProjectUiController(val deleteProjectUseCase: DeleteProjectUseCase, val consoleIO: ConsoleIO): BaseUIController {
     override fun execute() {
-        tryToExecute(
-           action =  {deleteProjectUseCase.deleteProject(projectId = getProjectId())},
+        val projectId = getProjectId()
+        tryToExecute<Boolean>(
+           action =  {action(projectId)},
             onSuccess = {onSuccess()}
         )
     }
 
+    private fun action(id: String): Boolean{
+        return deleteProjectUseCase.deleteProject(projectId = id)
+    }
     private fun getProjectId(): String{
         consoleIO.println("please enter project id here: ")
         val projectId = consoleIO.readFromUser()
