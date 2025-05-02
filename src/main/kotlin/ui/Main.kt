@@ -38,23 +38,30 @@ fun main() {
 //            3 to createTask
             4 to editTaskUiController,
             5 to deleteTaskUiController,
-            6 to viewTaskLogsUIController,
+//            6 to viewTasks,
             7 to viewProjectHistoryUIController,
             8 to viewTaskLogsUIController,
 //            9 to createUser,
             10 to createProjectUIController,
-            11 to updateStateUiController,
+            11 to updateStateUiController,  // todo:// need better naming
             12 to deleteProjectUiController,
-//            13 to createState
-            14 to editTaskUiController,
+//            13 to addProjectState
+            14 to editTaskUiController, // edit
 //            15 to deleteProjectState
         )
     )
 
     val mateHandler: MateMenuHandler = MateMenuHandler(
         mapOf(
-            1 to getProjectUIController,
-//            2 to getTaskState,
+//            1 to viewAllProject,
+//          2 to viewTaskState,
+//            3 to createTask,
+            4 to editTaskUiController,
+            5 to deleteTaskUiController,
+//            6 to viewAllTask,
+            7 to viewProjectHistoryUIController,
+            8 to viewTaskLogsUIController
+
 
         )
     )
