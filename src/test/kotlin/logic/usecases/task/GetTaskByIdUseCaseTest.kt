@@ -4,8 +4,8 @@ import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import logic.exception.PlanMateException
 import logic.exception.PlanMateException.NotFoundException
+import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
 import logic.repository.TaskRepository
 import logic.usecases.testFactory.CreateTaskTestFactory
 import org.junit.jupiter.api.BeforeEach
@@ -52,12 +52,11 @@ class GetTaskByIdUseCaseTest {
     @Test
     fun `should throw NoTaskFoundException when there are no task for provided task id`() {
         // given
-        val projectId = UUID.randomUUID()
         val anotherProjectID = UUID.fromString("123e4567-e89b-12d3-a456-426614174000")
-        every { repository.getTaskById(projectId) } throws NotFoundException.TaskNotFoundException
+        every { repository.getTaskById(anotherProjectID) } throws NotFoundException.TaskNotFoundException
 
         // when && then
-        assertThrows<PlanMateException.NotFoundException.TaskNotFoundException> {
+        assertThrows<TaskNotFoundException> {
             useCase(anotherProjectID)
         }
     }
