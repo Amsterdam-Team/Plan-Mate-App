@@ -19,8 +19,6 @@ class GetProjectsWithTasksUseCaseTest{
 
     private val projectOneId = UUID.randomUUID()
     private val projectTwoId = UUID.randomUUID()
-    private val projectThreeId = UUID.randomUUID()
-    private val projectFourId = UUID.randomUUID()
 
     private val projects = listOf(
         createProject(
@@ -34,12 +32,6 @@ class GetProjectsWithTasksUseCaseTest{
             name = "project 2",
             states = listOf("to do", "in progress"),
             tasks = emptyList()
-        ),
-        createProject(
-            id = projectThreeId,
-            name = "project 3",
-            states = listOf("to do", "in progress"),
-            tasks = emptyList()
         )
     )
 
@@ -48,11 +40,6 @@ class GetProjectsWithTasksUseCaseTest{
         CreateTaskTestFactory.createTaskWithProjectID(projectOneId),
         CreateTaskTestFactory.createTaskWithProjectID(projectOneId),
         CreateTaskTestFactory.createTaskWithProjectID(projectOneId),
-    )
-    private val tasksForProjectTwo = listOf(
-        CreateTaskTestFactory.createTaskWithProjectID(projectTwoId),
-        CreateTaskTestFactory.createTaskWithProjectID(projectTwoId),
-        CreateTaskTestFactory.createTaskWithProjectID(projectTwoId),
     )
 
     @BeforeEach
@@ -78,16 +65,16 @@ class GetProjectsWithTasksUseCaseTest{
     }
 
     @Test
-    fun `should link projectThree with empty list when no tasks exist with this project id`(){
+    fun `should link projectTwo with empty list when no tasks exist with this project id`(){
         // Given
-        every { taskRepository.getAllTasksByProjectId(projectThreeId) } returns emptyList()
+        every { taskRepository.getAllTasksByProjectId(projectTwoId) } returns emptyList()
 
         // When
         val result = useCase()
 
         // Then
-        val projectThree = result.find { it.id == projectThreeId }
-        assertThat(emptyList<Task>()).isEqualTo(projectThree?.tasks)
+        val projectTwo = result.find { it.id == projectTwoId }
+        assertThat(emptyList<Task>()).isEqualTo(projectTwo?.tasks)
     }
 
     @Test

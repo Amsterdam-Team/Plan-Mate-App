@@ -9,6 +9,10 @@ class GetProjectsWithTasksUseCase(
     private val taskRepository: TaskRepository
 ) {
     operator fun invoke(): List<Project>{
-        TODO()
+        val projects = projectRepository.getProjects()
+        return projects.map { project ->
+            val tasks = taskRepository.getAllTasksByProjectId(project.id)
+            project.copy(tasks = tasks)
+        }
     }
 }
