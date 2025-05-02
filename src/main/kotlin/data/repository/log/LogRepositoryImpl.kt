@@ -4,7 +4,7 @@ import data.datasources.CsvDataSource
 import logic.entities.LogItem
 import logic.exception.PlanMateException.DataSourceException.EmptyDataException
 import logic.repository.LogRepository
-import java.util.UUID
+import java.util.*
 
 class LogRepositoryImpl(private val csvDataSource: CsvDataSource<LogItem>): LogRepository {
     override fun viewLogsById(id: UUID): List<LogItem> {
