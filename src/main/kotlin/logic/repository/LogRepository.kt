@@ -6,5 +6,5 @@ import java.util.*
 interface LogRepository {
     fun viewLogsById(id : UUID) : List<LogItem>
     fun viewAllLogs(): List<LogItem>
-    fun addLog(log : LogItem)
+    fun addLog(message : String, itemId: UUID)
 }

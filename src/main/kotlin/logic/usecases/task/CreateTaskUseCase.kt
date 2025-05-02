@@ -1,18 +1,21 @@
 package logic.usecases.task
 
+import logic.entities.LogItem
 import logic.entities.Task
 import logic.exception.PlanMateException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskNameException
 import logic.exception.PlanMateException.ValidationException.InvalidStateNameException
 import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
 import logic.exception.PlanMateException.NotFoundException.StateNotFoundException
+import logic.repository.LogRepository
 import logic.repository.ProjectRepository
 import logic.repository.TaskRepository
 import java.util.UUID
 
 class CreateTaskUseCase(
     private val taskRepository: TaskRepository,
-    private val projectRepository: ProjectRepository
+    private val projectRepository: ProjectRepository,
+    private val logRepository: LogRepository
 ) {
 
     fun createTask(name: String, projectId: String, state: String) {
@@ -25,14 +28,18 @@ class CreateTaskUseCase(
             condition = isStateInProject(state = state, projectStates = targetProject.states),
             exception = StateNotFoundException
         )
-
+        val taskId =UUID.randomUUID()
         taskRepository.createTask(
             Task(
-                id = UUID.randomUUID(),
+                id = taskId,
                 name = name,
                 projectId = targetProject.id,
                 state = state
             )
+        )
+        logRepository.addLog(
+            "create a new task ${name} in ${targetProject.name} project",
+            taskId
         )
 
     }

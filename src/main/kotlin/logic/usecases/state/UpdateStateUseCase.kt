@@ -7,9 +7,11 @@ import logic.exception.PlanMateException.ValidationException.SameStateNameExcept
 import logic.exception.PlanMateException.ValidationException.InvalidStateNameException
 import logic.exception.PlanMateException.ValidationException.EmptyDataException
 import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
+import logic.repository.LogRepository
 
 class UpdateStateUseCase(
-    private val projectRepository: ProjectRepository
+    private val projectRepository: ProjectRepository,
+    private val logRepository: LogRepository
 ) {
     fun updateState(projectID:String,oldState:String,newState:String){
         val id = validateAndParseProjectID(projectID)
@@ -19,6 +21,10 @@ class UpdateStateUseCase(
             .find { it.id == id } ?: throw ProjectNotFoundException
 
         projectRepository.updateProjectStateById(id, oldState, newState)
+        logRepository.addLog(
+            "update project state from ${oldState} to $newState}",
+            id
+        )
     }
 
     private fun validateAndParseProjectID(projectID: String): UUID {
