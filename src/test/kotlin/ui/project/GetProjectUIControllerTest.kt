@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import ui.console.ConsoleIO
+import utils.printSwimlanesView
 import java.util.*
 import kotlin.test.Test
 
@@ -21,6 +22,7 @@ class GetProjectUIControllerTest {
 
     @BeforeEach
     fun setup() {
+        mockkStatic("utils.SwimLanesUIKt")
         consoleIO = mockk(relaxed = true)
         usecase = mockk(relaxed = true)
         uiController = GetProjectUIController(usecase, consoleIO)
@@ -37,11 +39,12 @@ class GetProjectUIControllerTest {
         val slot = captureSlot()
         val projectID = "db373589-b656-4e68-a7c0-2ccc705ca169"
         val project = createProject(UUID.fromString(projectID), "", listOf(), listOf())
-        every { usecase.getProject(projectID) } returns project
+        every { usecase.getProject(any()) } returns project
+        every { printSwimlanesView(project) } just Runs
         //When
         uiController.execute()
         //Then
-        assertThat(slot.captured == project.toString())
+        verify { printSwimlanesView(project) }
 
     }
 

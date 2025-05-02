@@ -7,6 +7,7 @@ import logic.exception.PlanMateException.ValidationException.EmptyDataException
 import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
 
 import logic.repository.ProjectRepository
+import logic.repository.TaskRepository
 import logic.usecases.project.helper.createProject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -18,12 +19,14 @@ import java.util.UUID
 class GetProjectUseCaseTest() {
 
     private lateinit var repository: ProjectRepository
+    private lateinit var taskRepo:TaskRepository
     private lateinit var usecase: GetProjectUseCase
 
     @BeforeEach
     fun setUp() {
         repository = mockk(relaxed = true)
-        usecase = GetProjectUseCase(repository)
+        taskRepo = mockk(relaxed = true)
+        usecase = GetProjectUseCase(repository,taskRepo)
     }
 
     @Test

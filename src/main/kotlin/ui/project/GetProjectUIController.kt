@@ -5,6 +5,7 @@ import logic.usecases.project.GetProjectUseCase
 import ui.console.ConsoleIO
 import ui.controller.BaseUIController
 import ui.utils.tryToExecute
+import utils.printSwimlanesView
 
 class GetProjectUIController(
     private val getProjectUseCase: GetProjectUseCase,
@@ -15,7 +16,7 @@ class GetProjectUIController(
         consoleIO.println("Enter Project Id :)")
         val projectID = consoleIO.readFromUser()
         tryToExecute(action = { getProjectUseCase.getProject(projectID) },
-            onSuccess = { consoleIO.println(it.toString())})
+            onSuccess = { printSwimlanesView(it) /*consoleIO.println(it.toString())*/})
     }
 
 
