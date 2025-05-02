@@ -14,7 +14,7 @@ class CsvDataSource<T : Any>(
             parser.deserialize(it)
         }
         return items.ifEmpty {
-            throw PlanMateException.DataSourceException.EmptyFileException
+            emptyList()
         }
     }
 
@@ -28,12 +28,8 @@ class CsvDataSource<T : Any>(
     }
 
     override fun saveAll(items: List<Any>) {
-        if (items.isEmpty()) {
-            throw PlanMateException.DataSourceException.EmptyDataException
-        } else {
-            val lines = items.map { parser.serialize(it as T) }
-            fileManager.writeLines(lines)
-        }
+        val lines = items.map { parser.serialize(it as T) }
+        fileManager.writeLines(lines)
     }
 
     override fun add(item: Any) {
