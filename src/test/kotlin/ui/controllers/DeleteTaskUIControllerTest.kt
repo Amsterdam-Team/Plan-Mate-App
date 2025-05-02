@@ -1,37 +1,35 @@
 package ui.controllers
 
-
 import com.google.common.truth.Truth.assertThat
-import helpers.ViewProjectHistoryTestFactory.ALL_PROJECTS
-import helpers.ViewProjectHistoryTestFactory.LOGS_FOR_PROJECT_1
-import helpers.ViewProjectHistoryTestFactory.PROJECT_1
+import helpers.DeleteTaskTestFactory.ALL_PROJECTS
+import helpers.DeleteTaskTestFactory.PROJECT_1
+import helpers.DeleteTaskTestFactory.TASK_1
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import logic.repository.ProjectRepository
+import logic.usecases.DeleteTaskUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import logic.repository.ProjectRepository
-import logic.repository.LogRepository
-import logic.usecases.ViewProjectHistoryUseCase
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
 
-class ViewProjectHistoryUIControllerTest {
+class DeleteTaskUIControllerTest {
 
-    private lateinit var useCase: ViewProjectHistoryUseCase
+    private lateinit var useCase: DeleteTaskUseCase
     private lateinit var repository: ProjectRepository
-    private lateinit var logRepository: LogRepository
-    private lateinit var controller: ViewProjectHistoryUIController
+    private lateinit var controller: DeleteTaskUIController
     private lateinit var outContent: ByteArrayOutputStream
 
     @BeforeEach
     fun setup() {
         useCase = mockk(relaxed = true)
         repository = mockk()
-        controller = ViewProjectHistoryUIController(useCase, repository)
+        controller = DeleteTaskUIController(useCase, repository)
         outContent = ByteArrayOutputStream()
         System.setOut(PrintStream(outContent))
     }
+
 
     @Test
     fun `should print all project IDs`() {
@@ -46,20 +44,18 @@ class ViewProjectHistoryUIControllerTest {
     }
 
     @Test
-    fun `should call viewProjectHistoryUseCase with params when project is selected`() {
+    fun `should call deleteTaskUseCase with params when task is selected`() {
         // Given
-        val selectedProjectId = PROJECT_1.id
         every { repository.getProjects() } returns ALL_PROJECTS
-        every { logRepository.viewLogsById(selectedProjectId) } returns LOGS_FOR_PROJECT_1
-
-        provideInput(selectedProjectId.toString())
+        provideInput(TASK_1.id.toString())
 
         // When
         controller.start()
 
         // Then
-        verify (exactly = 1) { useCase.execute(selectedProjectId.toString()) }
+        verify (exactly = 1){ useCase.execute(TASK_1.id.toString()) }
     }
+
 
     private fun provideInput(input: String) {
         val stream = input.byteInputStream()
