@@ -2,10 +2,13 @@ package data.repository.task
 
 import data.datasources.CsvDataSource
 import data.repository.project.ProjectRepositoryImpl
+import io.mockk.every
 import io.mockk.mockk
 import logic.entities.Project
 import logic.entities.Task
 import logic.exception.PlanMateException
+import logic.exception.PlanMateException.DataSourceException.EmptyDataException
+import logic.exception.PlanMateException.DataSourceException.EmptyFileException
 import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -14,19 +17,19 @@ import org.junit.jupiter.api.assertThrows
 import java.util.*
 import java.util.UUID.randomUUID
 
-class EditTasKTest {
+class EditTasKRepositoryTest {
 
     lateinit var dataSource: CsvDataSource<Task>
     lateinit var repository: TaskRepositoryImpl
-    lateinit var newTask: Task
+    lateinit var authTask: Task
 
     @BeforeEach
     fun setUp() {
-        dataSource = CsvDataSource(mockk(), mockk())
+        dataSource = mockk()
         repository = TaskRepositoryImpl(dataSource)
-        newTask = Task(
+        authTask = Task(
             id = randomUUID(),
-            name = "newTask",
+            name = "add auth function",
             projectId = randomUUID(),
             state = "todo"
         )
@@ -37,15 +40,34 @@ class EditTasKTest {
     fun `should edit task successfully when editing function complete successfully`() {
 
         assertDoesNotThrow {
-            repository.updateTask(newTask)
+            repository.updateTask(authTask)
         }
     }
 
     @Test
     fun `should throw not found exception when editing or updating not existed task`() {
 
+        every{dataSource.getAll()} returns listOf(authTask)
+
+        val uiTask= Task( id = randomUUID(),
+            name = "add ui ",
+            projectId = randomUUID(),
+            state = "todo")
         assertThrows<TaskNotFoundException> {
-            repository.updateTask(newTask)
+            repository.updateTaskNameByID(uiTask.id, "add ui structure")
+        }
+    }
+
+    @Test
+    fun `should throw empty data exception when editing or updating and there is no tasks`() {
+
+        every{dataSource.getAll()} throws EmptyFileException
+        val uiTask= Task( id = randomUUID(),
+            name = "add ui ",
+            projectId = randomUUID(),
+            state = "todo")
+        assertThrows<EmptyDataException> {
+            repository.updateTaskNameByID(uiTask.id, "add ui structure")
         }
     }
 
