@@ -6,7 +6,7 @@ import data.datasources.parser.TaskCsvParser
 import io.mockk.*
 import logic.entities.Task
 import logic.exception.PlanMateException.DataSourceException.*
-import logic.usecases.task.testFactory.CreateTaskTestFactory
+import logic.usecases.testFactory.CreateTaskTestFactory
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
