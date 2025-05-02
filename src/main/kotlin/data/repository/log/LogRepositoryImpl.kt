@@ -25,7 +25,7 @@ class LogRepositoryImpl(private val dataSource : DataSource, private val user : 
         dataSource.add(
             LogItem(
             id = UUID.randomUUID(),
-            message = "${message} by ${user.username}",
+            message = "${message} by ${user.username} at ${LocalDateTime.now().toString()}",
             date= LocalDateTime.now(),
                 entityId = itemId
         ))

@@ -1,11 +1,13 @@
 package logic.usecases
 
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
+import logic.repository.LogRepository
 import logic.repository.TaskRepository
 import java.util.UUID
 
 class DeleteTaskUseCase(
     private val taskRepository: TaskRepository,
+    val logRepository: LogRepository
 ) {
     fun execute(taskId: String?) {
         if(taskId.isNullOrEmpty()) throw InvalidTaskIDException
@@ -15,5 +17,10 @@ class DeleteTaskUseCase(
             throw InvalidTaskIDException
         }
         taskRepository.deleteTask(taskUUID)
+        logRepository.addLog(
+            "delete task of id ${taskId}",
+            UUID.fromString(taskId)
+
+        )
     }
 }

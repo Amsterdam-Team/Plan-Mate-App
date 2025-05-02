@@ -4,14 +4,21 @@ import logic.entities.Project
 import logic.entities.User
 import logic.exception.PlanMateException.AuthorizationException.AdminPrivilegesRequiredException
 import logic.exception.PlanMateException.ValidationException.*
+import logic.repository.LogRepository
 import logic.repository.ProjectRepository
+import java.util.UUID
 
-class CreateProjectUseCase(private val repository: ProjectRepository, private val user: User) {
+class CreateProjectUseCase(private val repository: ProjectRepository, private val user: User, val logRepository: LogRepository) {
     fun createProject(project: Project) {
         if (!user.isAdmin) throw AdminPrivilegesRequiredException
         isValidProjectName(project.name)
         isValidProjectStates(project.states)
         repository.createProject(project)
+        logRepository.addLog(
+            "create project ${project.name} ",
+            project.id
+
+        )
     }
 
     fun isValidProjectName(name: String): String {

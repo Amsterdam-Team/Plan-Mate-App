@@ -5,18 +5,23 @@ import logic.exception.PlanMateException
 import logic.exception.PlanMateException.DataSourceException.EmptyDataException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskNameException
+import logic.repository.LogRepository
 import logic.repository.TaskRepository
 import java.util.UUID
 
-class EditTaskUseCase(val taskRepository: TaskRepository) {
+class EditTaskUseCase(val taskRepository: TaskRepository,  val logRepository: LogRepository) {
 
     fun editTaskName(taskId: String, newName: String):Boolean {
-
         validateStringInput(newName)
         validateId(taskId)
         val task = taskRepository.getTaskById(UUID.fromString(taskId))
 
         taskRepository.updateTask(task.copy(name = newName))
+        logRepository.addLog(
+            "edit task name be ${newName}",
+            UUID.fromString(taskId)
+
+        )
         return true
     }
 
@@ -26,11 +31,14 @@ class EditTaskUseCase(val taskRepository: TaskRepository) {
         validateId(taskId)
         val task = taskRepository.getTaskById(UUID.fromString(taskId))
         taskRepository.updateTask(task.copy(name = newName, state = newState))
+        logRepository.addLog(
+            "edit task name and state to be ${newName}, ${newState}",
+            UUID.fromString(taskId)
+
+        )
         return true
     }
-    fun validateInput(taskId:String, name: String){
 
-    }
 
 
     fun validateStringInput(name:String){

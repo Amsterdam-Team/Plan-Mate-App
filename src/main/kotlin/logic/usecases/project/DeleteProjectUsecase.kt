@@ -3,14 +3,21 @@ package logic.usecases.project
 import logic.exception.PlanMateException
 import logic.exception.PlanMateException.DataSourceException.EmptyDataException
 import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
+import logic.repository.LogRepository
 import logic.repository.ProjectRepository
 import java.util.UUID
+import kotlin.math.log
 
-class DeleteProjectUseCase(val projectRepository: ProjectRepository){
+class DeleteProjectUseCase(val projectRepository: ProjectRepository, val logRepository: LogRepository){
 
     fun deleteProject(projectId: String): Boolean {
         validateId(projectId)
         projectRepository.deleteProject(UUID.fromString(projectId))
+        logRepository.addLog(
+            "delete project with id ${projectId}",
+            UUID.fromString(projectId)
+
+        )
         return true
     }
 
