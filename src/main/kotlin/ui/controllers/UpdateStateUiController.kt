@@ -7,7 +7,7 @@ import ui.utils.tryToExecute
 
 class UpdateStateUiController(
     private val editStateUseCase: UpdateStateUseCase,
-    private val consoleIO: ConsoleIO
+    private val consoleIO: ui.console.ConsoleIO
 ) :BaseUIController{
 
     override fun execute(){
