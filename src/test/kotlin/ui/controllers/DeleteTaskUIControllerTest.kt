@@ -37,7 +37,7 @@ class DeleteTaskUIControllerTest {
         every { repository.getProjects() } returns ALL_PROJECTS
 
         // When
-        controller.start()
+        controller.execute()
 
         // Then
         assertThat(outContent.toString()).contains(PROJECT_1.id.toString())
@@ -50,7 +50,7 @@ class DeleteTaskUIControllerTest {
         provideInput(TASK_1.id.toString())
 
         // When
-        controller.start()
+        controller.execute()
 
         // Then
         verify (exactly = 1){ useCase.execute(TASK_1.id.toString()) }
