@@ -19,7 +19,7 @@ class ProjectRepositoryImpl(val dataSource: DataSource) : ProjectRepository {
     }
 
     override fun deleteProject(projectId: UUID) {
-        val allProject= dataSource.getAll() as List<Project>
+        val allProject= dataSource.getAll().map { it as Project }
         if (allProject.isEmpty()) throw EmptyDataException
         if(allProject.find { it.id== projectId } == null) throw ProjectNotFoundException
         try {

@@ -17,7 +17,7 @@ class TaskRepositoryImpl(val dataSource: DataSource): TaskRepository {
 
     override fun updateTask(task: Task) {
         val allTasks =  try {
-            dataSource.getAll() as List<Task>
+            dataSource.getAll().map { it as Task }
         } catch (e: EmptyFileException){
             throw EmptyDataException
         }catch (e: Exception){
@@ -34,7 +34,7 @@ class TaskRepositoryImpl(val dataSource: DataSource): TaskRepository {
 
     override fun updateTaskNameByID(taskId: UUID, newName: String) {
        val allTasks =  try {
-           dataSource.getAll() as List<Task>
+           dataSource.getAll().map { it as Task }
        } catch (e: EmptyFileException){
            throw EmptyDataException
        }catch (e: Exception){
