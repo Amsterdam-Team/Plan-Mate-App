@@ -5,7 +5,7 @@ import logic.entities.Task
 import logic.repository.TaskRepository
 import java.util.*
 
-class TaskRepositoryImpl(val dataSource: DataSource<Task>): TaskRepository {
+class TaskRepositoryImpl(val dataSource: DataSource): TaskRepository {
     override fun createTask(task: Task) {
         TODO("Not yet implemented")
     }
@@ -30,7 +30,7 @@ class TaskRepositoryImpl(val dataSource: DataSource<Task>): TaskRepository {
         TODO("Not yet implemented")
     }
 
-    override fun getAllTasksByProjectId(projectId: String): List<Task> {
+    override fun getAllTasksByProjectId(projectId: UUID): List<Task> {
         TODO("Not yet implemented")
     }
 
