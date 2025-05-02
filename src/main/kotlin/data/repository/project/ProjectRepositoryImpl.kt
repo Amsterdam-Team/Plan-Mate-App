@@ -1,11 +1,11 @@
 package data.repository.project
 
-import data.datasources.CsvDataSource
+import data.datasources.DataSource
 import logic.entities.Project
 import logic.repository.ProjectRepository
 import java.util.UUID
 
-class ProjectRepositoryImpl(private val dataSource: CsvDataSource<Project>): ProjectRepository {
+class ProjectRepositoryImpl(private val dataSource: DataSource) : ProjectRepository {
     override fun createProject(project: Project) {
         TODO("Not yet implemented")
     }
