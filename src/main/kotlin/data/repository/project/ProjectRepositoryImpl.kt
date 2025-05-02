@@ -2,12 +2,11 @@ package data.repository.project
 
 import data.datasources.DataSource
 import logic.entities.Project
-import logic.exception.PlanMateException
 import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
 import logic.exception.PlanMateException.ValidationException.EmptyDataException
 import logic.exception.PlanMateException.ValidationException.ProjectNameAlreadyExistException
 import logic.repository.ProjectRepository
-import java.util.*
+import java.util.UUID
 
 class ProjectRepositoryImpl(val dataSource: DataSource) : ProjectRepository {
     override fun createProject(project: Project) {
@@ -60,8 +59,18 @@ class ProjectRepositoryImpl(val dataSource: DataSource) : ProjectRepository {
         TODO("Not yet implemented")
     }
 
-    override fun addStateById(id: UUID, state: String) {
-        TODO("Not yet implemented")
-    }
+    override fun addStateById(projectId: UUID, state: String) {
+        val allProjects = dataSource.getAll().map { it as Project }.toMutableList()
 
+        val projectIndex = allProjects.indexOfFirst { it.id == projectId }
+
+        if (projectIndex == -1) throw ProjectNotFoundException
+
+        val targetProject = allProjects[projectIndex]
+        val updatedProject = targetProject.copy(states = targetProject.states + state)
+
+        allProjects[projectIndex] = updatedProject
+
+        dataSource.saveAll(allProjects)
+    }
 }

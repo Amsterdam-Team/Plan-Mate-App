@@ -26,6 +26,7 @@ import logic.usecases.project.CreateProjectUseCase
 import logic.usecases.project.DeleteProjectUseCase
 import logic.usecases.project.GetProjectsUseCase
 import logic.usecases.project.ViewProjectHistoryUseCase
+import logic.usecases.state.AddStateUseCase
 import logic.usecases.state.DeleteStateUseCase
 import logic.usecases.state.GetProjectStatesUseCase
 import logic.usecases.state.GetTaskStateUseCase
@@ -38,10 +39,10 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import ui.DeleteProjectUiController
 import ui.EditTaskUiController
-import ui.LoginUIController
 import ui.ViewTaskLogsUIController
 import ui.console.ConsoleIO
 import ui.console.ConsoleIOImpl
+import ui.controllers.AddStateUIController
 import ui.controllers.CreateProjectUIController
 import ui.controllers.DeleteTaskUIController
 import ui.controllers.UpdateStateUiController
@@ -49,7 +50,7 @@ import ui.menuHandler.AdminMenuHandler
 import ui.menuHandler.MateMenuHandler
 import ui.project.GetProjectUIController
 import ui.project.ViewProjectHistoryUIController
-import java.util.*
+import java.util.UUID
 
 val appModule = module {
 
@@ -71,8 +72,18 @@ val appModule = module {
 
     single<DataSource>(user) { CsvDataSource(get<FileManager<User>>(user), get<UserCsvParser>()) }
     single<DataSource>(task) { CsvDataSource(get<FileManager<Task>>(task), get<TaskCsvParser>()) }
-    single<DataSource>(project) { CsvDataSource(get<FileManager<Project>>(project), get<ProjectCsvParser>()) }
-    single<DataSource>(log) { CsvDataSource(get<FileManager<LogItem>>(log), get<LogItemCsvParser>()) }
+    single<DataSource>(project) {
+        CsvDataSource(
+            get<FileManager<Project>>(project),
+            get<ProjectCsvParser>()
+        )
+    }
+    single<DataSource>(log) {
+        CsvDataSource(
+            get<FileManager<LogItem>>(log),
+            get<LogItemCsvParser>()
+        )
+    }
 
 
     single<AuthRepository> { AuthRepositoryImpl(get(user)) }
@@ -80,7 +91,12 @@ val appModule = module {
     single<ProjectRepository> { ProjectRepositoryImpl(get(project)) }
     single<LogRepository> { LogRepositoryImpl(get(log)) }
 
-    single { CreateProjectUseCase(get(), User(id = UUID.randomUUID(), username = "fsef", password = "fsefs", isAdmin = true)) }
+    single {
+        CreateProjectUseCase(
+            get(),
+            User(id = UUID.randomUUID(), username = "fsef", password = "fsefs", isAdmin = true)
+        )
+    }
     single { DeleteProjectUseCase(get()) }
     single { GetProjectsUseCase(get(), get()) }
 
@@ -88,6 +104,7 @@ val appModule = module {
     single { UpdateStateUseCase(get()) }
     single { GetProjectStatesUseCase(get()) }
     single { GetTaskStateUseCase(get()) }
+    single { AddStateUseCase(get()) }
 
     single { CreateTaskUseCase(get(), get()) }
     single { EditTaskUseCase(get()) }
@@ -101,6 +118,7 @@ val appModule = module {
 
     single<ConsoleIO> { ConsoleIOImpl() }
 
+    single { AddStateUIController(get(), get()) }
     single { CreateProjectUIController(get()) }
     single { DeleteTaskUIController(get(), get()) }
     single { UpdateStateUiController(get(), get()) }
