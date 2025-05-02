@@ -5,7 +5,7 @@ import logic.entities.Project
 import logic.repository.ProjectRepository
 import java.util.*
 
-class ProjectRepositoryImpl(val dataSource: DataSource<Project>) : ProjectRepository {
+class ProjectRepositoryImpl(private val dataSource: DataSource) : ProjectRepository {
     override fun createProject(project: Project) {
         TODO("Not yet implemented")
     }
