@@ -8,7 +8,7 @@ import logic.repository.ProjectRepository
 import logic.repository.TaskRepository
 import java.util.UUID
 
-class GetProjectUseCase(
+class GetProjectsUseCase(
     private val projectRepository: ProjectRepository,
     private val taskRepository: TaskRepository
 ) {
@@ -19,6 +19,10 @@ class GetProjectUseCase(
         if (projects.isEmpty()) throw EmptyDataException
         return projects.find { it.id == id } ?: throw ProjectNotFoundException
 
+    }
+
+    fun getAllProjects(): List<Project>{
+        return linkProjectAWithTasks()
     }
 
     private fun validateAndParseProjectID(projectID: String): UUID {
