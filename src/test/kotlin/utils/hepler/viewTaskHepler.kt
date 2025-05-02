@@ -46,5 +46,5 @@ fun simulateConsoleInteraction(input: String, block: () -> Unit): String {
 val validId = UUID.fromString("123e4567-e89b-12d3-a456-426614174000")
 val invalidId = "123e4567-e89b-12d3-a456-426614174%@0"
 
-const val TASK_ID_NOT_FOUND = " Task not found. Please make sure the task ID is correct."
-const val INVALID_ID_FORMAT = "This Id is invalid format , Please ensure you enter correct format of id "
+const val TASK_NOT_FOUND = "Task not found. Please make sure the task ID is correct."
+const val INVALID_ID_FORMAT = "This Id is invalid format , Please ensure you enter correct format of id"

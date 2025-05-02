@@ -2,7 +2,7 @@ package usecase
 
 import io.mockk.every
 import io.mockk.mockk
-import logic.exception.PlanMateException.NotFoundException.TaskIdNotFoundException
+import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.repository.LogRepository
 import logic.usecases.ViewTaskLogsUseCase
@@ -51,10 +51,10 @@ class ViewTaskLogsUseCaseTest {
     }
 
     @Test
-    fun `should throw TaskIdNotFoundException when id of task not found`(){
-        every { repository.viewLogsById(validId) } throws TaskIdNotFoundException
+    fun `should throw TaskNotFoundException when id of task not found`(){
+        every { repository.viewLogsById(validId) } throws TaskNotFoundException
 
-        assertThrows<TaskIdNotFoundException> {
+        assertThrows<TaskNotFoundException> {
             useCase.viewTaskLogs(validId.toString())
         }
     }

@@ -14,7 +14,10 @@ class ViewTaskLogsUIController(
         val taskId = readLine().toString()
         tryToExecute (
             action = { viewTaskLogsUseCase.viewTaskLogs(taskId) },
-            onSuccess = {println("Task Logs :")}
+            onSuccess = { logs ->
+                println("Task Logs :")
+                logs.forEach { println(it.message) }
+            }
         )
     }
 }
