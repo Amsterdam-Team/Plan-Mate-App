@@ -2,6 +2,8 @@ package data.repository.task
 
 import data.datasources.DataSource
 import logic.entities.Task
+import logic.exception.PlanMateException.DataSourceException.ObjectDoesNotExistException
+import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
 import logic.repository.TaskRepository
 import java.util.*
 
@@ -23,7 +25,13 @@ class TaskRepositoryImpl(val dataSource: DataSource): TaskRepository {
     }
 
     override fun deleteTask(taskId: UUID) {
-        TODO("Not yet implemented")
+        val task = try {
+            dataSource.getById(taskId) as Task
+        }catch (_: ObjectDoesNotExistException){
+            throw TaskNotFoundException
+        }
+        val allTasks = dataSource.getAll() as List<Task>
+        dataSource.saveAll(allTasks.filterNot { it.id == task.id })
     }
 
     override fun getTaskById(taskId: UUID): Task {
