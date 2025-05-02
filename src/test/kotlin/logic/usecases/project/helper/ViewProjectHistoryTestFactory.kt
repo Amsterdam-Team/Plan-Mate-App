@@ -1,12 +1,11 @@
-package helpers
+package logic.usecases.project.helper
 
-
-import logic.entities.LogItem
-import java.util.*
 import kotlinx.datetime.Clock
-import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import logic.entities.LogItem
 import logic.entities.Project
+import java.util.UUID
 
 object ViewProjectHistoryTestFactory {
 
@@ -26,7 +25,7 @@ object ViewProjectHistoryTestFactory {
 
     val ALL_PROJECTS = listOf(PROJECT_1, PROJECT_2)
 
-    private val NOW = Clock.System.now().toLocalDateTime(TimeZone.UTC)
+    private val NOW = Clock.System.now().toLocalDateTime(TimeZone.Companion.UTC)
 
     val LOG_1 = LogItem(
         id = UUID.fromString("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
