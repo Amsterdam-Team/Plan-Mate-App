@@ -2,11 +2,12 @@ package logic.usecases.task
 
 import logic.entities.Task
 import logic.repository.TaskRepository
+import java.util.*
 
 class GetTaskByIdUseCase(
     private val repository: TaskRepository
 ) {
-    operator fun invoke(taskId: String): Task {
+    operator fun invoke(taskId: UUID): Task {
         return repository.getTaskById(taskId)
 
     }
