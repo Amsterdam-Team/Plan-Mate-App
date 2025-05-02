@@ -7,7 +7,7 @@ import io.mockk.verify
 import logic.exception.PlanMateException
 import logic.exception.PlanMateException.NotFoundException
 import logic.repository.TaskRepository
-import logic.usecases.testFactory.CreateTasksWithProjectID.createTaskWithProjectID
+import logic.usecases.testFactory.CreateTaskTestFactory
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -38,8 +38,8 @@ class GetAllTasksByProjectIdUseCaseTest {
     fun `should get tasks by project id when project is exists`() {
         // given
         val projectId = UUID.randomUUID()
-        val taskOne = createTaskWithProjectID(projectId = projectId)
-        val taskTwo = createTaskWithProjectID(projectId = projectId)
+        val taskOne = CreateTaskTestFactory.validTask.copy(projectId = projectId)
+        val taskTwo = CreateTaskTestFactory.validTask.copy(projectId = projectId)
         every { repository.getAllTasksByProjectId(projectId) } returns listOf(taskOne, taskTwo)
         // when
         val result = useCase(projectId)
@@ -52,8 +52,9 @@ class GetAllTasksByProjectIdUseCaseTest {
     fun `should return tasks filtered by project ID`() {
         // given
         val projectId = UUID.randomUUID()
-        val taskOne = createTaskWithProjectID(projectId = projectId)
-        val taskTwo = createTaskWithProjectID(projectId = projectId)
+        val taskOne = CreateTaskTestFactory.validTask.copy(projectId = projectId)
+        val taskTwo = CreateTaskTestFactory.validTask.copy(projectId = projectId)
+
 
         every { repository.getAllTasksByProjectId(projectId) } returns listOf(taskOne, taskTwo)
 

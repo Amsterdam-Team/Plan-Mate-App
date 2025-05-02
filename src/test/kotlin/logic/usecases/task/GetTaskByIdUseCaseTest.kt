@@ -7,7 +7,7 @@ import io.mockk.verify
 import logic.exception.PlanMateException
 import logic.exception.PlanMateException.NotFoundException
 import logic.repository.TaskRepository
-import logic.usecases.testFactory.CreateTasksWithProjectID.createTaskWithProjectID
+import logic.usecases.testFactory.CreateTaskTestFactory
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -37,7 +37,8 @@ class GetTaskByIdUseCaseTest {
     fun `should get task by task id when task is exists`() {
         // given
         val projectId = UUID.randomUUID()
-        val taskOne = createTaskWithProjectID(projectId = projectId)
+        val taskOne = CreateTaskTestFactory.validTask.copy(projectId = projectId)
+
         every { repository.getTaskById(projectId) } returns taskOne
 
         // when
