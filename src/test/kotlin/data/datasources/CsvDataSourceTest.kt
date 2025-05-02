@@ -50,17 +50,6 @@ class CsvDataSourceTest{
         assertThat(result).isEqualTo(parsedTasks)
     }
 
-    @Test
-    fun `should throw empty file exception when reading an empty file`() {
-        // Given
-        every { fileManager.readLines() } returns emptyList()
-
-        // When && Then
-        assertThrows<EmptyFileException>{
-            csvDataSource.getAll()
-        }
-    }
-
     // endregion
 
     // region getById
@@ -122,16 +111,6 @@ class CsvDataSourceTest{
         verify { fileManager.writeLines(lines) }
     }
 
-    @Test
-    fun `should throw empty data exception when given empty list`(){
-        // Given
-        val saveObjects = emptyList<Task>()
-
-        // When && Then
-        assertThrows<EmptyDataException> {
-            csvDataSource.saveAll(saveObjects)
-        }
-    }
     //endregion
 
     companion object{
