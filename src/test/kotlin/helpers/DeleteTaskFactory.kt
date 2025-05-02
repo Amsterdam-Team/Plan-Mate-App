@@ -6,13 +6,6 @@ import java.util.UUID
 
 object DeleteTaskTestFactory {
 
-//    val USER = User(
-//        username = "mina",
-//        id = UUID.fromString("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
-//        password = "",
-//        isAdmin = false
-//    )
-
     val PROJECT1_ID: UUID = UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb")
     val PROJECT2_ID: UUID = UUID.fromString("bbbbbbbb-cccc-bbbb-bbbb-bbbbbbbbbbbb")
 
@@ -49,13 +42,6 @@ object DeleteTaskTestFactory {
         name = "Smart Home",
         states = listOf("NEW", "ACTIVE", "ARCHIVED"),
         tasks = listOf(TASK_3)
-    )
-
-    val EMPTY_TASKS_PROJECT = Project(
-        id = UUID.randomUUID(),
-        name = "Smart Home",
-        states = listOf("NEW", "ACTIVE", "ARCHIVED"),
-        tasks = emptyList()
     )
 
     val ALL_PROJECTS = listOf(PROJECT_1, PROJECT_2)
