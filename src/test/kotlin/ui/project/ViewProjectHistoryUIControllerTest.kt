@@ -17,7 +17,7 @@ import java.io.PrintStream
 
 class ViewProjectHistoryUIControllerTest {
 
-    private lateinit var viewProjectHistoryUseCase: ViewProjectHistoryUseCase
+    private lateinit var useCase: ViewProjectHistoryUseCase
     private lateinit var repository: ProjectRepository
     private lateinit var controller: ViewProjectHistoryUIController
     private lateinit var outContent: ByteArrayOutputStream
@@ -25,8 +25,8 @@ class ViewProjectHistoryUIControllerTest {
     @BeforeEach
     fun setup() {
         repository = mockk(relaxed = true)
-        viewProjectHistoryUseCase = mockk(relaxed = true)
-        controller = ViewProjectHistoryUIController(viewProjectHistoryUseCase, repository)
+        useCase = mockk(relaxed = true)
+        controller = ViewProjectHistoryUIController(useCase, repository)
         outContent = ByteArrayOutputStream()
         System.setOut(PrintStream(outContent))
     }
@@ -56,7 +56,7 @@ class ViewProjectHistoryUIControllerTest {
         controller.execute()
 
         // Then
-        verify(exactly = 1) { viewProjectHistoryUseCase.execute(selectedProjectId.toString()) }
+        verify(exactly = 1) { useCase.execute(selectedProjectId.toString()) }
     }
 
     @Test
@@ -65,7 +65,7 @@ class ViewProjectHistoryUIControllerTest {
         val selectedProjectId = PROJECT_1.id
         every { repository.getProjects() } returns ALL_PROJECTS
         provideInput(selectedProjectId.toString())
-        every { viewProjectHistoryUseCase.execute(selectedProjectId.toString())} returns LOGS_FOR_PROJECT_1
+        every { useCase.execute(selectedProjectId.toString())} returns LOGS_FOR_PROJECT_1
         // When
         controller.execute()
 
