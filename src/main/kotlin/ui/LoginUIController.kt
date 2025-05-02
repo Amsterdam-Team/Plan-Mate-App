@@ -20,7 +20,10 @@ class LoginUIController(
         println("Enter Your Password : ")
         val password = readLine().toString()
         tryToExecute (
-            action = { loginUseCase.verifyUserState(username,password) },
+            action = {
+                val user = loginUseCase.verifyUserState(username,password)
+                onLoginSuccess(user)
+            },
             onSuccess = { println("Success Login......".printAsASuccessState()) }
         )
 
