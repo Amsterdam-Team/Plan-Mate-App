@@ -3,7 +3,7 @@ package data.repository.project
 import data.datasources.DataSource
 import logic.entities.Project
 import logic.repository.ProjectRepository
-import java.util.UUID
+import java.util.*
 
 class ProjectRepositoryImpl(private val dataSource: DataSource) : ProjectRepository {
     override fun createProject(project: Project) {
@@ -15,7 +15,9 @@ class ProjectRepositoryImpl(private val dataSource: DataSource) : ProjectReposit
     }
 
     override fun deleteProject(projectId: UUID) {
-        TODO("Not yet implemented")
+        dataSource
+        throw Exception("unimplemented yet")
+
     }
 
     override fun getProjects(): List<Project> {
