@@ -1,10 +1,15 @@
-package ui.controllers
+package ui.project
 
 
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import logic.repository.ProjectRepository
+import logic.usecases.project.ViewProjectHistoryUseCase
+import logic.usecases.project.helper.ViewProjectHistoryTestFactory.ALL_PROJECTS
+import logic.usecases.project.helper.ViewProjectHistoryTestFactory.LOGS_FOR_PROJECT_1
+import logic.usecases.project.helper.ViewProjectHistoryTestFactory.PROJECT_1
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.io.ByteArrayOutputStream
@@ -13,15 +18,15 @@ import java.io.PrintStream
 class ViewProjectHistoryUIControllerTest {
 
     private lateinit var viewProjectHistoryUseCase: ViewProjectHistoryUseCase
-    private lateinit var projectRepository: ProjectRepository
+    private lateinit var repository: ProjectRepository
     private lateinit var controller: ViewProjectHistoryUIController
     private lateinit var outContent: ByteArrayOutputStream
 
     @BeforeEach
     fun setup() {
-        projectRepository = mockk(relaxed = true)
+        repository = mockk(relaxed = true)
         viewProjectHistoryUseCase = mockk(relaxed = true)
-        controller = ViewProjectHistoryUIController(viewProjectHistoryUseCase, projectRepository)
+        controller = ViewProjectHistoryUIController(viewProjectHistoryUseCase, repository)
         outContent = ByteArrayOutputStream()
         System.setOut(PrintStream(outContent))
     }
@@ -44,7 +49,7 @@ class ViewProjectHistoryUIControllerTest {
     fun `should call viewProjectHistoryUseCase with params when project is selected`() {
         // Given
         val selectedProjectId = PROJECT_1.id
-        every { projectRepository.getProjects() } returns ALL_PROJECTS
+        every { repository.getProjects() } returns ALL_PROJECTS
         provideInput(selectedProjectId.toString())
 
         // When
@@ -58,7 +63,7 @@ class ViewProjectHistoryUIControllerTest {
     fun `should print logs for selected project`() {
         // Given
         val selectedProjectId = PROJECT_1.id
-        every { projectRepository.getProjects() } returns ALL_PROJECTS
+        every { repository.getProjects() } returns ALL_PROJECTS
         provideInput(selectedProjectId.toString())
         every { viewProjectHistoryUseCase.execute(selectedProjectId.toString())} returns LOGS_FOR_PROJECT_1
         // When
