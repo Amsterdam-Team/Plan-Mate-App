@@ -11,26 +11,26 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 class DeleteTaskUseCaseTest {
-    private lateinit var taskRepository: TaskRepository
-    private lateinit var deleteTaskUseCase: DeleteTaskUseCase
+    private lateinit var repository: TaskRepository
+    private lateinit var useCase: DeleteTaskUseCase
 
     @BeforeEach
     fun setup() {
-        taskRepository = mockk(relaxed = true)
-        deleteTaskUseCase = DeleteTaskUseCase(taskRepository)
+        repository = mockk(relaxed = true)
+        useCase = DeleteTaskUseCase(repository)
     }
 //region success
     @Test
     fun `should call deleteTask when task is found`() {
         // Given
         val task = TASK_1
-        every { taskRepository.getTaskById(task.id) } returns task
+        every { repository.getTaskById(task.id) } returns task
 
         // When
-        deleteTaskUseCase.execute(task.id.toString())
+        useCase.execute(task.id.toString())
 
         // Then
-        verify(exactly = 1) { taskRepository.deleteTask(task.id) }
+        verify(exactly = 1) { repository.deleteTask(task.id) }
     }
 //endregion
 //region task validations
@@ -38,10 +38,10 @@ class DeleteTaskUseCaseTest {
     fun `should throw InvalidTaskIDException when input is null`() {
         // Given
         val task = TASK_1
-        every { taskRepository.getTaskById(task.id) } returns task
+        every { repository.getTaskById(task.id) } returns task
         // When & Then
         assertThrows<InvalidTaskIDException> {
-            deleteTaskUseCase.execute(null)
+            useCase.execute(null)
         }
     }
 
@@ -49,10 +49,10 @@ class DeleteTaskUseCaseTest {
     fun `should throw InvalidTaskIDException when input is not a uuid`() {
         // Given
         val task = TASK_1
-        every { taskRepository.getTaskById(task.id) } returns task
+        every { repository.getTaskById(task.id) } returns task
         // When & Then
         assertThrows<InvalidTaskIDException> {
-            deleteTaskUseCase.execute("not-uuid")
+            useCase.execute("not-uuid")
         }
     }
 
