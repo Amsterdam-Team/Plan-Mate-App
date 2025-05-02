@@ -1,6 +1,11 @@
 package ui.utils
 
 import logic.exception.PlanMateException
+import logic.exception.PlanMateException.AuthorizationException.AdminPrivilegesRequiredException
+import logic.exception.PlanMateException.AuthorizationException.UserNotFoundException
+import logic.exception.PlanMateException.NotFoundException.*
+import logic.exception.PlanMateException.ParsingException.CsvFormatException
+import logic.exception.PlanMateException.ValidationException.*
 
 fun String.printAsASuccessState() {
     val green = "\u001B[32m"
@@ -17,44 +22,36 @@ fun String.printAsAFailState() {
 fun getErrorMessageByException(exception: Exception): String {
 
     return when (exception) {
-        is PlanMateException.AuthorizationException.AdminPrivilegesRequiredException ->
-            "You need admin privileges to perform this action."
+        is AdminPrivilegesRequiredException -> "You need admin privileges to perform this action."
 
-        is PlanMateException.AuthorizationException.UserNotFoundException ->
-            "User not found. Please check the user ID or try again."
+        is UserNotFoundException -> "User not found. Please check the user ID or try again."
 
-        is PlanMateException.ValidationException.InvalidUsernameException ->
-            "The username you entered is not valid. Please try a different one."
+        is InvalidUsernameException -> "The username you entered is not valid. Please try a different one."
 
-        is PlanMateException.ValidationException.InvalidPasswordException ->
-            "The password you entered is not valid. Please follow the password rules."
+        is InvalidPasswordException -> "The password you entered is not valid. Please follow the password rules."
 
-        is PlanMateException.ValidationException.InvalidStateNameException ->
-            "The state name is not valid. Please enter a valid name."
+        is InvalidStateNameException -> "The state name is not valid. Please enter a valid name."
 
-        is PlanMateException.ValidationException.InvalidTaskNameException ->
-            "The task name is not valid. Please enter a proper task name."
+        is InvalidTaskNameException -> "The task name is not valid. Please enter a proper task name."
 
-        is PlanMateException.ValidationException.InvalidTaskIDException ->
-            "The task ID is invalid. Please check and try again."
+        is InvalidTaskIDException -> "The task ID is invalid. Please check and try again."
 
-        is PlanMateException.ValidationException.InvalidProjectNameException ->
-            "The project name is not valid. Please enter a valid project name."
+        is InvalidProjectNameException -> "The project name is not valid. Please enter a valid project name."
 
-        is PlanMateException.ValidationException.InvalidProjectIDException ->
-            "The project ID is invalid. Please check and try again."
+        is InvalidProjectIDException -> "The project ID is invalid. Please check and try again."
 
-        is PlanMateException.ParsingException.CsvFormatException ->
-            "Something went wrong while handling your data. Please try again."
+        is CsvFormatException -> "Something went wrong while handling your data. Please try again."
 
-        is PlanMateException.NotFoundException.ProjectNotFoundException ->
-            "Project not found. It may have been deleted or doesn't exist."
+        is ProjectNotFoundException -> "Project not found. It may have been deleted or doesn't exist."
 
-        is PlanMateException.NotFoundException.TaskNotFoundException ->
-            "Task not found. Please make sure the task ID is correct."
+        is TaskNotFoundException -> "Task not found. Please make sure the task ID is correct."
 
-        is PlanMateException.NotFoundException.StateNotFoundException ->
-            "State not found. Please check the state name or ID."
+        is StateNotFoundException -> "State not found. Please check the state name or ID."
+
+        is EmptyProjectNameException -> "Project name shouldn't be empty,Please enter the project name"
+
+        is EmptyProjectStatesException -> "Project states shouldn't be empty,Please enter the project states"
+
 
         is PlanMateException -> "Something went wrong with your request. Please try again."
 

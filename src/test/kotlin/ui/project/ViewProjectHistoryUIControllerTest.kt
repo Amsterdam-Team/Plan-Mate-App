@@ -1,14 +1,10 @@
-package ui.project
+package ui.controllers
+
 
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import logic.repository.ProjectRepository
-import logic.usecases.project.ViewProjectHistoryUseCase
-import logic.usecases.project.helper.ViewProjectHistoryTestFactory.ALL_PROJECTS
-import logic.usecases.project.helper.ViewProjectHistoryTestFactory.LOGS_FOR_PROJECT_1
-import logic.usecases.project.helper.ViewProjectHistoryTestFactory.PROJECT_1
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.io.ByteArrayOutputStream
@@ -33,8 +29,7 @@ class ViewProjectHistoryUIControllerTest {
     @Test
     fun `should print all project IDs`() {
         // Given
-        every { projectRepository.getProjects() } returns ALL_PROJECTS
-
+        every { repository.getProjects() } returns ALL_PROJECTS
 
         // When
         controller.execute()
