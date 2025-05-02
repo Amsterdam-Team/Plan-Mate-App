@@ -33,14 +33,29 @@ fun main() {
 
     val adminHandler: AdminMenuHandler = AdminMenuHandler(
         mapOf(
-            1 to createProjectUIController,
-            2 to updateStateUiController
+//            1 to ViewAllProject,
+//            2 to viewState
+//            3 to createTask
+            4 to editTaskUiController,
+            5 to deleteTaskUiController,
+            6 to viewTaskLogsUIController,
+            7 to viewProjectHistoryUIController,
+            8 to viewTaskLogsUIController,
+//            9 to createUser,
+            10 to createProjectUIController,
+            11 to updateStateUiController,
+            12 to deleteProjectUiController,
+//            13 to createState
+            14 to editTaskUiController,
+//            15 to deleteProjectState
         )
     )
 
     val mateHandler: MateMenuHandler = MateMenuHandler(
         mapOf(
             1 to getProjectUIController,
+//            2 to getTaskState,
+
         )
     )
 
