@@ -18,6 +18,6 @@ class LogRepositoryImpl(private val dataSource : DataSource): LogRepository {
     }
 
     override fun addLog(log: LogItem) {
-        TODO("Not yet implemented")
+        dataSource.add(log)
     }
 }
