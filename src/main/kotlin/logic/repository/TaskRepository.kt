@@ -1,7 +1,7 @@
 package logic.repository
 
 import logic.entities.Task
-import java.util.UUID
+import java.util.*
 
 interface TaskRepository {
     fun createTask(task: Task)
