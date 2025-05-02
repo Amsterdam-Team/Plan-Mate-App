@@ -2,7 +2,7 @@ package usecase
 
 import io.mockk.every
 import io.mockk.mockk
-import logic.exception.PlanMateException.NotFoundException.TaskIDNotFoundException
+import logic.exception.PlanMateException.NotFoundException.TaskIdNotFoundException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.repository.LogRepository
 import logic.usecases.ViewTaskLogsUseCase
@@ -13,7 +13,6 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import utils.hepler.taskLogs
 import utils.hepler.validId
-import java.util.UUID
 import kotlin.test.assertEquals
 
 class ViewTaskLogsUseCaseTest {
@@ -31,7 +30,7 @@ class ViewTaskLogsUseCaseTest {
     fun `should return logs of task when id is valid format of UUID and found`(){
         every { repository.viewLogsById(validId) } returns taskLogs()
 
-        val returnedLogs = useCase.viewTaskLogs(validId)
+        val returnedLogs = useCase.viewTaskLogs(validId.toString())
         assertEquals(taskLogs(), returnedLogs)
     }
 
@@ -47,16 +46,16 @@ class ViewTaskLogsUseCaseTest {
     fun `should throw InvalidTaskIDException when task id is invalid UUID format`(id:String){
 
         assertThrows<InvalidTaskIDException>{
-            useCase.viewTaskLogs(UUID.fromString(id))
+            useCase.viewTaskLogs(id)
         }
     }
 
     @Test
     fun `should throw TaskIdNotFoundException when id of task not found`(){
-        every { repository.viewLogsById(validId) } throws TaskIDNotFoundException
+        every { repository.viewLogsById(validId) } throws TaskIdNotFoundException
 
-        assertThrows<TaskIDNotFoundException> {
-            useCase.viewTaskLogs(validId)
+        assertThrows<TaskIdNotFoundException> {
+            useCase.viewTaskLogs(validId.toString())
         }
     }
 }

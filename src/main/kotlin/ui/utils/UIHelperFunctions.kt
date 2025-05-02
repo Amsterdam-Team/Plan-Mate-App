@@ -52,6 +52,8 @@ fun getErrorMessageByException(exception: Exception): String {
 
         is EmptyProjectStatesException -> "Project states shouldn't be empty,Please enter the project states"
 
+        is TaskLogsNotFound -> "This task not have any logs till now..."
+
 
         is PlanMateException -> "Something went wrong with your request. Please try again."
 

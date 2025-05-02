@@ -15,26 +15,36 @@ fun taskLogs ()= listOf<LogItem>(
         entityId = UUID.fromString("123e4567-e89b-12d3-a456-426614174000"),
     ),
     LogItem(
-        id = UUID.fromString("11111551-22a1-bb11-1111-177588lkhjk1"),
+        id = UUID.fromString("11111111-1111-1111-1111-111111111111"),
         message = "This task state is updated by Hend at 01:30 29-4-2025",
         date = LocalDateTime(2025, 4, 29, 8, 30),
         entityId = UUID.fromString("123e4567-e89b-12d3-a456-426614174000"),
     )
 )
 
-fun readInputFromConsole(input : String) : String{
-    System.setIn(ByteArrayInputStream(input.toByteArray()))
-
+fun simulateConsoleInteraction(input: String, block: () -> Unit): String {
+    val inputStream = ByteArrayInputStream(input.toByteArray())
     val outputStream = ByteArrayOutputStream()
+
+    val originalIn = System.`in`
+    val originalOut = System.out
+
+    System.setIn(inputStream)
     System.setOut(PrintStream(outputStream))
 
-    val output = outputStream.toString()
+    try {
+        block()
+    } finally {
+        System.setIn(originalIn)
+        System.setOut(originalOut)
+    }
 
-    return (output)
+    return outputStream.toString()
 }
+
 
 val validId = UUID.fromString("123e4567-e89b-12d3-a456-426614174000")
 val invalidId = "123e4567-e89b-12d3-a456-426614174%@0"
 
-const val TASK_ID_NOT_FOUND = " This ID not found, Please enter correct id.."
+const val TASK_ID_NOT_FOUND = " Task not found. Please make sure the task ID is correct."
 const val INVALID_ID_FORMAT = "This Id is invalid format , Please ensure you enter correct format of id "
