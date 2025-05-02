@@ -1,5 +1,6 @@
 package ui.state
 
+import com.google.common.truth.Truth.assertThat
 import console.ConsoleIO
 import io.mockk.*
 import logic.usecases.state.UpdateStateUseCase
@@ -7,8 +8,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
-import ui.UpdateStateUiController
-import java.util.UUID
+import org.junit.jupiter.params.provider.ValueSource
+import ui.controllers.UpdateStateUiController
 
 class UpdateStateUiControllerTest {
 
@@ -23,18 +24,25 @@ class UpdateStateUiControllerTest {
         uiController = UpdateStateUiController(usecase, consoleIO)
     }
 
+    private fun captureSlot(): CapturingSlot<String> {
+        val slot = slot<String>()
+        every { consoleIO.println(capture(slot)) } just Runs
+        return slot
+    }
     @Test
     fun `should execute edit state successfully when all inputs are valid`() {
         //Given
         val projectID = "db373589-b656-4e68-a7c0-2ccc705ca169"
         val oldState = "Done"
         val newState = "Completed"
-        every { consoleIO.println(any()) } just Runs
-        every { usecase.updateState(UUID.fromString(projectID), oldState, newState) } just runs
+        val slot = captureSlot()
+        every { consoleIO.println(capture(slot)) } just Runs
+        every { usecase.updateState(projectID, oldState, newState) } just runs
         //When
         uiController.execute()
         //Then
-        verify { consoleIO.println("State Updated Successfully") }
+        assertThat(slot.equals("State Updated Successfully"))
+
     }
 
 
@@ -44,31 +52,36 @@ class UpdateStateUiControllerTest {
         val projectID = "db373589-b656-4e68-a7c0-2ccc705ca169"
         val oldState = " "
         val newState = "Done"
-        every { consoleIO.println(any()) } just Runs
-        every { usecase.updateState(UUID.fromString(projectID), oldState, newState) }
+        val slot = captureSlot()
+        every { consoleIO.println(capture(slot)) } just Runs
+        every { usecase.updateState(projectID, oldState, newState) }
         //When
         uiController.execute()
         //Then
-        verify { consoleIO.println("State name is blank") }
+       assertThat(slot.equals("The state name is not valid. Please enter a valid name."))
     }
 
     @ParameterizedTest
-    @CsvSource(
+    @ValueSource(
+        strings = [
         " ",
         "old",
         "db373589-b656-4e68 a7c0-2ccc705ca169",
         " db373589-b656#4e68@a7c0-2ccc705ca169"
+        ]
     )
     fun `should show invalid Id format message when updateStateUseCase throws InvalidProjectIDException`(invalidID: String) {
         //Given
         val oldState = "Done"
-        val newState = "Done"
-        every { consoleIO.println(any()) } just Runs
-        every { usecase.updateState(UUID.fromString(invalidID), oldState, newState) }
+        val newState = "Finished"
+        val slot = captureSlot()
+
+        every { consoleIO.println(capture(slot)) } just Runs
+        every { usecase.updateState(invalidID, oldState, newState) }
         //When
         uiController.execute()
         //Then
-        verify { consoleIO.println("Invalid Project ID format") }
+        assertThat(slot.equals("The project ID is invalid. Please check and try again."))
 
     }
 
@@ -78,12 +91,13 @@ class UpdateStateUiControllerTest {
         val projectID = "db373589-b656-4e68-a7c0-2ccc705ca169"
         val oldState = "Done"
         val newState = "Done"
-        every { consoleIO.println(any()) } just Runs
-        every { usecase.updateState(UUID.fromString(projectID), oldState, newState) }
+        val slot = captureSlot()
+        every { consoleIO.println(capture(slot)) } just Runs
+        every { usecase.updateState(projectID, oldState, newState) }
         //When
         uiController.execute()
         //Then
-        verify { consoleIO.println("Old state and new state are identical. No changes applied.") }
+        assertThat(slot.equals("Current state and new state are identical. No changes applied."))
     }
 
 

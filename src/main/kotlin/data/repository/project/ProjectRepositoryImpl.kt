@@ -1,10 +1,12 @@
 package data.repository.project
 
+import data.datasources.DataSource
 import logic.entities.Project
+import logic.exception.PlanMateException
 import logic.repository.ProjectRepository
 import java.util.UUID
 
-class ProjectRepositoryImpl(val dataSource: DataSource<Project>) : ProjectRepository {
+class ProjectRepositoryImpl(private val dataSource: DataSource) : ProjectRepository {
     override fun createProject(project: Project) {
         TODO("Not yet implemented")
     }
@@ -20,7 +22,7 @@ class ProjectRepositoryImpl(val dataSource: DataSource<Project>) : ProjectReposi
     }
 
     override fun getProjects(): List<Project> {
-        TODO("Not yet implemented")
+        return dataSource.getAll().map { it as Project }
     }
 
     override fun getProject(id: UUID): Project {
@@ -28,8 +30,8 @@ class ProjectRepositoryImpl(val dataSource: DataSource<Project>) : ProjectReposi
     }
 
     override fun updateProjectStateById(id: UUID, oldState: String, newState: String) {
-        val projects = dataSource.getAll() as List<Project>
-        val project = dataSource.getById(id) as Project
+        val projects = dataSource.getAll().map { it as Project }
+        val project = projects.find { it.id == id } ?: throw PlanMateException.NotFoundException.ProjectNotFoundException
 
         val updatedProject = project.copy(
             states = project.states.map {
