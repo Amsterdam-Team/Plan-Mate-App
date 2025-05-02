@@ -19,7 +19,9 @@ object CreateTaskTestFactory {
             name = name,
             projectId = projectID,
             state = state,
-            )
+        )
     }
+
+    fun createTaskWithProjectID(projectId: UUID) = createTask(projectID = projectId)
 
 }
