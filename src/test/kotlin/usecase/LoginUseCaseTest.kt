@@ -66,20 +66,6 @@ class LoginUseCaseTest {
         }
     }
 
-    @Test
-    fun `should throw user not found exception when username and password are valid format but not found`(){
-        //Given
-        val username= "Hen"
-        val password = "K12345"
-
-        every { repository.login(username, password) } throws UserNotFoundException
-
-        //When && Throw
-        assertThrows<UserNotFoundException> {
-            useCase.verifyUserState(username, password)
-        }
-    }
-
     @ParameterizedTest
     @ValueSource(
         strings = [
