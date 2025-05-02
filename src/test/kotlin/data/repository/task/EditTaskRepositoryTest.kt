@@ -9,7 +9,6 @@ import logic.entities.Task
 import logic.exception.PlanMateException.DataSourceException.EmptyDataException
 import logic.exception.PlanMateException.DataSourceException.EmptyFileException
 import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
-import logic.usecases.task.testFactory.CreateTaskTestFactory
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
