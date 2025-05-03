@@ -42,7 +42,7 @@ class CreateTaskUseCaseTest {
             every { id } returns validTask.projectId
             every { states } returns listOf(validTask.state)
         }
-        every { taskRepository.createTask(validTask) } returns Unit
+        every { taskRepository.createTask(validTask) } returns false
 
         //When & Then
         assertDoesNotThrow {
