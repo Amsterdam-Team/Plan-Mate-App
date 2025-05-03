@@ -26,7 +26,7 @@ class DeleteProjectRepositoryTest {
     @BeforeEach
     fun setUp() {
         dataSource = mockk()
-        repository = ProjectRepositoryImpl(dataSource)
+        repository = ProjectRepositoryImpl(mockk())
         dummyId = randomUUID()
 
     }
