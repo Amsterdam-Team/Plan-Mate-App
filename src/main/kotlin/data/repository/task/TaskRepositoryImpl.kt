@@ -5,34 +5,34 @@ import logic.entities.Task
 import logic.repository.TaskRepository
 import java.util.*
 
-class TaskRepositoryImpl(private val taskDataSourceInterface: TaskDataSourceInterface): TaskRepository {
-    override fun createTask(task: Task) {
-        TODO("Not yet implemented")
-    }
+class TaskRepositoryImpl(private val taskDataSource: TaskDataSourceInterface): TaskRepository {
+    override fun createTask(task: Task) =
+        taskDataSource.insertTask(task)
+
 
     override fun updateTask(task: Task) =
-        taskDataSourceInterface.updateTaskName(task.id,task.name)&&
-        taskDataSourceInterface.updateTaskState(task.id,task.state)
+        taskDataSource.updateTaskName(task.id,task.name)&&
+        taskDataSource.updateTaskState(task.id,task.state)
 
 
     override fun updateTaskNameByID(taskId: UUID, newName: String) =
-        taskDataSourceInterface.updateTaskName(taskId,newName)
+        taskDataSource.updateTaskName(taskId,newName)
 
 
     override fun updateStateNameByID(taskId: UUID, newState: String) =
-        taskDataSourceInterface.updateTaskState(taskId,newState)
+        taskDataSource.updateTaskState(taskId,newState)
 
 
     override fun deleteTask(taskId: UUID) =
-        taskDataSourceInterface.deleteTask(taskId)
+        taskDataSource.deleteTask(taskId)
 
     override fun getTaskById(taskId: UUID): Task =
-        taskDataSourceInterface.getTaskById(taskId)
+        taskDataSource.getTaskById(taskId)
 
 
 
     override fun getAllTasksByProjectId(projectId: UUID) =
-        taskDataSourceInterface.getAllTasks()
+        taskDataSource.getAllTasks()
 
 
 

@@ -5,13 +5,13 @@ import logic.entities.LogItem
 import logic.repository.LogRepository
 import java.util.*
 
-class LogRepositoryImpl(private val logDataSourceInterface: LogDataSourceInterface): LogRepository {
+class LogRepositoryImpl(private val logDataSource: LogDataSourceInterface): LogRepository {
     override fun viewLogsById(entityId: UUID) =
-        logDataSourceInterface.getLogsByEntityId(entityId)
+        logDataSource.getLogsByEntityId(entityId)
 
     override fun viewAllLogs() =
-        logDataSourceInterface.getAllLogs()
+        logDataSource.getAllLogs()
 
     override fun addLog(log: LogItem) =
-        logDataSourceInterface.insertLog(log)
+        logDataSource.insertLog(log)
 }

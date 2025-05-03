@@ -4,7 +4,7 @@ import logic.entities.Task
 import java.util.*
 
 interface TaskRepository {
-    fun createTask(task: Task)
+    fun createTask(task: Task): Boolean
     fun deleteTask(taskId: UUID): Boolean
     fun getTaskById(taskId : UUID) : Task
     fun getAllTasksByProjectId(projectId: UUID): List<Task>

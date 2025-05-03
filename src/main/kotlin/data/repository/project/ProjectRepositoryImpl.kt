@@ -5,36 +5,36 @@ import logic.entities.Project
 import logic.repository.ProjectRepository
 import java.util.*
 
-class ProjectRepositoryImpl(private val projectDataSourceInterface: ProjectDataSourceInterface) : ProjectRepository {
+class ProjectRepositoryImpl(private val projectDataSource: ProjectDataSourceInterface) : ProjectRepository {
 
     override fun createProject(project: Project) =
-        projectDataSourceInterface.insertProject(project)
+        projectDataSource.insertProject(project)
 
 
     override fun updateProjectNameById(projectId: UUID, newName: String) =
-        projectDataSourceInterface.updateProjectName(projectId,newName)
+        projectDataSource.updateProjectName(projectId,newName)
 
 
     override fun deleteProject(projectId: UUID) =
-        projectDataSourceInterface.deleteProject(projectId)
+        projectDataSource.deleteProject(projectId)
 
 
     override fun getProjects() =
-        projectDataSourceInterface.getAllProjects()
+        projectDataSource.getAllProjects()
 
 
     override fun getProject(projectId: UUID) =
-        projectDataSourceInterface.getProjectById(projectId)
+        projectDataSource.getProjectById(projectId)
 
     override fun updateProjectStateById(projectId: UUID, oldState: String, newState: String) =
-        projectDataSourceInterface.updateProjectState(projectId,oldState,newState)
+        projectDataSource.updateProjectState(projectId,oldState,newState)
 
 
     override fun deleteStateById(projectId: UUID, oldState: String)=
-        projectDataSourceInterface.deleteProjectState(projectId,oldState)
+        projectDataSource.deleteProjectState(projectId,oldState)
 
 
     override fun addStateById(projectId: UUID, state: String) =
-        projectDataSourceInterface.insertProjectState(projectId,state)
+        projectDataSource.insertProjectState(projectId,state)
 
 }
