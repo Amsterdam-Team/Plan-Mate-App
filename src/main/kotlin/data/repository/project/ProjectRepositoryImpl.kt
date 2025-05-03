@@ -1,6 +1,7 @@
 package data.repository.project
 
 import data.datasources.DataSource
+import data.datasources.projectDataSource.ProjectDataSourceInterface
 import logic.entities.Project
 import logic.exception.PlanMateException
 import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
@@ -9,59 +10,36 @@ import logic.exception.PlanMateException.ValidationException.ProjectNameAlreadyE
 import logic.repository.ProjectRepository
 import java.util.*
 
-class ProjectRepositoryImpl(val dataSource: DataSource) : ProjectRepository {
-    override fun createProject(project: Project) {
-        val existedProjects = dataSource.getAll().map { it as Project }
-        if (existedProjects.any { it.name.equals(project.name, ignoreCase = true) }) {
-            throw ProjectNameAlreadyExistException
-        }
-        dataSource.add(project)
-    }
+class ProjectRepositoryImpl(private val projectDataSourceInterface: ProjectDataSourceInterface) : ProjectRepository {
 
-    override fun updateProjectNameById(id: UUID, newName: String) {
-        TODO("Not yet implemented")
-    }
+    override fun createProject(project: Project) =
+        projectDataSourceInterface.insertProject(project)
 
-    override fun deleteProject(projectId: UUID) {
-        val allProject = dataSource.getAll().map { it as Project }
-        if (allProject.isEmpty()) throw EmptyDataException
-        allProject.find { it.id == projectId } ?: throw ProjectNotFoundException
-        val newProjectsList = allProject.filterNot { it.id == projectId }
-        dataSource.saveAll(newProjectsList)
 
-    }
+    override fun updateProjectNameById(projectId: UUID, newName: String) =
+        projectDataSourceInterface.updateProjectName(projectId,newName)
 
-    override fun getProjects(): List<Project> {
-        return dataSource.getAll().map { it as Project }
-    }
 
-    override fun getProject(id: UUID): Project {
-        return dataSource.getById(id) as Project
-    }
+    override fun deleteProject(projectId: UUID) =
+        projectDataSourceInterface.deleteProject(projectId)
 
-    override fun updateProjectStateById(id: UUID, oldState: String, newState: String) {
-        val projects = dataSource.getAll().map { it as Project }
-        val project =
-            projects.find { it.id == id } ?: throw ProjectNotFoundException
 
-        val updatedProject = project.copy(
-            states = project.states.map {
-                if (it == oldState) newState else it
-            }
-        )
+    override fun getProjects() =
+        projectDataSourceInterface.getAllProjects()
 
-        val updatedProjects = projects.map {
-            if (it.id == id) updatedProject else it
-        }
-        dataSource.saveAll(updatedProjects)
-    }
 
-    override fun deleteStateById(projectId: UUID, oldState: String): Boolean {
-        TODO("Not yet implemented")
-    }
+    override fun getProject(projectId: UUID) =
+        projectDataSourceInterface.getProjectById(projectId)
 
-    override fun addStateById(id: UUID, state: String) {
-        TODO("Not yet implemented")
-    }
+    override fun updateProjectStateById(projectId: UUID, oldState: String, newState: String) =
+        projectDataSourceInterface.updateProjectState(projectId,oldState,newState)
+
+
+    override fun deleteStateById(projectId: UUID, oldState: String)=
+        projectDataSourceInterface.deleteProjectState(projectId,oldState)
+
+
+    override fun addStateById(projectId: UUID, state: String) =
+        projectDataSourceInterface.insertProjectState(projectId,state)
 
 }
