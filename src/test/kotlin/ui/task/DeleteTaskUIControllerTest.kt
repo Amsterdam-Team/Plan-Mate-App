@@ -1,14 +1,12 @@
-package ui.controllers
+package ui.task
 
-import com.google.common.truth.Truth.assertThat
-import helpers.DeleteTaskTestFactory.ALL_PROJECTS
-import helpers.DeleteTaskTestFactory.PROJECT_1
-import helpers.DeleteTaskTestFactory.TASK_1
+import com.google.common.truth.Truth
+import helpers.DeleteTaskTestFactory
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import logic.repository.ProjectRepository
-import logic.usecases.DeleteTaskUseCase
+import logic.usecases.task.DeleteTaskUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.io.ByteArrayOutputStream
@@ -34,26 +32,26 @@ class DeleteTaskUIControllerTest {
     @Test
     fun `should print all project IDs`() {
         // Given
-        every { repository.getProjects() } returns ALL_PROJECTS
+        every { repository.getProjects() } returns DeleteTaskTestFactory.ALL_PROJECTS
 
         // When
         controller.execute()
 
         // Then
-        assertThat(outContent.toString()).contains(PROJECT_1.id.toString())
+        Truth.assertThat(outContent.toString()).contains(DeleteTaskTestFactory.PROJECT_1.id.toString())
     }
 
     @Test
     fun `should call deleteTaskUseCase with params when task is selected`() {
         // Given
-        every { repository.getProjects() } returns ALL_PROJECTS
-        provideInput(TASK_1.id.toString())
+        every { repository.getProjects() } returns DeleteTaskTestFactory.ALL_PROJECTS
+        provideInput(DeleteTaskTestFactory.TASK_1.id.toString())
 
         // When
         controller.execute()
 
         // Then
-        verify (exactly = 1){ useCase.execute(TASK_1.id.toString()) }
+        verify(exactly = 1) { useCase.execute(DeleteTaskTestFactory.TASK_1.id.toString()) }
     }
 
 

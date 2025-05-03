@@ -1,4 +1,4 @@
-package logic.usecases
+package logic.usecases.task
 
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.repository.TaskRepository
