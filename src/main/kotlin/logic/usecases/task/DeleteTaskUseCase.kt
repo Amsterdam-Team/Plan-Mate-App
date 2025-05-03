@@ -7,13 +7,13 @@ import java.util.UUID
 class DeleteTaskUseCase(
     private val taskRepository: TaskRepository,
 ) {
-    fun execute(taskId: String?) {
+    fun execute(taskId: String?) : Boolean{
         if(taskId.isNullOrEmpty()) throw InvalidTaskIDException
         val taskUUID = try {
             UUID.fromString(taskId)
         }catch (_:IllegalArgumentException){
             throw InvalidTaskIDException
         }
-        taskRepository.deleteTask(taskUUID)
+        return taskRepository.deleteTask(taskUUID)
     }
 }
