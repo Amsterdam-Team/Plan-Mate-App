@@ -28,7 +28,7 @@ class CreateProjectUseCaseTest {
     @BeforeEach
     fun start() {
         dataSource = mockk()
-        repository = ProjectRepositoryImpl(dataSource)
+        repository = ProjectRepositoryImpl(mockk())
         user = User(id = UUID.randomUUID(), isAdmin = true, username = "Mahmoud", password = "123456")
         useCase = CreateProjectUseCase(repository, user)
     }
