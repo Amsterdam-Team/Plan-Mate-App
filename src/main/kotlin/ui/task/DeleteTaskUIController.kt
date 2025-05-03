@@ -1,11 +1,9 @@
 package ui.task
 
 import console.ConsoleIO
-import logic.repository.ProjectRepository
 import logic.usecases.task.DeleteTaskUseCase
 import ui.controller.BaseUIController
 import ui.utils.tryToExecute
-import utils.printSwimlanesView
 
 class DeleteTaskUIController(
     private val deleteTaskUseCase: DeleteTaskUseCase,
@@ -14,6 +12,7 @@ class DeleteTaskUIController(
     override fun execute() {
         tryToExecute(
             action = {
+                consoleIO.println("Please Enter Task ID:")
                 deleteTaskUseCase.execute(consoleIO.readFromUser())
             },
             onSuccess = { isTaskDeleted ->
