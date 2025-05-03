@@ -19,7 +19,7 @@ import logic.repository.AuthRepository
 import logic.repository.LogRepository
 import logic.repository.ProjectRepository
 import logic.repository.TaskRepository
-import logic.usecases.DeleteTaskUseCase
+import logic.usecases.task.DeleteTaskUseCase
 import logic.usecases.LoginUseCase
 import logic.usecases.ViewTaskLogsUseCase
 import logic.usecases.project.CreateProjectUseCase
@@ -38,12 +38,11 @@ import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import ui.DeleteProjectUiController
 import ui.EditTaskUiController
-import ui.LoginUIController
 import ui.ViewTaskLogsUIController
 import ui.console.ConsoleIO
 import ui.console.ConsoleIOImpl
 import ui.controllers.CreateProjectUIController
-import ui.controllers.DeleteTaskUIController
+import ui.task.DeleteTaskUIController
 import ui.controllers.UpdateStateUiController
 import ui.menuHandler.AdminMenuHandler
 import ui.menuHandler.MateMenuHandler
