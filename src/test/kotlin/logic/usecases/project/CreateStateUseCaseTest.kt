@@ -50,7 +50,6 @@ class CreateStateUseCaseTest {
         val result = useCase.execute(project.id, blankState)
 
         // Then
-        assertThat(result).isInstanceOf(ResultStatus.Error::class.java)
         assertThat((result as ResultStatus.Error).exception).isInstanceOf(InvalidStateNameException::class.java)
     }
 
@@ -65,7 +64,6 @@ class CreateStateUseCaseTest {
         val result = useCase.execute(fakeProjectId, state)
 
         // Then
-        assertThat(result).isInstanceOf(ResultStatus.Error::class.java)
         assertThat((result as ResultStatus.Error).exception).isInstanceOf(ProjectNotFoundException::class.java)
     }
 
@@ -80,7 +78,6 @@ class CreateStateUseCaseTest {
         val result = useCase.execute(project.id, duplicateState)
 
         // Then
-        assertThat(result).isInstanceOf(ResultStatus.Error::class.java)
         assertThat((result as ResultStatus.Error).exception).isInstanceOf(SameStateNameException::class.java)
     }
 
@@ -95,7 +92,6 @@ class CreateStateUseCaseTest {
         val result = useCase.execute(project.id, duplicateWithSpaces)
 
         // Then
-        assertThat(result).isInstanceOf(ResultStatus.Error::class.java)
         assertThat((result as ResultStatus.Error).exception).isInstanceOf(SameStateNameException::class.java)
     }
 }

@@ -48,7 +48,6 @@ class CreateUserUseCaseTest {
         val result = useCase.execute(user.username, user.password, user.isAdmin)
 
         // Then
-        assertThat(result).isInstanceOf(ResultStatus.Error::class.java)
         assertThat((result as ResultStatus.Error).exception).isInstanceOf(UserAlreadyExistsException::class.java)
     }
 
@@ -62,7 +61,6 @@ class CreateUserUseCaseTest {
         val result = useCase.execute(username, blankPassword, false)
 
         // Then
-        assertThat(result).isInstanceOf(ResultStatus.Error::class.java)
         assertThat((result as ResultStatus.Error).exception).isInstanceOf(InvalidPasswordException::class.java)
     }
 
@@ -76,7 +74,6 @@ class CreateUserUseCaseTest {
         val result = useCase.execute(blankUsername, password, false)
 
         // Then
-        assertThat(result).isInstanceOf(ResultStatus.Error::class.java)
         assertThat((result as ResultStatus.Error).exception).isInstanceOf(InvalidUsernameException::class.java)
     }
 
@@ -90,7 +87,6 @@ class CreateUserUseCaseTest {
         val result = useCase.execute(blankUsername, blankPassword, false)
 
         // Then
-        assertThat(result).isInstanceOf(ResultStatus.Error::class.java)
         assertThat((result as ResultStatus.Error).exception).isInstanceOf(InvalidUsernameException::class.java)
     }
 }
