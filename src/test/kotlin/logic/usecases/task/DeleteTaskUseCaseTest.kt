@@ -1,5 +1,6 @@
 package logic.usecases.task
 
+import com.google.common.truth.Truth.assertThat
 import helpers.DeleteTaskTestFactory
 import io.mockk.every
 import io.mockk.mockk
@@ -21,35 +22,50 @@ class DeleteTaskUseCaseTest {
     }
 //region success
     @Test
-    fun `should call deleteTask when task is found`() {
+    fun `should call deleteTask when parameters is correct`() {
         // Given
         val task = DeleteTaskTestFactory.TASK_1
-        every { repository.getTaskById(task.id) } returns task
-
         // When
         useCase.execute(task.id.toString())
 
         // Then
-    verify(exactly = 1) { repository.deleteTask(task.id) }
+        verify(exactly = 1) { repository.deleteTask(task.id) }
+    }
+    @Test
+    fun `should returns true when task is deleted successfully`() {
+        // Given
+        val task = DeleteTaskTestFactory.TASK_1
+        every { repository.deleteTask(task.id) } returns true
+        // When
+        val result  = useCase.execute(task.id.toString())
+
+        // Then
+        assertThat(result).isTrue()
     }
 //endregion
 //region task validations
+
     @Test
-    fun `should throw InvalidTaskIDException when input is null`() {
+    fun `should returns false when task is not deleted`() {
         // Given
         val task = DeleteTaskTestFactory.TASK_1
-        every { repository.getTaskById(task.id) } returns task
-        // When & Then
-    assertThrows<PlanMateException.ValidationException.InvalidTaskIDException> {
-        useCase.execute(null)
+        every { repository.deleteTask(task.id) } returns false
+        // When
+        val result  = useCase.execute(task.id.toString())
+
+        // Then
+        assertThat(result).isFalse()
     }
+    @Test
+    fun `should throw InvalidTaskIDException when input is null`() {
+        // When & Then
+        assertThrows<PlanMateException.ValidationException.InvalidTaskIDException> {
+            useCase.execute(null)
+        }
     }
 
     @Test
-    fun `should throw InvalidTaskIDException when input is not a uuid`() {
-        // Given
-        val task = DeleteTaskTestFactory.TASK_1
-        every { repository.getTaskById(task.id) } returns task
+    fun `should throw InvalidTaskIDException when input is not a uuid`(){
         // When & Then
         assertThrows<PlanMateException.ValidationException.InvalidTaskIDException> {
             useCase.execute("not-uuid")

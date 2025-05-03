@@ -1,62 +1,61 @@
 package ui.task
 
-import com.google.common.truth.Truth
-import helpers.DeleteTaskTestFactory
+import console.ConsoleIO
+import helpers.DeleteTaskTestFactory.TASK_1
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import logic.repository.ProjectRepository
 import logic.usecases.task.DeleteTaskUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.io.ByteArrayOutputStream
-import java.io.PrintStream
 
 class DeleteTaskUIControllerTest {
 
     private lateinit var useCase: DeleteTaskUseCase
-    private lateinit var repository: ProjectRepository
     private lateinit var controller: DeleteTaskUIController
-    private lateinit var outContent: ByteArrayOutputStream
+    private lateinit var consoleIO: ConsoleIO
 
     @BeforeEach
     fun setup() {
         useCase = mockk(relaxed = true)
-        repository = mockk()
-        controller = DeleteTaskUIController(useCase, repository)
-        outContent = ByteArrayOutputStream()
-        System.setOut(PrintStream(outContent))
+        consoleIO = mockk(relaxed = true)
+        controller = DeleteTaskUIController(useCase,consoleIO)
     }
 
-
     @Test
-    fun `should print all project IDs`() {
+    fun `should print success message when task deleted`() {
         // Given
-        every { repository.getProjects() } returns DeleteTaskTestFactory.ALL_PROJECTS
-
+        every { consoleIO.readFromUser() } returns TASK_1.id.toString()
+        every { useCase.execute(TASK_1.id.toString()) } returns true
         // When
         controller.execute()
 
         // Then
-        Truth.assertThat(outContent.toString()).contains(DeleteTaskTestFactory.PROJECT_1.id.toString())
+        verify(exactly = 1) { consoleIO.println("✅ Task deleted successfully.") }
+    }
+
+    @Test
+    fun `should print fail message when task is not deleted`() {
+        // Given
+        every { consoleIO.readFromUser() } returns TASK_1.id.toString()
+        every { useCase.execute(TASK_1.id.toString()) } returns false
+        // When
+        controller.execute()
+
+        // Then
+        verify(exactly = 1) { consoleIO.println("❌ Failed to delete task. Please try again.") }
     }
 
     @Test
     fun `should call deleteTaskUseCase with params when task is selected`() {
         // Given
-        every { repository.getProjects() } returns DeleteTaskTestFactory.ALL_PROJECTS
-        provideInput(DeleteTaskTestFactory.TASK_1.id.toString())
+        every { consoleIO.readFromUser() } returns TASK_1.id.toString()
 
         // When
         controller.execute()
 
         // Then
-        verify(exactly = 1) { useCase.execute(DeleteTaskTestFactory.TASK_1.id.toString()) }
+        verify(exactly = 1) { useCase.execute(TASK_1.id.toString()) }
     }
 
-
-    private fun provideInput(input: String) {
-        val stream = input.byteInputStream()
-        System.setIn(stream)
-    }
 }
