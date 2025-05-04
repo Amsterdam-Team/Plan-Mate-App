@@ -15,8 +15,7 @@ class ProjectRepositoryImpl(private val projectDataSource: ProjectDataSourceInte
         projectDataSource.updateProjectName(projectId,newName)
 
 
-    override fun deleteProject(projectId: UUID) =
-        projectDataSource.deleteProject(projectId)
+    override fun deleteProject(projectId: UUID) = projectDataSource.deleteProject(projectId)
 
 
     override fun getProjects() =

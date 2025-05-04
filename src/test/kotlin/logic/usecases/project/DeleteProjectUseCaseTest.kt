@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import data.repository.project.ProjectRepositoryImpl
 import io.mockk.*
 import logic.exception.PlanMateException
+import logic.exception.PlanMateException.DataSourceException.EmptyDataException
 import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -51,7 +52,7 @@ class DeleteProjectUseCaseTest {
     @Test
     fun `should call delete project repo function when try to delete project`() {
         useCase.deleteProject(dummyProjectId.toString())
-        verify(exactly = 1) { repository.deleteProject(any()) }
+        verify(exactly = 1) { repository.deleteProject(dummyProjectId) }
 
     }
 
@@ -59,10 +60,12 @@ class DeleteProjectUseCaseTest {
     fun `should throw empty data exception when the id entered by user is empty`() {
         // given
         val id = ""
+        every {repository.deleteProject(any())} returns false
         // when
-
         // then
-
+        assertThrows<EmptyDataException> {
+            useCase.deleteProject(id)
+        }
     }
     @ParameterizedTest
     @CsvSource(
