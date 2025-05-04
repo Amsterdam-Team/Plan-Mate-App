@@ -17,4 +17,6 @@ interface UserDataSourceInterface {
     fun updatePassword(userId: UUID, newPassword: String): Boolean
 
     fun replaceAllUsers(users: List<User>): Boolean
+
+    fun findUserByCredentials(username:String, password:String):User
 }

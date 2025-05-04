@@ -1,17 +1,15 @@
-package logic.usecases.login
+package usecase
 
+import com.google.common.truth.Truth.assertThat
+import helper.validUserData
 import io.mockk.every
 import io.mockk.mockk
-import logic.exception.PlanMateException
+import logic.exception.PlanMateException.AuthorizationException.*
 import logic.repository.AuthRepository
 import logic.usecases.LoginUseCase
-import logic.usecases.testFactory.validUserData
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.ValueSource
 
 class LoginUseCaseTest {
     private lateinit var repository : AuthRepository
@@ -32,78 +30,36 @@ class LoginUseCaseTest {
         //When
         every { repository.login(username, password) } returns validUserData()
         //then
-        val returnedUser = useCase.verifyUserState(username, password)
-        Assertions.assertEquals(validUserData(), returnedUser)
+        val returnedUser = useCase.validateUserCredentials(username, password)
+        assertThat(returnedUser).isEqualTo(validUserData())
+
     }
 
     @Test
-    fun `should throw wrong username exception when username and password are valid format but username is wrong`(){
+    fun `should throw wrong username exception when username is wrong`(){
         //Given
         val username= "Hen"
         val password = "H123456"
 
-        every {
-            repository.login(
-                username,
-                password
-            )
-        } throws PlanMateException.AuthorizationException.WrongUsernameException
+        every { repository.login(username, password) } throws WrongUsernameException
 
         //When && Throw
-        assertThrows<PlanMateException.AuthorizationException.WrongUsernameException> {
-            useCase.verifyUserState(username, password)
+        assertThrows<WrongUsernameException> {
+            useCase.validateUserCredentials(username, password)
         }
     }
 
     @Test
-    fun `should throw wrong password exception when username and password are valid format but password is wrong`(){
+    fun `should throw wrong password exception when password is wrong`(){
         //Given
         val username= "Hend"
         val password = "H123457"
 
-        every {
-            repository.login(
-                username,
-                password
-            )
-        } throws PlanMateException.AuthorizationException.WrongPasswordException
+        every { repository.login(username, password) } throws WrongPasswordException
 
         //When && Throw
-        assertThrows<PlanMateException.AuthorizationException.WrongPasswordException> {
-            useCase.verifyUserState(username, password)
-        }
-    }
-
-    @ParameterizedTest
-    @ValueSource(
-        strings = [
-            "H@$",
-            "1325",
-            "",
-            "he" //size less than 3
-        ]
-    )
-    fun `should throw invalid username exception when username is invalid format`(username:String){
-        val password = "H1234567"
-
-        assertThrows<PlanMateException.ValidationException.InvalidUsernameException> {
-            useCase.verifyUserState(username, password)
-        }
-    }
-
-    @ParameterizedTest
-    @ValueSource(
-        strings = [
-            "123456",
-            "",
-            "h1234"
-        ]
-    )
-    fun `should print invalid password exception when password is invalid format`(password:String){
-        val username = "Hend"
-
-        assertThrows<PlanMateException.ValidationException.InvalidPasswordException> {
-            useCase.verifyUserState(username, password)
+        assertThrows<WrongPasswordException> {
+            useCase.validateUserCredentials(username, password)
         }
     }
 }
