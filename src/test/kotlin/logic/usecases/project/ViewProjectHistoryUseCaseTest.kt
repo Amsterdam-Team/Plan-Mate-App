@@ -8,10 +8,8 @@ import io.mockk.mockk
 import logic.repository.LogRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
 import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
 import org.junit.jupiter.api.assertThrows
-import java.util.UUID
 
 class ViewProjectHistoryUseCaseTest {
 
