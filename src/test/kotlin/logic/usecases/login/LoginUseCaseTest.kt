@@ -1,12 +1,12 @@
-package usecase
+package logic.usecases.login
 
-import com.google.common.truth.Truth.assertThat
-import helper.validUserData
+import com.google.common.truth.Truth
 import io.mockk.every
 import io.mockk.mockk
-import logic.exception.PlanMateException.AuthorizationException.*
+import logic.exception.PlanMateException
 import logic.repository.AuthRepository
 import logic.usecases.LoginUseCase
+import logic.usecases.testFactory.validUserData
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -31,7 +31,7 @@ class LoginUseCaseTest {
         every { repository.login(username, password) } returns validUserData()
         //then
         val returnedUser = useCase.validateUserCredentials(username, password)
-        assertThat(returnedUser).isEqualTo(validUserData())
+        Truth.assertThat(returnedUser).isEqualTo(validUserData())
 
     }
 
@@ -41,10 +41,15 @@ class LoginUseCaseTest {
         val username= "Hen"
         val password = "H123456"
 
-        every { repository.login(username, password) } throws WrongUsernameException
+        every {
+            repository.login(
+                username,
+                password
+            )
+        } throws PlanMateException.AuthorizationException.WrongUsernameException
 
         //When && Throw
-        assertThrows<WrongUsernameException> {
+        assertThrows<PlanMateException.AuthorizationException.WrongUsernameException> {
             useCase.validateUserCredentials(username, password)
         }
     }
@@ -55,10 +60,15 @@ class LoginUseCaseTest {
         val username= "Hend"
         val password = "H123457"
 
-        every { repository.login(username, password) } throws WrongPasswordException
+        every {
+            repository.login(
+                username,
+                password
+            )
+        } throws PlanMateException.AuthorizationException.WrongPasswordException
 
         //When && Throw
-        assertThrows<WrongPasswordException> {
+        assertThrows<PlanMateException.AuthorizationException.WrongPasswordException> {
             useCase.validateUserCredentials(username, password)
         }
     }
