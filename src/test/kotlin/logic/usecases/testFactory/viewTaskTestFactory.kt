@@ -2,9 +2,6 @@ package logic.usecases.testFactory
 
 import kotlinx.datetime.LocalDateTime
 import logic.entities.LogItem
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.io.PrintStream
 import java.util.UUID
 
 fun taskLogs ()= listOf<LogItem>(
@@ -21,27 +18,6 @@ fun taskLogs ()= listOf<LogItem>(
         entityId = UUID.fromString("123e4567-e89b-12d3-a456-426614174000"),
     )
 )
-
-fun simulateConsoleInteraction(input: String, block: () -> Unit): String {
-    val inputStream = ByteArrayInputStream(input.toByteArray())
-    val outputStream = ByteArrayOutputStream()
-
-    val originalIn = System.`in`
-    val originalOut = System.out
-
-    System.setIn(inputStream)
-    System.setOut(PrintStream(outputStream))
-
-    try {
-        block()
-    } finally {
-        System.setIn(originalIn)
-        System.setOut(originalOut)
-    }
-
-    return outputStream.toString()
-}
-
 
 val validId = UUID.fromString("123e4567-e89b-12d3-a456-426614174000")
 val invalidId = "123e4567-e89b-12d3-a456-426614174%@0"

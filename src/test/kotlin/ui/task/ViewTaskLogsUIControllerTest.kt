@@ -1,8 +1,13 @@
 package ui.task
 
+import com.google.common.truth.Truth.assertThat
+import io.mockk.CapturingSlot
+import io.mockk.Runs
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
-import logic.exception.PlanMateException
+import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
+import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.usecases.ViewTaskLogsUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -10,54 +15,57 @@ import ui.ViewTaskLogsUIController
 import logic.usecases.testFactory.INVALID_ID_FORMAT
 import logic.usecases.testFactory.TASK_NOT_FOUND
 import logic.usecases.testFactory.invalidId
-import logic.usecases.testFactory.simulateConsoleInteraction
 import logic.usecases.testFactory.taskLogs
 import logic.usecases.testFactory.validId
+import ui.console.ConsoleIO
 
 class ViewTaskLogsUIControllerTest {
     private lateinit var useCase : ViewTaskLogsUseCase
     private lateinit var uiController : ViewTaskLogsUIController
+    private lateinit var consoleIO: ConsoleIO
+
 
     @BeforeEach
     fun setup(){
         useCase = mockk()
-        uiController = ViewTaskLogsUIController(useCase)
+        consoleIO = mockk()
+        uiController = ViewTaskLogsUIController(useCase,consoleIO)
     }
 
     @Test
     fun `should print logs of task when logs are found`(){
+        val slot = CapturingSlot<String>()
 
+        every { consoleIO.println(capture(slot)) } just Runs
         every { useCase.viewTaskLogs(validId.toString()) } returns taskLogs()
 
-        val output = simulateConsoleInteraction(validId.toString()) {
-            uiController.execute()
-        }
+        uiController.execute()
 
-        assert(output.contains(taskLogs()[0].message))
-        assert(output.contains(taskLogs()[1].message))
-
+        assertThat(slot.equals((taskLogs()[0].message) + (taskLogs()[1].message )))
     }
 
     @Test
     fun `should print Invalid ID Format message when use case throw InvalidTaskIDException`(){
+        val slot = CapturingSlot<String>()
 
-        every { useCase.viewTaskLogs(invalidId) } throws PlanMateException.ValidationException.InvalidTaskIDException
+        every { consoleIO.println(capture(slot)) } just Runs
+        every { useCase.viewTaskLogs(invalidId) } throws InvalidTaskIDException
 
-        val output = simulateConsoleInteraction(invalidId.toString()) {
-            uiController.execute()
-        }
+        uiController.execute()
 
-        assert(output.contains(INVALID_ID_FORMAT))
+        assertThat(slot.equals(INVALID_ID_FORMAT))
     }
 
     @Test
     fun `should print Task Not Found message when use case throw TaskNotFoundException`(){
+        val slot = CapturingSlot<String>()
 
-        every { useCase.viewTaskLogs(invalidId.toString()) } throws PlanMateException.NotFoundException.TaskNotFoundException
+        every { consoleIO.println(capture(slot)) } just Runs
 
-        val output = simulateConsoleInteraction(invalidId.toString()) {
-            uiController.execute()
-        }
-        assert(output.contains(TASK_NOT_FOUND))
+        every { useCase.viewTaskLogs(invalidId.toString()) } throws TaskNotFoundException
+
+        uiController.execute()
+
+        assertThat(slot.equals(TASK_NOT_FOUND))
     }
 }

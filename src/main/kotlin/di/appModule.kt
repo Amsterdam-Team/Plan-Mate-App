@@ -113,6 +113,6 @@ val appModule = module {
     single { EditTaskUiController(get(), get()) }
 
 
-    single { ViewTaskLogsUIController(get()) }
+    single { ViewTaskLogsUIController(get(),get()) }
 
 }
