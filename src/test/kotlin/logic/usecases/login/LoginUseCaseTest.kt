@@ -1,13 +1,11 @@
-package usecase
+package logic.usecases.login
 
-import helper.validUserData
 import io.mockk.every
 import io.mockk.mockk
-import logic.exception.PlanMateException.AuthorizationException.*
-import logic.exception.PlanMateException.ValidationException.InvalidPasswordException
-import logic.exception.PlanMateException.ValidationException.InvalidUsernameException
+import logic.exception.PlanMateException
 import logic.repository.AuthRepository
 import logic.usecases.LoginUseCase
+import logic.usecases.testFactory.validUserData
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -44,10 +42,15 @@ class LoginUseCaseTest {
         val username= "Hen"
         val password = "H123456"
 
-        every { repository.login(username, password) } throws WrongUsernameException
+        every {
+            repository.login(
+                username,
+                password
+            )
+        } throws PlanMateException.AuthorizationException.WrongUsernameException
 
         //When && Throw
-        assertThrows<WrongUsernameException> {
+        assertThrows<PlanMateException.AuthorizationException.WrongUsernameException> {
             useCase.verifyUserState(username, password)
         }
     }
@@ -58,10 +61,15 @@ class LoginUseCaseTest {
         val username= "Hend"
         val password = "H123457"
 
-        every { repository.login(username, password) } throws WrongPasswordException
+        every {
+            repository.login(
+                username,
+                password
+            )
+        } throws PlanMateException.AuthorizationException.WrongPasswordException
 
         //When && Throw
-        assertThrows<WrongPasswordException> {
+        assertThrows<PlanMateException.AuthorizationException.WrongPasswordException> {
             useCase.verifyUserState(username, password)
         }
     }
@@ -78,9 +86,9 @@ class LoginUseCaseTest {
     fun `should throw invalid username exception when username is invalid format`(username:String){
         val password = "H1234567"
 
-        assertThrows<InvalidUsernameException>{
-           useCase.verifyUserState(username,password)
-       }
+        assertThrows<PlanMateException.ValidationException.InvalidUsernameException> {
+            useCase.verifyUserState(username, password)
+        }
     }
 
     @ParameterizedTest
@@ -94,8 +102,8 @@ class LoginUseCaseTest {
     fun `should print invalid password exception when password is invalid format`(password:String){
         val username = "Hend"
 
-        assertThrows<InvalidPasswordException>{
-            useCase.verifyUserState(username,password)
+        assertThrows<PlanMateException.ValidationException.InvalidPasswordException> {
+            useCase.verifyUserState(username, password)
         }
     }
 }

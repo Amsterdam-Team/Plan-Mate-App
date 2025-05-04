@@ -1,20 +1,18 @@
-package uiController
+package ui
 
-import helper.SUCCESS_MESSAGE_FOR_LOGIN
-import helper.WRONG_PASSWORD
-import helper.WRONG_USER_NAME
-import helper.simulateConsoleInteraction
-import helper.validUserData
 import io.mockk.every
 import io.mockk.mockk
-import logic.exception.PlanMateException.AuthorizationException.WrongPasswordException
-import logic.exception.PlanMateException.AuthorizationException.WrongUsernameException
+import logic.exception.PlanMateException
 import logic.usecases.LoginUseCase
+import logic.usecases.testFactory.SUCCESS_MESSAGE_FOR_LOGIN
+import logic.usecases.testFactory.WRONG_PASSWORD
+import logic.usecases.testFactory.WRONG_USER_NAME
+import logic.usecases.testFactory.simulateConsoleInteraction
+import logic.usecases.testFactory.validUserData
 import org.junit.jupiter.api.BeforeEach
-import ui.LoginUIController
+import org.junit.jupiter.api.Test
 import ui.menuHandler.AdminMenuHandler
 import ui.menuHandler.MateMenuHandler
-import kotlin.test.Test
 
 class LoginUIControllerTest {
     private lateinit var useCase : LoginUseCase
@@ -36,11 +34,11 @@ class LoginUIControllerTest {
         val password = "H123456"
         val input = "$username\n$password"
 
-        every { useCase.verifyUserState(username,password) } returns validUserData()
+        every { useCase.verifyUserState(username, password) } returns validUserData()
 
         val output = simulateConsoleInteraction(input) {
-          uiController.execute()
-       }
+            uiController.execute()
+        }
 
         assert(output.toString().contains(SUCCESS_MESSAGE_FOR_LOGIN))
     }
@@ -51,7 +49,12 @@ class LoginUIControllerTest {
         val password = "H123456"
         val input = "$username\n$password"
 
-        every { useCase.verifyUserState(username,password) } throws WrongUsernameException
+        every {
+            useCase.verifyUserState(
+                username,
+                password
+            )
+        } throws PlanMateException.AuthorizationException.WrongUsernameException
 
         val output = simulateConsoleInteraction(input) {
             uiController.execute()
@@ -66,7 +69,12 @@ class LoginUIControllerTest {
         val password = "12345"
         val input = "$username\n$password"
 
-        every { useCase.verifyUserState(username,password) } throws WrongPasswordException
+        every {
+            useCase.verifyUserState(
+                username,
+                password
+            )
+        } throws PlanMateException.AuthorizationException.WrongPasswordException
 
         val output = simulateConsoleInteraction(input) {
             uiController.execute()

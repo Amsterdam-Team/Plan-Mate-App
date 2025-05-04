@@ -1,4 +1,4 @@
-package helper
+package logic.usecases.testFactory
 
 import logic.entities.User
 import java.io.ByteArrayInputStream
