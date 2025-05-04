@@ -37,6 +37,7 @@ class ViewTaskLogsUIControllerTest {
         val slot = CapturingSlot<String>()
 
         every { consoleIO.println(capture(slot)) } just Runs
+        every { consoleIO.readFromUser() } returns validId.toString()
         every { useCase.viewTaskLogs(validId.toString()) } returns taskLogs()
 
         uiController.execute()
@@ -49,6 +50,7 @@ class ViewTaskLogsUIControllerTest {
         val slot = CapturingSlot<String>()
 
         every { consoleIO.println(capture(slot)) } just Runs
+        every { consoleIO.readFromUser() } returns invalidId.toString()
         every { useCase.viewTaskLogs(invalidId) } throws InvalidTaskIDException
 
         uiController.execute()
@@ -61,7 +63,7 @@ class ViewTaskLogsUIControllerTest {
         val slot = CapturingSlot<String>()
 
         every { consoleIO.println(capture(slot)) } just Runs
-
+        every { consoleIO.readFromUser() } returns invalidId.toString()
         every { useCase.viewTaskLogs(invalidId.toString()) } throws TaskNotFoundException
 
         uiController.execute()
