@@ -36,7 +36,7 @@ class LoginUIControllerTest {
         val password = "H123456"
         val input = "$username\n$password"
 
-        every { useCase.verifyUserState(username,password) } returns validUserData()
+        every { useCase.validateUserCredentials(username,password) } returns validUserData()
 
         val output = simulateConsoleInteraction(input) {
           uiController.execute()
@@ -51,7 +51,7 @@ class LoginUIControllerTest {
         val password = "H123456"
         val input = "$username\n$password"
 
-        every { useCase.verifyUserState(username,password) } throws WrongUsernameException
+        every { useCase.validateUserCredentials(username,password) } throws WrongUsernameException
 
         val output = simulateConsoleInteraction(input) {
             uiController.execute()
@@ -66,7 +66,7 @@ class LoginUIControllerTest {
         val password = "12345"
         val input = "$username\n$password"
 
-        every { useCase.verifyUserState(username,password) } throws WrongPasswordException
+        every { useCase.validateUserCredentials(username,password) } throws WrongPasswordException
 
         val output = simulateConsoleInteraction(input) {
             uiController.execute()

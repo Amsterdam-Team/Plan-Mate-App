@@ -21,7 +21,7 @@ class LoginUIController(
         val password = readLine().toString()
         tryToExecute (
             action = {
-                val user = loginUseCase.verifyUserState(username,password)
+                val user = loginUseCase.validateUserCredentials(username,password)
                 onLoginSuccess(user)
             },
             onSuccess = { println("Success Login......".printAsASuccessState()) }
