@@ -1,42 +1,26 @@
 package ui.project
 
-import logic.entities.LogItem
-import logic.repository.ProjectRepository
+import console.ConsoleIO
 import logic.usecases.project.ViewProjectHistoryUseCase
 import ui.controller.BaseUIController
 import ui.utils.tryToExecute
-import utils.printSwimlanesView
+import utils.formatLogItem
 
 class ViewProjectHistoryUIController(
     private val viewProjectHistoryUseCase: ViewProjectHistoryUseCase,
-    private val projectRepository: ProjectRepository,
+    private val consoleIO: ConsoleIO
 ) : BaseUIController {
 
     override fun execute() {
         tryToExecute(
             action = {
-                print("hi, please enter the id of the project")
-                projectRepository.getProjects().forEach {
-                    printSwimlanesView(it)
-                }
-                viewProjectHistoryUseCase.execute(readlnOrNull())
+                consoleIO.println("Please Enter Project ID:")
+                viewProjectHistoryUseCase.execute(consoleIO.readFromUser())
             },
             onSuccess = {
-                it.forEach { printLogItem(it) }
+                it.forEach { consoleIO.println(formatLogItem(it)) }
             }
         )
     }
 
-    private fun printLogItem(log: LogItem) {
-        println(
-            """
-        ------------------------------
-        🆔 Log ID     : ${log.id}
-        📝 Message    : ${log.message}
-        📅 Date       : ${log.date}
-        🔗 Entity ID  : ${log.entityId}
-        ------------------------------
-        """.trimIndent()
-        )
-    }
 }
