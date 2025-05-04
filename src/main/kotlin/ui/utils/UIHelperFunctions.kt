@@ -3,6 +3,8 @@ package ui.utils
 import logic.exception.PlanMateException
 import logic.exception.PlanMateException.AuthorizationException.AdminPrivilegesRequiredException
 import logic.exception.PlanMateException.AuthorizationException.UserNotFoundException
+import logic.exception.PlanMateException.AuthorizationException.WrongPasswordException
+import logic.exception.PlanMateException.AuthorizationException.WrongUsernameException
 import logic.exception.PlanMateException.NotFoundException.*
 import logic.exception.PlanMateException.ParsingException.CsvFormatException
 import logic.exception.PlanMateException.ValidationException.*
@@ -25,10 +27,10 @@ fun getErrorMessageByException(exception: Exception): String {
         is AdminPrivilegesRequiredException -> "You need admin privileges to perform this action."
 
 
-        is PlanMateException.AuthorizationException.WrongPasswordException ->
+        is WrongPasswordException ->
                "The password you entered is wrong , Please enter correct password"
 
-        is PlanMateException.AuthorizationException.WrongUsernameException ->
+        is WrongUsernameException ->
             "The user name you entered is wrong , Please enter correct user name"
 
         is UserNotFoundException -> "User not found. Please check the user ID or try again."

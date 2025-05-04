@@ -9,11 +9,7 @@ class LoginUseCase(
 ) {
 
     fun validateUserCredentials(username : String, password : String): User{
-        try{
-            val userData = authRepository.login(username,password)
-            return userData
-        }catch(exception: PlanMateException.ValidationException) {
-            throw exception
-        }
+        val userData = authRepository.login(username,password)
+        return userData
     }
 }

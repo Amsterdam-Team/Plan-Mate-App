@@ -1,16 +1,17 @@
 package ui
 
+import com.google.common.truth.Truth.assertThat
+import io.mockk.*
 import logic.usecases.testFactory.SUCCESS_MESSAGE_FOR_LOGIN
 import logic.usecases.testFactory.WRONG_PASSWORD
 import logic.usecases.testFactory.WRONG_USER_NAME
-import logic.usecases.testFactory.simulateConsoleInteraction
 import logic.usecases.testFactory.validUserData
-import io.mockk.every
-import io.mockk.mockk
-import logic.exception.PlanMateException
+import logic.exception.PlanMateException.AuthorizationException.WrongPasswordException
+import logic.exception.PlanMateException.AuthorizationException.WrongUsernameException
 import logic.usecases.LoginUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import ui.console.ConsoleIO
 import ui.menuHandler.AdminMenuHandler
 import ui.menuHandler.MateMenuHandler
 
@@ -19,67 +20,69 @@ class LoginUIControllerTest {
     private lateinit var uiController : LoginUIController
     private lateinit var adminMenuHandler : AdminMenuHandler
     private lateinit var mateMenuHandler: MateMenuHandler
+    private lateinit var consoleIO: ConsoleIO
 
     @BeforeEach
     fun setup(){
         useCase = mockk()
         adminMenuHandler = mockk()
         mateMenuHandler = mockk()
-        uiController = LoginUIController(useCase,adminMenuHandler,mateMenuHandler)
+        consoleIO = mockk()
+        uiController = LoginUIController(useCase,adminMenuHandler,mateMenuHandler,consoleIO)
     }
+
 
     @Test
     fun `should print success message when useCase return full user data`(){
         val username = "Hend"
         val password = "H123456"
-        val input = "$username\n$password"
+        val input = "${username}\n${password}"
+        val slot = CapturingSlot<String>()
+
+        every { consoleIO.println(capture(slot)) } just Runs
+        every { consoleIO.readFromUser() } returns input
 
         every { useCase.validateUserCredentials(username, password) } returns validUserData()
 
-        val output = simulateConsoleInteraction(input) {
-            uiController.execute()
-        }
+        uiController.execute()
 
-        assert(output.toString().contains(SUCCESS_MESSAGE_FOR_LOGIN))
+        assertThat(slot.equals(SUCCESS_MESSAGE_FOR_LOGIN))
     }
 
     @Test
     fun `should print wrong username message when useCase throw wrong user name exception`(){
         val username = "Hen"
         val password = "H123456"
-        val input = "$username\n$password"
+        val input = "${username}\n${password}"
 
-        every {
-            useCase.validateUserCredentials(
-                username,
-                password
-            )
-        } throws PlanMateException.AuthorizationException.WrongUsernameException
+        val slot = CapturingSlot<String>()
 
-        val output = simulateConsoleInteraction(input) {
-            uiController.execute()
-        }
+        every { consoleIO.println(capture(slot)) } just Runs
+        every { consoleIO.readFromUser() } returns input
 
-        assert(output.contains(WRONG_USER_NAME))
+
+        every { useCase.validateUserCredentials(username, password) } throws WrongUsernameException
+
+        uiController.execute()
+
+        assertThat(slot.equals(WRONG_USER_NAME))
     }
 
     @Test
     fun `should print wrong password message when useCase throw wrong password exception`(){
         val username = "Hend"
         val password = "12345"
-        val input = "$username\n$password"
+        val input = "${username}\n${password}"
+        val slot = CapturingSlot<String>()
 
-        every {
-            useCase.validateUserCredentials(
-                username,
-                password
-            )
-        } throws PlanMateException.AuthorizationException.WrongPasswordException
+        every { consoleIO.println(capture(slot)) } just Runs
+        every { consoleIO.readFromUser() } returns input
 
-        val output = simulateConsoleInteraction(input) {
-            uiController.execute()
-        }
 
-        assert(output.contains(WRONG_PASSWORD))
+        every { useCase.validateUserCredentials(username, password) } throws WrongPasswordException
+
+        uiController.execute()
+
+        assertThat(slot.equals(WRONG_PASSWORD))
     }
 }
