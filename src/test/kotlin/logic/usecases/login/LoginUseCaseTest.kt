@@ -1,9 +1,10 @@
 package logic.usecases.login
 
-import com.google.common.truth.Truth
+import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
-import logic.exception.PlanMateException
+import logic.exception.PlanMateException.AuthorizationException.WrongPasswordException
+import logic.exception.PlanMateException.AuthorizationException.WrongUsernameException
 import logic.repository.AuthRepository
 import logic.usecases.LoginUseCase
 import logic.usecases.testFactory.validUserData
@@ -31,8 +32,7 @@ class LoginUseCaseTest {
         every { repository.login(username, password) } returns validUserData()
         //then
         val returnedUser = useCase.validateUserCredentials(username, password)
-        Truth.assertThat(returnedUser).isEqualTo(validUserData())
-
+        assertThat(returnedUser).isEqualTo(validUserData())
     }
 
     @Test
@@ -46,10 +46,10 @@ class LoginUseCaseTest {
                 username,
                 password
             )
-        } throws PlanMateException.AuthorizationException.WrongUsernameException
+        } throws WrongUsernameException
 
         //When && Throw
-        assertThrows<PlanMateException.AuthorizationException.WrongUsernameException> {
+        assertThrows<WrongUsernameException> {
             useCase.validateUserCredentials(username, password)
         }
     }
@@ -65,10 +65,10 @@ class LoginUseCaseTest {
                 username,
                 password
             )
-        } throws PlanMateException.AuthorizationException.WrongPasswordException
+        } throws WrongPasswordException
 
         //When && Throw
-        assertThrows<PlanMateException.AuthorizationException.WrongPasswordException> {
+        assertThrows<WrongPasswordException> {
             useCase.validateUserCredentials(username, password)
         }
     }
