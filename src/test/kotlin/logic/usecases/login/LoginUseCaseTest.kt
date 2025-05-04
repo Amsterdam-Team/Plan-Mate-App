@@ -1,12 +1,12 @@
-package usecase
+package logic.usecases.login
 
 import com.google.common.truth.Truth.assertThat
-import helper.validUserData
 import io.mockk.every
 import io.mockk.mockk
 import logic.exception.PlanMateException.AuthorizationException.*
 import logic.repository.AuthRepository
 import logic.usecases.LoginUseCase
+import logic.usecases.testFactory.validUserData
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
