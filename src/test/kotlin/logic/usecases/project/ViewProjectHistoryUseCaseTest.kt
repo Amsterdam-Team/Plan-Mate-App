@@ -14,12 +14,12 @@ import org.junit.jupiter.api.assertThrows
 class ViewProjectHistoryUseCaseTest {
 
     private lateinit var logRepository: LogRepository
-    private lateinit var viewProjectHistoryUseCase: ViewProjectHistoryUseCase
+    private lateinit var getProjectHistoryUseCase: GetProjectHistoryUseCase
 
     @BeforeEach
     fun setup() {
         logRepository = mockk()
-        viewProjectHistoryUseCase = ViewProjectHistoryUseCase(logRepository)
+        getProjectHistoryUseCase = GetProjectHistoryUseCase(logRepository)
     }
 
     @Test
@@ -30,7 +30,7 @@ class ViewProjectHistoryUseCaseTest {
         every { logRepository.viewLogsById(projectId) } returns logs
 
         // When
-        val result = viewProjectHistoryUseCase.execute(projectId.toString())
+        val result = getProjectHistoryUseCase.execute(projectId.toString())
 
         // Then
         assertThat(result).isEqualTo(logs)
@@ -40,7 +40,7 @@ class ViewProjectHistoryUseCaseTest {
     fun `should throw InvalidProjectIDException when input is not UUID`(){
         // When & Then
         assertThrows<InvalidProjectIDException> {
-            viewProjectHistoryUseCase.execute("not-uuid")
+            getProjectHistoryUseCase.execute("not-uuid")
         }
     }
 
@@ -48,7 +48,7 @@ class ViewProjectHistoryUseCaseTest {
     fun `should throw InvalidProjectIDException when input is null`(){
         // When & Then
         assertThrows<InvalidProjectIDException> {
-            viewProjectHistoryUseCase.execute(null)
+            getProjectHistoryUseCase.execute(null)
         }
     }
 

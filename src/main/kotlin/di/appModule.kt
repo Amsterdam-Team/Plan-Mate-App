@@ -25,7 +25,7 @@ import logic.usecases.ViewTaskLogsUseCase
 import logic.usecases.project.CreateProjectUseCase
 import logic.usecases.project.DeleteProjectUseCase
 import logic.usecases.project.GetProjectsUseCase
-import logic.usecases.project.ViewProjectHistoryUseCase
+import logic.usecases.project.GetProjectHistoryUseCase
 import logic.usecases.state.DeleteStateUseCase
 import logic.usecases.state.GetProjectStatesUseCase
 import logic.usecases.state.GetTaskStateUseCase
@@ -95,7 +95,7 @@ val appModule = module {
     single { DeleteTaskUseCase(get()) }
 
     single { LoginUseCase(get()) }
-    single { ViewProjectHistoryUseCase(get()) }
+    single { GetProjectHistoryUseCase(get()) }
     single { ViewTaskLogsUseCase(get()) }
 
     single<ConsoleIO> { ConsoleIOImpl() }

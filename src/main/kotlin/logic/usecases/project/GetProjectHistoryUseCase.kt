@@ -1,12 +1,11 @@
 package logic.usecases.project
 
 import logic.entities.LogItem
-import logic.exception.PlanMateException
 import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
 import logic.repository.LogRepository
 import java.util.UUID
 
-class ViewProjectHistoryUseCase(
+class GetProjectHistoryUseCase(
     private val logRepository: LogRepository
 ) {
     fun execute(projectId: String?): List<LogItem> {

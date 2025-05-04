@@ -5,7 +5,7 @@ import console.ConsoleIO
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import logic.usecases.project.ViewProjectHistoryUseCase
+import logic.usecases.project.GetProjectHistoryUseCase
 import logic.usecases.project.helper.ViewProjectHistoryTestFactory.LOGS_FOR_PROJECT_1
 import logic.usecases.project.helper.ViewProjectHistoryTestFactory.PROJECT_1
 import org.junit.jupiter.api.BeforeEach
@@ -14,7 +14,7 @@ import utils.formatLogItem
 
 class ViewProjectHistoryUIControllerTest {
 
-    private lateinit var useCase: ViewProjectHistoryUseCase
+    private lateinit var useCase: GetProjectHistoryUseCase
     private lateinit var controller: ViewProjectHistoryUIController
     private lateinit var consoleIO: ConsoleIO
     @BeforeEach
@@ -22,7 +22,7 @@ class ViewProjectHistoryUIControllerTest {
         useCase = mockk(relaxed = true)
         consoleIO = mockk(relaxed = true)
         controller = ViewProjectHistoryUIController(
-            viewProjectHistoryUseCase = useCase,
+            getProjectHistoryUseCase = useCase,
             consoleIO = consoleIO)
     }
 
