@@ -1,22 +1,18 @@
-package uiController
+package ui.task
 
 import io.mockk.every
 import io.mockk.mockk
-
-import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
-
-import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
+import logic.exception.PlanMateException
 import logic.usecases.ViewTaskLogsUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import ui.ViewTaskLogsUIController
-import utils.hepler.TASK_NOT_FOUND
-import utils.hepler.INVALID_ID_FORMAT
-import utils.hepler.invalidId
-import utils.hepler.simulateConsoleInteraction
-import utils.hepler.taskLogs
-import utils.hepler.validId
-
+import logic.usecases.testFactory.INVALID_ID_FORMAT
+import logic.usecases.testFactory.TASK_NOT_FOUND
+import logic.usecases.testFactory.invalidId
+import logic.usecases.testFactory.simulateConsoleInteraction
+import logic.usecases.testFactory.taskLogs
+import logic.usecases.testFactory.validId
 
 class ViewTaskLogsUIControllerTest {
     private lateinit var useCase : ViewTaskLogsUseCase
@@ -45,7 +41,7 @@ class ViewTaskLogsUIControllerTest {
     @Test
     fun `should print Invalid ID Format message when use case throw InvalidTaskIDException`(){
 
-        every { useCase.viewTaskLogs(invalidId) } throws InvalidTaskIDException
+        every { useCase.viewTaskLogs(invalidId) } throws PlanMateException.ValidationException.InvalidTaskIDException
 
         val output = simulateConsoleInteraction(invalidId.toString()) {
             uiController.execute()
@@ -57,7 +53,7 @@ class ViewTaskLogsUIControllerTest {
     @Test
     fun `should print Task Not Found message when use case throw TaskNotFoundException`(){
 
-        every { useCase.viewTaskLogs(invalidId.toString()) } throws TaskNotFoundException
+        every { useCase.viewTaskLogs(invalidId.toString()) } throws PlanMateException.NotFoundException.TaskNotFoundException
 
         val output = simulateConsoleInteraction(invalidId.toString()) {
             uiController.execute()
