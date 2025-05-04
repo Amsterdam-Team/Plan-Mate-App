@@ -10,27 +10,15 @@ import java.util.UUID
 
 class EditTaskUseCase(val taskRepository: TaskRepository) {
 
-    fun editTaskName(taskId: String, newName: String):Boolean {
 
-        validateStringInput(newName)
-        validateId(taskId)
-        val task = taskRepository.getTaskById(UUID.fromString(taskId))
-
-        taskRepository.updateTask(task.copy(name = newName))
-        return true
-    }
-
-    fun editTaskNameAndState(taskId: String, newName: String, newState :String): Boolean{
+    fun editTask(taskId: String, newName:String, newState:String): Boolean{
         validateStringInput(newName)
         validateStringInput(newState)
         validateId(taskId)
-        val task = taskRepository.getTaskById(UUID.fromString(taskId))
-        taskRepository.updateTask(task.copy(name = newName, state = newState))
-        return true
+       return  taskRepository.updateTaskNameByID(UUID.fromString(taskId), newName)
+                && taskRepository.updateStateNameByID(UUID.fromString(taskId), newState)
     }
-    fun validateInput(taskId:String, name: String){
 
-    }
 
 
     fun validateStringInput(name:String){
