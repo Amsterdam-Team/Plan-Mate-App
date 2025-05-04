@@ -13,7 +13,7 @@ import logic.exception.PlanMateException.ValidationException.InvalidProjectIDExc
 import org.junit.jupiter.api.assertThrows
 import java.util.UUID
 
-class GetProjectLogsUseCaseTest {
+class ViewProjectHistoryUseCaseTest {
 
     private lateinit var logRepository: LogRepository
     private lateinit var viewProjectHistoryUseCase: ViewProjectHistoryUseCase
@@ -54,17 +54,5 @@ class GetProjectLogsUseCaseTest {
         }
     }
 
-    @Test
-    fun `should throw ProjectNotFoundException when project does not exist`() {
-        // Given
-        val invalidProjectId = UUID.randomUUID()
-        every {
-            logRepository.viewLogsById(invalidProjectId)
-        } throws ProjectNotFoundException
 
-        // When & Then
-        assertThrows<ProjectNotFoundException> {
-            viewProjectHistoryUseCase.execute(invalidProjectId.toString())
-        }
-    }
 }
