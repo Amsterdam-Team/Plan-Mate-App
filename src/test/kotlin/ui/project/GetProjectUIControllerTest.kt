@@ -19,12 +19,14 @@ class GetProjectUIControllerTest {
     private lateinit var usecase: GetProjectsUseCase
     private lateinit var uiController: GetProjectUIController
     private lateinit var consoleIO: ConsoleIO
+    private lateinit var slot: CapturingSlot<String>
 
     @BeforeEach
     fun setup() {
         mockkStatic("utils.SwimLanesUIKt")
         consoleIO = mockk(relaxed = true)
         usecase = mockk(relaxed = true)
+        slot = captureSlot()
         uiController = GetProjectUIController(usecase, consoleIO)
     }
     private fun captureSlot(): CapturingSlot<String> {
@@ -33,10 +35,10 @@ class GetProjectUIControllerTest {
         return slot
     }
 
+
     @Test
     fun `should execute view project successfully when project id is valid`() {
         //Given
-        val slot = captureSlot()
         val projectID = "db373589-b656-4e68-a7c0-2ccc705ca169"
         val project = createProject(UUID.fromString(projectID), "", listOf(), listOf())
         every { usecase.getProject(any()) } returns project
@@ -44,6 +46,8 @@ class GetProjectUIControllerTest {
         //When
         uiController.execute()
         //Then
+        assertThat(slot.captured == "Enter Project Id :)")
+        verify(exactly = 1){ consoleIO.readFromUser() }
         verify { printSwimlanesView(project) }
 
     }
@@ -52,11 +56,12 @@ class GetProjectUIControllerTest {
     fun `should show project not exist when getProjectUseCase throws ProjectNotFoundException`() {
         //Given
         val projectID = "2b19ee75-2b4c-430f-bad8-dfa6b14709d9"
-        val slot = captureSlot()
         every { usecase.getProject(projectID) } throws ProjectNotFoundException
         //When
         uiController.execute()
         //Then
+        assertThat(slot.captured == "Enter Project Id :)")
+        verify(exactly = 1){ consoleIO.readFromUser() }
         assertThat(slot.captured == "Project not found. It may have been deleted or doesn't exist.")
     }
 
@@ -64,11 +69,12 @@ class GetProjectUIControllerTest {
     fun `should show projects is empty when getProjectUseCase throws EmptyDataException`() {
         //Given
         val projectID = "2b19ee75-2b4c-430f-bad8-dfa6b14709d9"
-        val slot = captureSlot()
         every { usecase.getProject(projectID) } throws EmptyDataException
         //When
         uiController.execute()
         //Then
+        assertThat(slot.captured == "Enter Project Id :)")
+        verify(exactly = 1){ consoleIO.readFromUser() }
         assertThat(slot.captured == "Projects is empty")
     }
 
@@ -83,14 +89,16 @@ class GetProjectUIControllerTest {
     )
     fun `should show invalid id format when getProjectUseCase throws InvalidProjectIDException`(invalidID: String) {
         //Given
-        val slot = captureSlot()
         every { usecase.getProject(invalidID) } throws InvalidProjectIDException
         //When
         uiController.execute()
         // Then
+        assertThat(slot.captured == "Enter Project Id :)")
+        verify(exactly = 1){ consoleIO.readFromUser() }
         assertThat(slot.captured == "The project ID is invalid. Please check and try again.")
 
 
     }
+
 
 }
