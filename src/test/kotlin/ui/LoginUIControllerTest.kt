@@ -1,77 +1,81 @@
-package uiController
+package ui
 
-import helper.SUCCESS_MESSAGE_FOR_LOGIN
-import helper.WRONG_PASSWORD
-import helper.WRONG_USER_NAME
-import helper.simulateConsoleInteraction
-import helper.validUserData
+import com.google.common.truth.Truth.assertThat
+import io.mockk.CapturingSlot
+import io.mockk.Runs
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
 import logic.exception.PlanMateException.AuthorizationException.WrongPasswordException
 import logic.exception.PlanMateException.AuthorizationException.WrongUsernameException
 import logic.usecases.LoginUseCase
+import logic.usecases.testFactory.SUCCESS_MESSAGE_FOR_LOGIN
+import logic.usecases.testFactory.WRONG_PASSWORD
+import logic.usecases.testFactory.WRONG_USER_NAME
+import logic.usecases.testFactory.validUserData
 import org.junit.jupiter.api.BeforeEach
-import ui.LoginUIController
+import org.junit.jupiter.api.Test
+import ui.console.ConsoleIO
 import ui.menuHandler.AdminMenuHandler
 import ui.menuHandler.MateMenuHandler
-import kotlin.test.Test
 
 class LoginUIControllerTest {
     private lateinit var useCase : LoginUseCase
     private lateinit var uiController : LoginUIController
     private lateinit var adminMenuHandler : AdminMenuHandler
     private lateinit var mateMenuHandler: MateMenuHandler
+    private lateinit var consoleIO: ConsoleIO
+
 
     @BeforeEach
     fun setup(){
         useCase = mockk()
         adminMenuHandler = mockk()
         mateMenuHandler = mockk()
+        consoleIO = mockk(relaxed = true)
         uiController = LoginUIController(useCase,adminMenuHandler,mateMenuHandler)
     }
+
 
     @Test
     fun `should print success message when useCase return full user data`(){
         val username = "Hend"
         val password = "H123456"
-        val input = "$username\n$password"
+        val slot = CapturingSlot<String>()
 
+        every { consoleIO.println(capture(slot)) } just Runs
         every { useCase.validateUserCredentials(username,password) } returns validUserData()
 
-        val output = simulateConsoleInteraction(input) {
-          uiController.execute()
-       }
+        uiController.execute()
 
-        assert(output.toString().contains(SUCCESS_MESSAGE_FOR_LOGIN))
+        assertThat(slot.equals(SUCCESS_MESSAGE_FOR_LOGIN))
     }
 
     @Test
     fun `should print wrong username message when useCase throw wrong user name exception`(){
         val username = "Hen"
         val password = "H123456"
-        val input = "$username\n$password"
+        val slot = CapturingSlot<String>()
 
+        every { consoleIO.println(capture(slot)) } just Runs
         every { useCase.validateUserCredentials(username,password) } throws WrongUsernameException
 
-        val output = simulateConsoleInteraction(input) {
-            uiController.execute()
-        }
+        uiController.execute()
 
-        assert(output.contains(WRONG_USER_NAME))
+        assertThat(slot.equals(WRONG_USER_NAME))
     }
 
     @Test
     fun `should print wrong password message when useCase throw wrong password exception`(){
         val username = "Hend"
         val password = "12345"
-        val input = "$username\n$password"
+        val slot = CapturingSlot<String>()
 
+        every { consoleIO.println(capture(slot)) } just Runs
         every { useCase.validateUserCredentials(username,password) } throws WrongPasswordException
 
-        val output = simulateConsoleInteraction(input) {
-            uiController.execute()
-        }
+        uiController.execute()
 
-        assert(output.contains(WRONG_PASSWORD))
+        assertThat(slot.equals(WRONG_PASSWORD))
     }
 }
