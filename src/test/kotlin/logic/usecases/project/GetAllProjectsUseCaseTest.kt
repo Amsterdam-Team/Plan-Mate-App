@@ -3,7 +3,6 @@ package logic.usecases.project
 import io.mockk.mockk
 import io.mockk.verify
 import logic.repository.ProjectRepository
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import kotlin.test.Test
 

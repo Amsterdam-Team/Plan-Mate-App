@@ -1,13 +1,9 @@
 package ui.project
 
-import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import logic.usecases.project.GetAllProjectsUseCase
-import logic.usecases.project.helper.ViewProjectHistoryTestFactory.ALL_PROJECTS
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
-import utils.printSwimlanesView
 import kotlin.test.Test
 
 class ViewAllProjectsUIControllerTest {
