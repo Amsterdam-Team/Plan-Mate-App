@@ -1,5 +1,6 @@
 package logic.usecases.state
 
+import com.google.common.truth.Truth.assertThat
 import data.datasources.DataSource
 import data.repository.project.ProjectRepositoryImpl
 import io.mockk.*
@@ -21,12 +22,10 @@ import kotlin.test.Test
 class UpdateStateUseCaseTest {
     private lateinit var repository: ProjectRepository
     private lateinit var useCase: UpdateStateUseCase
-    private lateinit var dataSource: DataSource
 
     @BeforeEach
     fun setup() {
-        dataSource = mockk(relaxed = true)
-        repository = ProjectRepositoryImpl(mockk())
+        repository = mockk(relaxed = true)
         useCase = UpdateStateUseCase(repository)
     }
 
@@ -36,16 +35,12 @@ class UpdateStateUseCaseTest {
         val projectID ="db373589-b656-4e68-a7c0-2ccc705ca169"
         val oldState = "In Progress"
         val newState = "In Review"
-        val project = createProject(UUID.fromString(projectID), "", listOf(oldState), listOf())
-
-        every { dataSource.getAll() } returns listOf(project)
-        //every { repository.updateProjectStateById(UUID.fromString(projectID),oldState,newState) } just Runs
 
         // When
-       useCase.updateState(projectID,oldState,newState)
-        // Then
+        val result = useCase.updateState(projectID,oldState,newState)
 
-        verify{ dataSource.getAll() }
+        // Then
+        assertThat(result).isTrue()
 
     }
 
@@ -55,9 +50,7 @@ class UpdateStateUseCaseTest {
         val projectId = "db373589-b656-4e68-a7c1-2ccc705ca169"
         val oldState = "Done"
         val newState = "Finished"
-        val project = createProject(UUID.randomUUID(), "", listOf(oldState), listOf())
 
-        every { dataSource.getAll() } returns listOf(project)
 
         // When & Then
         assertThrows<ProjectNotFoundException> {
@@ -70,9 +63,6 @@ class UpdateStateUseCaseTest {
         val projectId = "db373589-b656-4e68-a7c1-2ccc705ca169"
         val oldState = "Done"
         val newState = "Finished"
-        val project = createProject(UUID.randomUUID(), "", listOf(oldState), listOf())
-
-        every { dataSource.getAll() } returns emptyList()
 
         // When & Then
         assertThrows<EmptyDataException> {
