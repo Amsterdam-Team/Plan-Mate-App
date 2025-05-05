@@ -33,7 +33,7 @@ fun getErrorMessageByException(exception: Exception): String {
 
         is UserNotFoundException -> "User not found. Please check the user ID or try again."
 
-        is InvalidUsernameException -> "The username you entered is not valid. UserName must not be empty field"
+        is InvalidUsernameException -> "The username you entered is not valid. UserName must not be empty field and should be at least 3 characters. You can use numbers, hyphen, spaces and under scores"
 
         is InvalidPasswordException -> "The password you entered is not valid. The password must be at least 8 characters length."
 

@@ -4,14 +4,15 @@ import logic.entities.User
 import logic.exception.PlanMateException.ValidationException.InvalidPasswordException
 import logic.exception.PlanMateException.ValidationException.InvalidUsernameException
 import logic.repository.AuthRepository
+import logic.usecases.ValidateInputUseCase
 import ui.utils.md5Hash
 import utils.ResultStatus
 import java.util.UUID
 
-class CreateUserUseCase(private val repository: AuthRepository) {
+class CreateUserUseCase(private val repository: AuthRepository, private val validateInputUseCase: ValidateInputUseCase) {
 
     fun execute(username: String, password: String): Boolean {
-        validateUserName(username)
+        if (! validateInputUseCase.isValidName(username)) throw InvalidUsernameException
         validatePassword(password)
         val user = User(
             id = UUID.randomUUID(),
@@ -23,11 +24,7 @@ class CreateUserUseCase(private val repository: AuthRepository) {
 
     }
 
-    private fun validateUserName(userName:String){
-        if (userName.isBlank() || userName.isEmpty()){
-            throw InvalidUsernameException
-        }
-    }
+
     private fun validatePassword(password:String){
         if (password.isBlank() || password.isEmpty() || password.length < 8){
             throw InvalidPasswordException

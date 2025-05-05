@@ -27,7 +27,6 @@ fun main() {
     val updateStateUiController: UpdateStateUiController = getKoin().get()
     val getProjectUIController: GetProjectUIController = getKoin().get()
     val deleteProjectUiController: DeleteProjectUiController = getKoin().get()
-//    val editTaskUiController: EditTaskUiController = getKoin().get()
     val viewTaskLogsUIController: ViewTaskLogsUIController = getKoin().get()
     val createTaskUIController: CreateTaskUIController = getKoin().get()
 
