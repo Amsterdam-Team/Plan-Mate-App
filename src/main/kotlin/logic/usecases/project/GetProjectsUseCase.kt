@@ -1,41 +1,28 @@
 package logic.usecases.project
 
 import logic.entities.Project
-import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
-import logic.exception.PlanMateException.ValidationException.EmptyDataException
+import logic.exception.PlanMateException
+import logic.exception.PlanMateException.ValidationException.InvalidUUIDFormatException
 import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
 import logic.repository.ProjectRepository
-import logic.repository.TaskRepository
-import java.util.UUID
+import logic.usecases.task.GetAllTasksByProjectIdUseCase
+import ui.utils.Validator
+import java.util.*
 
 class GetProjectsUseCase(
     private val projectRepository: ProjectRepository,
-    private val taskRepository: TaskRepository
+    private val getTasksUseCase: GetAllTasksByProjectIdUseCase
 ) {
 
-    fun getProject(projectID: String): Project {
-        val id = validateAndParseProjectID(projectID)
-        val projects = linkProjectAWithTasks()
-        if (projects.isEmpty()) throw EmptyDataException
-        return projects.find { it.id == id } ?: throw ProjectNotFoundException
+    operator fun invoke(projectID: String): Project {
+        val projectUUID = Validator.isUUIDValid(projectID)
+        val project = projectRepository.getProject(projectUUID)
+        val tasks = getTasksUseCase.invoke(projectUUID)
+        return project.copy(
+            tasks = tasks
+        )
 
     }
 
-    fun getAllProjects(): List<Project>{
-        return linkProjectAWithTasks()
-    }
 
-    private fun validateAndParseProjectID(projectID: String): UUID {
-        return try {
-            UUID.fromString(projectID)
-        } catch (e: IllegalArgumentException) {
-            throw InvalidProjectIDException
-        }
-    }
-    private fun linkProjectAWithTasks():List<Project>{
-        return projectRepository.getProjects().map { project ->
-            val tasks = taskRepository.getAllTasksByProjectId(project.id)
-            project.copy(tasks = tasks)
-        }
-    }
 }
