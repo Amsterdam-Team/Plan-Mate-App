@@ -21,6 +21,7 @@ sealed class PlanMateException : Exception() {
         data object UserAlreadyExistsException : ValidationException()
         data object StateAlreadyExistsException : ValidationException()
         data object EmptyDataException : ValidationException()
+        data object InvalidUUIDFormatException:ValidationException()
 
         data object EmptyProjectStatesException : ValidationException()
         data object EmptyProjectNameException : ValidationException()

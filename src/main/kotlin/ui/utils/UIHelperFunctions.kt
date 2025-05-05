@@ -62,7 +62,7 @@ fun getErrorMessageByException(exception: Exception): String {
 
         is SameStateNameException -> "Current state and new state are identical. No changes applied."
         is TaskLogsNotFound -> "This task not have any logs till now..."
-
+        is InvalidUUIDFormatException -> "Invalid UUID Format"
 
         is PlanMateException -> "Something went wrong with your request. Please try again."
 
