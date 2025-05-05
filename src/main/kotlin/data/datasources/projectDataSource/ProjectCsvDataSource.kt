@@ -3,7 +3,8 @@ package data.datasources.projectDataSource
 import data.datasources.FileManager
 import data.datasources.parser.CsvParser
 import logic.entities.Project
-import logic.exception.PlanMateException
+import logic.exception.PlanMateException.DataSourceException.EmptyDataException
+import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
 import logic.exception.PlanMateException.DataSourceException.EmptyFileException
 import java.io.IOException
 import java.util.*
@@ -21,9 +22,8 @@ class ProjectCsvDataSource (
         }
     }
 
-    override fun getProjectById(projectId: UUID): Project {
-        TODO("Not yet implemented")
-    }
+    override fun getProjectById(projectId: UUID) = getAllProjects().find { it.id == projectId } ?: throw ProjectNotFoundException
+
 
     override fun insertProject(project: Project): Boolean {
         val projects = getAllProjects()
@@ -41,30 +41,96 @@ class ProjectCsvDataSource (
     }
 
     override fun deleteProject(projectId: UUID): Boolean {
-        TODO("Not yet implemented")
+        val projects = getAllProjects()
+        val newProjects = projects.filterNot { it.id == projectId }
+        if (projects == newProjects) return false
+        return try {
+            fileManager.writeLines(newProjects.map { csvParser.serialize(it) })
+            true
+        } catch (e: IOException){
+            false
+        }
     }
 
     override fun updateProjectName(projectId: UUID, newName: String): Boolean {
-        TODO("Not yet implemented")
+        val projects = getAllProjects()
+        val oldProject = projects.find { it.id == projectId } ?: return false
+        val newProjects = projects.filterNot { it.id == projectId }.toMutableList()
+        val newProject = oldProject.copy(name = newName)
+        newProjects.add(newProject)
+        return try {
+            fileManager.writeLines(newProjects.map { csvParser.serialize(it) })
+            true
+        } catch (e: IOException){
+            false
+        }
     }
 
     override fun replaceAllProjects(projects: List<Project>): Boolean {
-        TODO("Not yet implemented")
+        return try {
+            fileManager.writeLines(projects.map { csvParser.serialize(it) })
+            true
+        } catch (e: EmptyDataException){
+            return false
+        } catch (e: IOException){
+            return false
+        }
     }
 
     override fun insertProjectState(projectId: UUID, state: String): Boolean {
-        TODO("Not yet implemented")
+        val projects = getAllProjects()
+        val oldProject = projects.find { it.id == projectId } ?: return false
+        val newProjects = projects.filterNot { it.id == projectId }.toMutableList()
+        val newStates = oldProject.states.toMutableList()
+        if (newStates.contains(state)) return false
+        newStates.add(state)
+        val newProject = oldProject.copy(states = newStates)
+        newProjects.add(newProject)
+        return try {
+            fileManager.writeLines(newProjects.map { csvParser.serialize(it) })
+            true
+        } catch (e: IOException){
+            false
+        }
     }
 
-    override fun getProjectStates(projectId: UUID): List<String> {
-        TODO("Not yet implemented")
-    }
+    override fun getProjectStates(projectId: UUID) = getAllProjects().find { it.id == projectId }?.states ?: emptyList()
+
 
     override fun deleteProjectState(projectId: UUID, state: String): Boolean {
-        TODO("Not yet implemented")
+        val projects = getAllProjects()
+        val oldProject = projects.find { it.id == projectId } ?: return false
+        if (state !in oldProject.states) return false
+        val newProjects = projects.filterNot { it.id == projectId }.toMutableList()
+        val newStates = oldProject.states.toMutableList()
+        newStates.remove(state)
+        val newProject = oldProject.copy(states = newStates)
+        newProjects.add(newProject)
+
+        return try {
+            fileManager.writeLines(newProjects.map { csvParser.serialize(it) })
+            true
+        } catch (e: IOException) {
+            false
+        }
     }
 
     override fun updateProjectState(projectId: UUID, oldState: String, newState: String): Boolean {
-        TODO("Not yet implemented")
+        val projects = getAllProjects()
+        val oldProject = projects.find { it.id == projectId } ?: return false
+        if (oldState !in oldProject.states) return false
+        val newProjects = projects.filterNot { it.id == projectId }.toMutableList()
+        val newStates = oldProject.states.toMutableList()
+        newStates.remove(oldState)
+        newStates.add(newState)
+        val newProject = oldProject.copy(states = newStates)
+        newProjects.add(newProject)
+
+        return try {
+            fileManager.writeLines(newProjects.map { csvParser.serialize(it) })
+            true
+        } catch (e: IOException) {
+            false
+        }
     }
 }
