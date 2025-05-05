@@ -1,8 +1,6 @@
 package data.datasources.projectDataSource
 
 import com.google.common.truth.Truth.assertThat
-import data.datasources.CsvDataSource
-import data.datasources.CsvDataSourceTest
 import data.datasources.FileManager
 import data.datasources.parser.ProjectCsvParser
 import io.mockk.every
@@ -15,8 +13,8 @@ import logic.usecases.testFactories.CreateProjectTestFactory
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.lang.Exception
-import java.util.UUID
+import java.io.IOException
+import java.util.*
 
 class ProjectCsvDataSourceTest{
 
@@ -114,6 +112,19 @@ class ProjectCsvDataSourceTest{
     fun `should return false when project can't be inserted into CSV file`() {
         // Given
         mockSerialization()
+        every { fileManager.appendLine(lines[0]) } throws IOException()
+
+        // When
+        val result = projectCsvDataSource.insertProject(project)
+
+        // Then
+        assertThat(result).isFalse()
+    }
+
+    @Test
+    fun `should return false when project exists in CSV file`() {
+        // Given
+        mockSerialization()
         every { fileManager.appendLine(lines[0]) } throws ProjectAlreadyExistsException
 
         // When
@@ -122,6 +133,7 @@ class ProjectCsvDataSourceTest{
         // Then
         assertThat(result).isFalse()
     }
+
     // endregion
 
     // region deleteProject
