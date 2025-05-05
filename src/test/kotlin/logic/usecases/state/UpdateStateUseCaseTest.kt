@@ -26,7 +26,7 @@ class UpdateStateUseCaseTest {
     @BeforeEach
     fun setup() {
         dataSource = mockk(relaxed = true)
-        repository = ProjectRepositoryImpl(dataSource)
+        repository = ProjectRepositoryImpl(mockk())
         useCase = UpdateStateUseCase(repository)
     }
 
