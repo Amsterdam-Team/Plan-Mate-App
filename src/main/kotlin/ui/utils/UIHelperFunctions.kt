@@ -37,7 +37,7 @@ fun getErrorMessageByException(exception: Exception): String {
 
         is InvalidPasswordException -> "The password you entered is not valid. Please follow the password rules."
 
-        is InvalidStateNameException -> "The state name is not valid. Please enter a valid name."
+        is InvalidStateNameException -> "The state name is not valid. State name must be not empty and does not contain any numbers or non alphabet characters"
 
         is InvalidTaskNameException -> "The task name is not valid. Please enter a proper task name."
 

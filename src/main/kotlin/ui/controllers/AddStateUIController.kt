@@ -16,11 +16,7 @@ class AddStateUIController(
         io.println("➕ Add New State to the Project")
 
         io.println("Enter Project ID: ")
-        val projectId = runCatching { UUID.fromString(io.readFromUser()) }.getOrNull()
-        if (projectId == null) {
-            io.println("Invalid UUID format")
-            return
-        }
+        val projectId = io.readFromUser()
 
         io.println("Enter State Name: ")
         val state = io.readFromUser()
@@ -28,7 +24,11 @@ class AddStateUIController(
         tryToExecute(
             action = { useCase.execute(projectId, state) },
             onSuccess = {
-                "State added successfully".printAsASuccessState()
+                result -> if(result){
+                    println("A new state added successfully")
+            }else{
+                println("Failed adding new state")
+            }
             }
         )
     }
