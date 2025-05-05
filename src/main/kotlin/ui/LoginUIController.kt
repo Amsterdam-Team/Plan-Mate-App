@@ -14,6 +14,7 @@ class LoginUIController(
     private val mateMenuHandler: MateMenuHandler,
     private val consoleIO: ConsoleIO
 ): BaseUIController {
+    lateinit var user : User
 
     override fun execute() {
         consoleIO.println("Hello My Friend..\nI hope You Remember Your username and password to login quickly...\nEnter Your user name : ")
@@ -22,7 +23,7 @@ class LoginUIController(
         val password = consoleIO.readFromUser()
         tryToExecute (
             action = {
-                val user = loginUseCase.validateUserCredentials(username,password)
+                user = loginUseCase.validateUserCredentials(username,password)
                 onLoginSuccess(user)
             },
             onSuccess = { consoleIO.println("Success Login......") }
@@ -32,4 +33,6 @@ class LoginUIController(
     private fun onLoginSuccess(user: User) {
         if (user.isAdmin) adminMenuHandler.start() else mateMenuHandler.start()
     }
+
+    private fun getCurrentUser() : User = user
 }
