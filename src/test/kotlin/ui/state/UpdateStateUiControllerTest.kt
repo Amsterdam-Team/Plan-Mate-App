@@ -30,12 +30,7 @@ class UpdateStateUiControllerTest {
         slot = mutableListOf()
         uiController = UpdateStateUiController(usecase, consoleIO)
     }
-
-    private fun captureSlot(): CapturingSlot<String> {
-        val slot = slot<String>()
-        every { consoleIO.println(capture(slot)) } just Runs
-        return slot
-    }
+    
     @Test
     fun `should execute edit state successfully when all inputs are valid`() {
         //Given
