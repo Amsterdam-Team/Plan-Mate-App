@@ -60,9 +60,7 @@ class DeleteProjectUseCaseTest {
     fun `should throw empty data exception when the id entered by user is empty`() {
         // given
         val id = ""
-        every {repository.deleteProject(any())} returns false
-        // when
-        // then
+        // when & then
         assertThrows<EmptyDataException> {
             useCase.deleteProject(id)
         }
@@ -74,9 +72,7 @@ class DeleteProjectUseCaseTest {
         "#@#@!@"
     )
     fun `should throw invalid id project exception when the user entered not valid uuid`(projectId:String) {
-        every {repository.deleteProject(any())} returns true
-        // when
-        // then
+        // when & then
         assertThrows<InvalidProjectIDException> {
             useCase.deleteProject(projectId)
         }

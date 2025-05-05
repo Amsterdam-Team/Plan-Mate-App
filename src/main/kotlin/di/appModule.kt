@@ -21,11 +21,12 @@ import logic.repository.ProjectRepository
 import logic.repository.TaskRepository
 import logic.usecases.task.DeleteTaskUseCase
 import logic.usecases.LoginUseCase
+import logic.usecases.ValidateInputUseCase
 import logic.usecases.ViewTaskLogsUseCase
 import logic.usecases.project.CreateProjectUseCase
 import logic.usecases.project.DeleteProjectUseCase
 import logic.usecases.project.GetProjectsUseCase
-import logic.usecases.project.ViewProjectHistoryUseCase
+import logic.usecases.project.GetProjectHistoryUseCase
 import logic.usecases.state.DeleteStateUseCase
 import logic.usecases.state.GetProjectStatesUseCase
 import logic.usecases.state.GetTaskStateUseCase
@@ -79,6 +80,8 @@ val appModule = module {
     single<ProjectRepository> { ProjectRepositoryImpl(get(project)) }
     single<LogRepository> { LogRepositoryImpl(get(log)) }
 
+    single { ValidateInputUseCase() }
+
     single { CreateProjectUseCase(get(), User(id = UUID.randomUUID(), username = "fsef", password = "fsefs", isAdmin = true)) }
     single { DeleteProjectUseCase(get()) }
     single { GetProjectsUseCase(get(), get()) }
@@ -88,7 +91,7 @@ val appModule = module {
     single { GetProjectStatesUseCase(get()) }
     single { GetTaskStateUseCase(get()) }
 
-    single { CreateTaskUseCase(get(), get()) }
+    single { CreateTaskUseCase(get(), get(), get()) }
     single { EditTaskUseCase(get()) }
     single { GetAllTasksByProjectIdUseCase(get()) }
     single { GetTaskByIdUseCase(get()) }
@@ -96,7 +99,8 @@ val appModule = module {
 
     single { LoginUseCase(get()) }
     single { ViewProjectHistoryUseCase(get()) }
-    single { ViewTaskLogsUseCase(get()) }
+    single { ViewTaskLogsUseCase(get(),get()) }
+
 
     single<ConsoleIO> { ConsoleIOImpl() }
 
@@ -113,6 +117,6 @@ val appModule = module {
     single { EditTaskUiController(get(), get()) }
 
 
-    single { ViewTaskLogsUIController(get()) }
+    single { ViewTaskLogsUIController(get(),get()) }
 
 }

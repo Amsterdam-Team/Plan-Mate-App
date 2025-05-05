@@ -1,23 +1,23 @@
 package ui
 
 import logic.usecases.ViewTaskLogsUseCase
+import ui.console.ConsoleIO
 import ui.controller.BaseUIController
 import ui.utils.tryToExecute
 
-import java.util.UUID
-
 class ViewTaskLogsUIController(
-    private val viewTaskLogsUseCase: ViewTaskLogsUseCase
+    private val viewTaskLogsUseCase: ViewTaskLogsUseCase,
+    private val consoleIO : ConsoleIO
 ): BaseUIController {
 
     override fun execute() {
-        println("Enter Task ID :")
-        val taskId = readLine().toString()
+        consoleIO.println("Enter Task ID :")
+        val taskId = consoleIO.readFromUser()
         tryToExecute (
             action = { viewTaskLogsUseCase.viewTaskLogs(taskId) },
             onSuccess = { logs ->
-                println("Task Logs :")
-                logs.forEach { println(it.message) }
+                consoleIO.println("Task Logs :")
+                logs.forEach { consoleIO.println(it.message) }
             }
         )
     }
