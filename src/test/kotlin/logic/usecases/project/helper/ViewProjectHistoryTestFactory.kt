@@ -16,14 +16,7 @@ object ViewProjectHistoryTestFactory {
         tasks = emptyList()
     )
 
-    val PROJECT_2 = Project(
-        id = UUID.fromString("22222222-2222-2222-2222-222222222222"),
-        name = "Project Beta",
-        states = listOf("Backlog", "Review", "Complete"),
-        tasks = emptyList()
-    )
 
-    val ALL_PROJECTS = listOf(PROJECT_1, PROJECT_2)
 
     private val NOW = Clock.System.now().toLocalDateTime(TimeZone.Companion.UTC)
 
