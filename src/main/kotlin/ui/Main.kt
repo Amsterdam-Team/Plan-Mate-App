@@ -4,6 +4,7 @@ import di.appModule
 import logic.usecases.LoginUseCase
 import org.koin.core.context.startKoin
 import org.koin.java.KoinJavaComponent.getKoin
+import ui.controller.CreateTaskUIController
 import ui.controllers.CreateProjectUIController
 import ui.controllers.UpdateStateUiController
 import ui.menuHandler.AdminMenuHandler
@@ -28,6 +29,7 @@ fun main() {
     val deleteProjectUiController: DeleteProjectUiController = getKoin().get()
     val editTaskUiController: EditTaskUiController = getKoin().get()
     val viewTaskLogsUIController: ViewTaskLogsUIController = getKoin().get()
+    val createTaskUIController: CreateTaskUIController = getKoin().get()
 
 
 
