@@ -8,17 +8,28 @@ import logic.exception.PlanMateException.ValidationException.InvalidProjectIDExc
 import logic.exception.PlanMateException.NotFoundException.StateNotFoundException
 import logic.repository.ProjectRepository
 import logic.repository.TaskRepository
+import logic.usecases.ValidateInputUseCase
 import java.util.UUID
 
 class CreateTaskUseCase(
     private val taskRepository: TaskRepository,
-    private val projectRepository: ProjectRepository
+    private val projectRepository: ProjectRepository,
+    private val validateInputUseCase: ValidateInputUseCase
 ) {
 
-    fun createTask(name: String, projectId: String, state: String) {
-        requireOrThrow(condition = isValidName(name), exception = InvalidTaskNameException)
-        requireOrThrow(condition = isValidUUID(uuid = projectId), exception = InvalidProjectIDException)
-        requireOrThrow(condition = isValidName(state), exception = InvalidStateNameException)
+    fun createTask(name: String, projectId: String, state: String): Boolean {
+        requireOrThrow(
+            condition = validateInputUseCase.isValidName(name),
+            exception = InvalidTaskNameException
+        )
+        requireOrThrow(
+            condition = validateInputUseCase.isValidUUID(uuid = projectId),
+            exception = InvalidProjectIDException
+        )
+        requireOrThrow(
+            condition = validateInputUseCase.isValidName(state),
+            exception = InvalidStateNameException
+        )
 
         val targetProject = projectRepository.getProject(UUID.fromString(projectId))
         requireOrThrow(
@@ -26,7 +37,7 @@ class CreateTaskUseCase(
             exception = StateNotFoundException
         )
 
-        taskRepository.createTask(
+        return taskRepository.createTask(
             Task(
                 id = UUID.randomUUID(),
                 name = name,
@@ -34,25 +45,14 @@ class CreateTaskUseCase(
                 state = state
             )
         )
-
     }
 
     private fun requireOrThrow(condition: Boolean, exception: PlanMateException) {
         if (!condition) throw exception
     }
 
-    private fun isValidName(name: String): Boolean {
-        return name.isNotBlank() &&
-                name.length in 3..100 &&
-                name.matches(Regex("^[\\w\\s-]+$"))
-    }
-
-
-    private fun isValidUUID(uuid: String) = runCatching { UUID.fromString(uuid) }.isSuccess
-
     private fun isStateInProject(state: String, projectStates: List<String>): Boolean {
         return state in projectStates
     }
 
 }
-

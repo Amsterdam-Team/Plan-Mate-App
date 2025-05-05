@@ -21,6 +21,7 @@ import logic.repository.ProjectRepository
 import logic.repository.TaskRepository
 import logic.usecases.task.DeleteTaskUseCase
 import logic.usecases.LoginUseCase
+import logic.usecases.ValidateInputUseCase
 import logic.usecases.ViewTaskLogsUseCase
 import logic.usecases.project.CreateProjectUseCase
 import logic.usecases.project.DeleteProjectUseCase
@@ -37,8 +38,7 @@ import logic.usecases.task.GetTaskByIdUseCase
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import ui.DeleteProjectUiController
-
-
+import ui.EditTaskUiController
 import ui.ViewTaskLogsUIController
 import ui.console.ConsoleIO
 import ui.console.ConsoleIOImpl
@@ -50,13 +50,6 @@ import ui.menuHandler.MateMenuHandler
 import ui.project.GetProjectUIController
 import ui.project.ViewProjectHistoryUIController
 import java.util.*
-
-val  user = User(
-    id = UUID.randomUUID(),
-    isAdmin = true,
-    username = "omer",
-    password = "omer"
-)
 
 val appModule = module {
 
@@ -81,13 +74,15 @@ val appModule = module {
     single<DataSource>(project) { CsvDataSource(get<FileManager<Project>>(project), get<ProjectCsvParser>()) }
     single<DataSource>(log) { CsvDataSource(get<FileManager<LogItem>>(log), get<LogItemCsvParser>()) }
 
-//
-//    single<AuthRepository> {  }
-//    single<TaskRepository> { TaskRepositoryImpl() }
-//    single<ProjectRepository> { ProjectRepositoryImpl() }
+
+    single<AuthRepository> { AuthRepositoryImpl(get(user)) }
+    single<TaskRepository> { TaskRepositoryImpl(get(task)) }
+    single<ProjectRepository> { ProjectRepositoryImpl(get(project)) }
     single<LogRepository> { LogRepositoryImpl(get(log)) }
 
-    single { CreateProjectUseCase(get(), di.user) }
+    single { ValidateInputUseCase() }
+
+    single { CreateProjectUseCase(get(), User(id = UUID.randomUUID(), username = "fsef", password = "fsefs", isAdmin = true)) }
     single { DeleteProjectUseCase(get()) }
     single { GetProjectsUseCase(get(), get()) }
 
@@ -96,7 +91,7 @@ val appModule = module {
     single { GetProjectStatesUseCase(get()) }
     single { GetTaskStateUseCase(get()) }
 
-    single { CreateTaskUseCase(get(), get()) }
+    single { CreateTaskUseCase(get(), get(), get()) }
     single { EditTaskUseCase(get()) }
     single { GetAllTasksByProjectIdUseCase(get()) }
     single { GetTaskByIdUseCase(get()) }
@@ -118,7 +113,7 @@ val appModule = module {
     single { GetProjectUIController(get(), get()) }
 
     single { DeleteProjectUiController(get(), get()) }
-//    single { EditTaskUiController(get(), get()) }
+    single { EditTaskUiController(get(), get()) }
 
 
     single { ViewTaskLogsUIController(get()) }
