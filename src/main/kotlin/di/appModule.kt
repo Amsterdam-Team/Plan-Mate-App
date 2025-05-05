@@ -99,7 +99,7 @@ val appModule = module {
 
     single { LoginUseCase(get()) }
     single { ViewProjectHistoryUseCase(get()) }
-    single { ViewTaskLogsUseCase(get()) }
+    single { ViewTaskLogsUseCase(get(),get()) }
 
     single<ConsoleIO> { ConsoleIOImpl() }
 
