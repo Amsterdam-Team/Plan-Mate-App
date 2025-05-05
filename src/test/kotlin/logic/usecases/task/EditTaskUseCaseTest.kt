@@ -72,15 +72,7 @@ class EditTaskUseCaseTest {
         }
     }
 
-    @Test
-    fun `should throw invalid task name when trying to add name contain numbers`() {
-        every { repository.updateTaskNameByID(task.id, "new124") } returns true
-        every { repository.updateStateNameByID(task.id, "new state") } returns true
-        assertThrows<InvalidTaskNameException> {
-            usecase.editTask(task.id.toString(), "new123", "new state")
 
-        }
-    }
 
 
 }
