@@ -10,22 +10,28 @@ import java.util.UUID
 
 class CreateUserUseCase(private val repository: AuthRepository) {
 
-    fun execute(username: String, password: String): ResultStatus<User> {
-        if (username.isBlank()) return ResultStatus.Error(InvalidUsernameException)
-        if (password.isBlank()) return ResultStatus.Error(InvalidPasswordException)
-
+    fun execute(username: String, password: String): Boolean {
+        validateUserName(username)
+        validatePassword(password)
         val user = User(
             id = UUID.randomUUID(),
             username = username,
             password = md5Hash(password),
             isAdmin = false
         )
+        return repository.createUser(user)
 
-        return runCatching {
-            repository.createUser(user)
-            ResultStatus.Success(user)
-        }.getOrElse {
-            ResultStatus.Error(InvalidUsernameException)
+    }
+
+    private fun validateUserName(userName:String){
+        if (userName.isBlank() || userName.isEmpty()){
+            throw InvalidUsernameException
         }
     }
+    private fun validatePassword(password:String){
+        if (password.isBlank() || password.isEmpty() || password.length < 8){
+            throw InvalidPasswordException
+        }
+    }
+
 }

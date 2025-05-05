@@ -1,16 +1,17 @@
 package data.repository.auth
 
 import data.datasources.DataSource
+import data.datasources.userDataSource.UserDataSourceInterface
 import logic.entities.User
 import logic.exception.PlanMateException.AuthorizationException.WrongPasswordException
 import logic.exception.PlanMateException.AuthorizationException.WrongUsernameException
 import logic.repository.AuthRepository
 
 class AuthRepositoryImpl(
-    private val dataSource: DataSource
+    private val userDataSource: UserDataSourceInterface
 ) : AuthRepository {
-    override fun createUser(user: User) {
-        dataSource.add(user)
+    override fun createUser(user: User): Boolean {
+      return userDataSource.insertUser(user)
     }
 
     override fun login(username: String, password: String): User {

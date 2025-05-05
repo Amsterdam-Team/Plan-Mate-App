@@ -24,8 +24,10 @@ class CreateUserUIController(
         tryToExecute(
             action = { createUserUseCase.execute(username, password) },
             onSuccess = { result ->
-                result.takeIf { it is ResultStatus.Success }?.let {
-                    "User created successfully".printAsASuccessState()
+                if(result){
+                    "Mate user created successfully"
+                }else{
+                    "Failed creating user"
                 }
             }
         )
