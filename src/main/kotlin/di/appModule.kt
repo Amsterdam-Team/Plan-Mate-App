@@ -3,38 +3,23 @@ package di
 import data.datasources.CsvDataSource
 import data.datasources.DataSource
 import data.datasources.FileManager
+import data.datasources.logDataSource.LogCsvDataSource
+import data.datasources.logDataSource.LogDataSourceInterface
 import data.datasources.parser.LogItemCsvParser
 import data.datasources.parser.ProjectCsvParser
 import data.datasources.parser.TaskCsvParser
 import data.datasources.parser.UserCsvParser
-import data.repository.auth.AuthRepositoryImpl
-import data.repository.log.LogRepositoryImpl
-import data.repository.project.ProjectRepositoryImpl
-import data.repository.task.TaskRepositoryImpl
+import data.datasources.projectDataSource.ProjectCsvDataSource
+import data.datasources.projectDataSource.ProjectDataSourceInterface
+import data.datasources.taskDataSource.TaskCsvDataSource
+import data.datasources.taskDataSource.TaskDataSourceInterface
+import data.datasources.userDataSource.UserCsvDataSource
+import data.datasources.userDataSource.UserDataSourceInterface
 import logic.entities.LogItem
 import logic.entities.Project
 import logic.entities.Task
 import logic.entities.User
-import logic.repository.AuthRepository
-import logic.repository.LogRepository
-import logic.repository.ProjectRepository
-import logic.repository.TaskRepository
-import logic.usecases.task.DeleteTaskUseCase
-import logic.usecases.LoginUseCase
-import logic.usecases.ValidateInputUseCase
-import logic.usecases.ViewTaskLogsUseCase
 import logic.usecases.project.CreateProjectUseCase
-import logic.usecases.project.DeleteProjectUseCase
-import logic.usecases.project.GetProjectsUseCase
-import logic.usecases.project.GetProjectHistoryUseCase
-import logic.usecases.state.DeleteStateUseCase
-import logic.usecases.state.GetProjectStatesUseCase
-import logic.usecases.state.GetTaskStateUseCase
-import logic.usecases.state.UpdateStateUseCase
-import logic.usecases.task.CreateTaskUseCase
-import logic.usecases.task.EditTaskUseCase
-import logic.usecases.task.GetAllTasksByProjectIdUseCase
-import logic.usecases.task.GetTaskByIdUseCase
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import ui.DeleteProjectUiController
@@ -43,12 +28,12 @@ import ui.ViewTaskLogsUIController
 import ui.console.ConsoleIO
 import ui.console.ConsoleIOImpl
 import ui.controllers.CreateProjectUIController
-import ui.task.DeleteTaskUIController
 import ui.controllers.UpdateStateUiController
 import ui.menuHandler.AdminMenuHandler
 import ui.menuHandler.MateMenuHandler
 import ui.project.GetProjectUIController
 import ui.project.ViewProjectHistoryUIController
+import ui.task.ViewAllTaksByProjectIdUIController
 import java.util.*
 
 val appModule = module {
@@ -59,53 +44,43 @@ val appModule = module {
     val log = named("log")
 
 
-    single { UserCsvParser() }
-    single { TaskCsvParser() }
-    single { ProjectCsvParser() }
-    single { LogItemCsvParser() }
+    single { ViewAllTaksByProjectIdUIController(get()) }
 
     single(user) { FileManager.create<User>() }
     single(task) { FileManager.create<Task>() }
     single(project) { FileManager.create<Project>() }
     single(log) { FileManager.create<LogItem>() }
+    single { UserCsvParser() }
+    single { TaskCsvParser() }
+    single { ProjectCsvParser() }
+    single { LogItemCsvParser() }
 
     single<DataSource>(user) { CsvDataSource(get<FileManager<User>>(user), get<UserCsvParser>()) }
     single<DataSource>(task) { CsvDataSource(get<FileManager<Task>>(task), get<TaskCsvParser>()) }
+    //single<DataSource>(task) { CsvDataSource(get(task), get<TaskCsvParser>()) }
+
     single<DataSource>(project) { CsvDataSource(get<FileManager<Project>>(project), get<ProjectCsvParser>()) }
     single<DataSource>(log) { CsvDataSource(get<FileManager<LogItem>>(log), get<LogItemCsvParser>()) }
 
 
-    single<AuthRepository> { AuthRepositoryImpl(get(user)) }
-    single<TaskRepository> { TaskRepositoryImpl(get(task)) }
-    single<ProjectRepository> { ProjectRepositoryImpl(get(project)) }
-    single<LogRepository> { LogRepositoryImpl(get(log)) }
 
-    single { ValidateInputUseCase() }
 
-    single { CreateProjectUseCase(get(), User(id = UUID.randomUUID(), username = "fsef", password = "fsefs", isAdmin = true)) }
-    single { DeleteProjectUseCase(get()) }
-    single { GetProjectsUseCase(get(), get()) }
+    single {
+        CreateProjectUseCase(
+            get(),
+            User(id = UUID.randomUUID(), username = "fsef", password = "fsefs", isAdmin = true)
+        )
+    }
 
-    single { DeleteStateUseCase(get()) }
-    single { UpdateStateUseCase(get()) }
-    single { GetProjectStatesUseCase(get()) }
-    single { GetTaskStateUseCase(get()) }
-
-    single { CreateTaskUseCase(get(), get(), get()) }
-    single { EditTaskUseCase(get()) }
-    single { GetAllTasksByProjectIdUseCase(get()) }
-    single { GetTaskByIdUseCase(get()) }
-    single { DeleteTaskUseCase(get()) }
-
-    single { LoginUseCase(get()) }
-    single { ViewProjectHistoryUseCase(get()) }
-    single { ViewTaskLogsUseCase(get(),get()) }
-
+// DataSourceInterface
+    single<TaskDataSourceInterface> { TaskCsvDataSource(get<DataSource>(task) as CsvDataSource<Task>) }
+    single<UserDataSourceInterface> { UserCsvDataSource(get<DataSource>(user) as CsvDataSource<User>) }
+    single<ProjectDataSourceInterface> { ProjectCsvDataSource(get<DataSource>(project) as CsvDataSource<Project>) }
+    single<LogDataSourceInterface> { LogCsvDataSource(get<DataSource>(project) as CsvDataSource<LogItem>) }
 
     single<ConsoleIO> { ConsoleIOImpl() }
 
     single { CreateProjectUIController(get()) }
-    single { DeleteTaskUIController(get(), get()) }
     single { UpdateStateUiController(get(), get()) }
     single { ViewProjectHistoryUIController(get(), get()) }
 
@@ -117,6 +92,8 @@ val appModule = module {
     single { EditTaskUiController(get(), get()) }
 
 
-    single { ViewTaskLogsUIController(get(),get()) }
+
+    single { ViewTaskLogsUIController(get(), get()) }
+
 
 }
