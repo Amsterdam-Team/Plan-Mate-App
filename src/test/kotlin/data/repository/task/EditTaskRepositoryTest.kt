@@ -24,7 +24,7 @@ class EditTasKRepositoryTest {
     @BeforeEach
     fun setUp() {
         dataSource = mockk()
-        repository = TaskRepositoryImpl(dataSource)
+        repository = TaskRepositoryImpl(mockk())
         authTask = Task(
             id = randomUUID(),
             name = "add auth function",
