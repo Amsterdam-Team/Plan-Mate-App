@@ -26,7 +26,7 @@ fun main() {
     val updateStateUiController: UpdateStateUiController = getKoin().get()
     val getProjectUIController: GetProjectUIController = getKoin().get()
     val deleteProjectUiController: DeleteProjectUiController = getKoin().get()
-    val editTaskUiController: EditTaskUiController = getKoin().get()
+//    val editTaskUiController: EditTaskUiController = getKoin().get()
     val viewTaskLogsUIController: ViewTaskLogsUIController = getKoin().get()
 
 
@@ -34,7 +34,8 @@ fun main() {
     val adminHandler: AdminMenuHandler = AdminMenuHandler(
         mapOf(
             1 to createProjectUIController,
-            2 to updateStateUiController
+            2 to updateStateUiController,
+            12 to deleteProjectUiController
         )
     )
 

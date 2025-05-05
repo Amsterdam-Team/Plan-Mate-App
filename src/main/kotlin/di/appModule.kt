@@ -37,7 +37,8 @@ import logic.usecases.task.GetTaskByIdUseCase
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import ui.DeleteProjectUiController
-import ui.EditTaskUiController
+
+
 import ui.ViewTaskLogsUIController
 import ui.console.ConsoleIO
 import ui.console.ConsoleIOImpl
@@ -49,6 +50,13 @@ import ui.menuHandler.MateMenuHandler
 import ui.project.GetProjectUIController
 import ui.project.ViewProjectHistoryUIController
 import java.util.*
+
+val  user = User(
+    id = UUID.randomUUID(),
+    isAdmin = true,
+    username = "omer",
+    password = "omer"
+)
 
 val appModule = module {
 
@@ -73,13 +81,13 @@ val appModule = module {
     single<DataSource>(project) { CsvDataSource(get<FileManager<Project>>(project), get<ProjectCsvParser>()) }
     single<DataSource>(log) { CsvDataSource(get<FileManager<LogItem>>(log), get<LogItemCsvParser>()) }
 
-
-    single<AuthRepository> { AuthRepositoryImpl(get(user)) }
-    single<TaskRepository> { TaskRepositoryImpl(get(task)) }
-    single<ProjectRepository> { ProjectRepositoryImpl(get(project)) }
+//
+//    single<AuthRepository> {  }
+//    single<TaskRepository> { TaskRepositoryImpl() }
+//    single<ProjectRepository> { ProjectRepositoryImpl() }
     single<LogRepository> { LogRepositoryImpl(get(log)) }
 
-    single { CreateProjectUseCase(get(), User(id = UUID.randomUUID(), username = "fsef", password = "fsefs", isAdmin = true)) }
+    single { CreateProjectUseCase(get(), di.user) }
     single { DeleteProjectUseCase(get()) }
     single { GetProjectsUseCase(get(), get()) }
 
@@ -110,7 +118,7 @@ val appModule = module {
     single { GetProjectUIController(get(), get()) }
 
     single { DeleteProjectUiController(get(), get()) }
-    single { EditTaskUiController(get(), get()) }
+//    single { EditTaskUiController(get(), get()) }
 
 
     single { ViewTaskLogsUIController(get()) }
