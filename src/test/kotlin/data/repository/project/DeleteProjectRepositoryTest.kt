@@ -1,6 +1,7 @@
 package data.repository.project
 
 import data.datasources.CsvDataSource
+import com.google.common.truth.Truth.assertThat
 import data.datasources.projectDataSource.ProjectDataSourceInterface
 import io.mockk.every
 import io.mockk.just
@@ -33,10 +34,30 @@ class DeleteProjectRepositoryTest {
     }
 
     @Test
+    fun `should return true when deleting project complete successfully`() {
+        // given
+        every { dataSource.deleteProject(someProjects[0].id) } returns true
+        val result = repository.deleteProject(someProjects[0].id)
+        assertThat(result).isTrue()
+
+    }
+
+    @Test
     fun `should delete project successfully when project is already exist`() {
         // given
         every { dataSource.deleteProject(someProjects[0].id) } returns true
         assertDoesNotThrow {
+            repository.deleteProject(someProjects[0].id)
+
+        }
+    }
+
+    @Test
+    fun `should throw project not found when deleting project not exist`() {
+        // given
+
+        every { dataSource.deleteProject(someProjects[0].id) } throws ProjectNotFoundException
+        assertThrows <ProjectNotFoundException> {
             repository.deleteProject(someProjects[0].id)
 
         }
