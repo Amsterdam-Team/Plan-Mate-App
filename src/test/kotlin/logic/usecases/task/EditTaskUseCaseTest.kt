@@ -15,19 +15,22 @@ import logic.exception.PlanMateException.NotFoundException.*
 import logic.exception.PlanMateException.ValidationException.InvalidProjectNameException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskNameException
+import logic.usecases.ValidateInputUseCase
 import logic.usecases.testFactory.CreateTaskTestFactory
 import java.util.*
 
 class EditTaskUseCaseTest {
     lateinit var repository: TaskRepositoryImpl
     lateinit var usecase: EditTaskUseCase
+    lateinit var validation: ValidateInputUseCase
     lateinit var taskId: String
     lateinit var task: Task
 
     @BeforeEach
     fun setUp() {
         repository = mockk(relaxed = true)
-        usecase = EditTaskUseCase(repository)
+        validation = ValidateInputUseCase()
+        usecase = EditTaskUseCase(repository, validation)
         taskId = UUID.randomUUID().toString()
         task = Task(
             id = UUID.randomUUID(),

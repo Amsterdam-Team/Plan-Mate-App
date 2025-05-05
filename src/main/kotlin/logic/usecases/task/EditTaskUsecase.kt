@@ -3,18 +3,18 @@ package logic.usecases.task
 import logic.entities.Task
 import logic.exception.PlanMateException
 import logic.exception.PlanMateException.DataSourceException.EmptyDataException
+import logic.exception.PlanMateException.ValidationException.InvalidStateNameException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskNameException
 import logic.repository.TaskRepository
 import logic.usecases.ValidateInputUseCase
 import java.util.UUID
 
-class EditTaskUseCase(val taskRepository: TaskRepository) {
+class EditTaskUseCase(val taskRepository: TaskRepository, val validateInputUseCase: ValidateInputUseCase) {
 
 
     fun editTask(taskId: String, newName: String, newState: String): Boolean {
-        validateStringInput(newName)
-        validateStringInput(newState)
+        validateTaskInputs(taskId, newName, newState)
 
         val uuid = parseId(taskId)
 
@@ -33,13 +33,20 @@ class EditTaskUseCase(val taskRepository: TaskRepository) {
         return updated
     }
 
-    private fun validateStringInput(input: String) {
-        if (input.isBlank()) throw EmptyDataException
 
-        val regex = Regex("^[\\w\\s-]+\$") // allows letters, numbers, underscores, hyphens, and spaces
-        if (!regex.matches(input)) {
+
+    private fun validateTaskInputs(taskId:String ,name:String, state:String): Boolean{
+        if (! validateInputUseCase.isValidName(name)){
             throw InvalidTaskNameException
         }
+        if(! validateInputUseCase.isValidName(state)){
+            throw InvalidStateNameException
+        }
+        if (! validateInputUseCase.isValidUUID(taskId)){
+            throw InvalidTaskIDException
+        }
+        return true
+
     }
 
     private fun parseId(id: String): UUID {
