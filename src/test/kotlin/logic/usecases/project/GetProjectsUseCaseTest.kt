@@ -3,9 +3,10 @@ package logic.usecases.project
 import com.google.common.truth.Truth.assertThat
 import io.mockk.*
 import logic.entities.Task
+import logic.exception.PlanMateException
 import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
 import logic.exception.PlanMateException.ValidationException.EmptyDataException
-import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
+import logic.exception.PlanMateException.ValidationException.InvalidUUIDFormatException
 
 import logic.repository.ProjectRepository
 import logic.repository.TaskRepository
@@ -65,7 +66,7 @@ class GetProjectsUseCaseTest() {
         //Given
         every { repository.getProject(projectOneId)} returns projects[0]
         //When
-        val result = useCase.getProject(projectOneId.toString())
+        val result = useCase(projectOneId.toString())
         //Then
         assertThat(result).isIn(projects)
     }
@@ -73,10 +74,10 @@ class GetProjectsUseCaseTest() {
     @Test
     fun `should throw ProjectNotFoundException when projectID does not exist in Projects`() {
         //Given
-        every { repository.getProject(projectOneId) } returns projects[0]
+        every { repository.getProject(projectOneId) } throws ProjectNotFoundException
         //When&Then
         assertThrows<ProjectNotFoundException> {
-            useCase.getProject("2b19ee75-2b4c-430f-bad8-dfa6b14709d9")
+            useCase(projectOneId.toString())
         }
     }
 
@@ -90,13 +91,13 @@ class GetProjectsUseCaseTest() {
         " db373589-b656#4e68@a7c0-2ccc705ca169"
         ]
     )
-    fun `should throw InvalidProjectIDException error when project ID is not a valid UUID`(invalidID:String) {
+    fun `should throw InvalidUUIDFormatException error when project ID is not a valid UUID`(invalidID:String) {
         //Given
         val projectID = invalidID
 
         //When & Then
-        assertThrows<InvalidProjectIDException> {
-            useCase.getProject(projectID)
+        assertThrows<InvalidUUIDFormatException> {
+            useCase(projectID)
         }
 
     }
