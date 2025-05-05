@@ -37,7 +37,7 @@ fun getErrorMessageByException(exception: Exception): String {
 
         is InvalidPasswordException -> "The password you entered is not valid. Please follow the password rules."
 
-        is InvalidStateNameException -> "The state name is not valid. State name must be not empty and does not contain any numbers or non alphabet characters"
+        is InvalidStateNameException -> "The state name is not valid. State name must be not be empty and does not contain any numbers or non alphabet characters"
 
         is InvalidTaskNameException -> "The task name is not valid. Please enter a proper task name."
 
@@ -63,6 +63,7 @@ fun getErrorMessageByException(exception: Exception): String {
         is SameStateNameException -> "Current state and new state are identical. No changes applied."
         is TaskLogsNotFound -> "This task not have any logs till now..."
 
+        is EmptyDataException -> "You must enter some data, this field cannot be empty"
 
         is PlanMateException -> "Something went wrong with your request. Please try again."
 
