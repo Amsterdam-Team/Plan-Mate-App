@@ -1,9 +1,14 @@
 package data.datasources.projectDataSource
 
+import data.datasources.FileManager
+import data.datasources.parser.CsvParser
 import logic.entities.Project
 import java.util.*
 
-class ProjectCsvDataSource: ProjectDataSourceInterface {
+class ProjectCsvDataSource (
+    private val fileManager: FileManager<Project>,
+    private val csvParser: CsvParser<Project>
+): ProjectDataSourceInterface {
     override fun getAllProjects(): List<Project> {
         TODO("Not yet implemented")
     }
