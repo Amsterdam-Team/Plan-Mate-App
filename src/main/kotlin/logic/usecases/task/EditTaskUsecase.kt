@@ -6,39 +6,49 @@ import logic.exception.PlanMateException.DataSourceException.EmptyDataException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskNameException
 import logic.repository.TaskRepository
+import logic.usecases.ValidateInputUseCase
 import java.util.UUID
 
 class EditTaskUseCase(val taskRepository: TaskRepository) {
 
 
-    fun editTask(taskId: String, newName:String, newState:String): Boolean{
+    fun editTask(taskId: String, newName: String, newState: String): Boolean {
         validateStringInput(newName)
         validateStringInput(newState)
-        validateId(taskId)
-       return  taskRepository.updateTaskNameByID(UUID.fromString(taskId), newName)
-                && taskRepository.updateStateNameByID(UUID.fromString(taskId), newState)
+
+        val uuid = parseId(taskId)
+
+        val existingTask = taskRepository.getTaskById(uuid)
+
+        var updated = false
+
+        if (existingTask.name != newName) {
+            updated = taskRepository.updateTaskNameByID(uuid, newName) || updated
+        }
+
+        if (existingTask.state != newState) {
+            updated = taskRepository.updateStateNameByID(uuid, newState) || updated
+        }
+
+        return updated
     }
 
+    private fun validateStringInput(input: String) {
+        if (input.isBlank()) throw EmptyDataException
 
-
-    fun validateStringInput(name:String){
-        if (name.isEmpty() || name.isBlank()){
-            throw EmptyDataException
-        }
-        if (name.contains(regex = Regex(pattern = "[^a-zA-Z\\s]"))){
+        val regex = Regex("^[\\w\\s-]+\$") // allows letters, numbers, underscores, hyphens, and spaces
+        if (!regex.matches(input)) {
             throw InvalidTaskNameException
         }
     }
-    fun validateId(id:String){
-        if (id.isEmpty() || id.isBlank()){
-            throw EmptyDataException
-        }
 
-        try {
+    private fun parseId(id: String): UUID {
+        if (id.isBlank()) throw EmptyDataException
+
+        return try {
             UUID.fromString(id)
-        } catch (e: IllegalArgumentException){
+        } catch (e: IllegalArgumentException) {
             throw InvalidTaskIDException
         }
     }
-
 }
