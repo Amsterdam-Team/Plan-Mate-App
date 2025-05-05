@@ -3,6 +3,9 @@ package data.datasources.projectDataSource
 import data.datasources.FileManager
 import data.datasources.parser.CsvParser
 import logic.entities.Project
+import logic.exception.PlanMateException
+import logic.exception.PlanMateException.DataSourceException.EmptyFileException
+import java.io.IOException
 import java.util.*
 
 class ProjectCsvDataSource (
@@ -10,7 +13,12 @@ class ProjectCsvDataSource (
     private val csvParser: CsvParser<Project>
 ): ProjectDataSourceInterface {
     override fun getAllProjects(): List<Project> {
-        TODO("Not yet implemented")
+        return try {
+            val lines = fileManager.readLines()
+            lines.map { csvParser.deserialize(it) }
+        } catch (e: EmptyFileException){
+            emptyList()
+        }
     }
 
     override fun getProjectById(projectId: UUID): Project {
@@ -18,7 +26,13 @@ class ProjectCsvDataSource (
     }
 
     override fun insertProject(project: Project): Boolean {
-        TODO("Not yet implemented")
+        val line = csvParser.serialize(project)
+        return try {
+            fileManager.appendLine(line)
+            true
+        } catch (e: IOException){
+            false
+        }
     }
 
     override fun deleteProject(projectId: UUID): Boolean {
