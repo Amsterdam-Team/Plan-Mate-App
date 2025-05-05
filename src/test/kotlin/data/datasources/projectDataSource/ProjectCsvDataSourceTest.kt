@@ -124,8 +124,8 @@ class ProjectCsvDataSourceTest{
     @Test
     fun `should return false when project exists in CSV file`() {
         // Given
-        mockSerialization()
-        every { fileManager.appendLine(lines[0]) } throws ProjectAlreadyExistsException
+        mockDeserialization()
+        every { fileManager.readLines() } returns  lines
 
         // When
         val result = projectCsvDataSource.insertProject(project)
