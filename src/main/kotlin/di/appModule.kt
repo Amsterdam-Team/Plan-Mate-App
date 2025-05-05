@@ -98,8 +98,9 @@ val appModule = module {
     single { DeleteTaskUseCase(get()) }
 
     single { LoginUseCase(get()) }
-    single { GetProjectHistoryUseCase(get()) }
-    single { ViewTaskLogsUseCase(get()) }
+    single { ViewProjectHistoryUseCase(get()) }
+    single { ViewTaskLogsUseCase(get(),get()) }
+
 
     single<ConsoleIO> { ConsoleIOImpl() }
 
@@ -116,6 +117,6 @@ val appModule = module {
     single { EditTaskUiController(get(), get()) }
 
 
-    single { ViewTaskLogsUIController(get()) }
+    single { ViewTaskLogsUIController(get(),get()) }
 
 }
