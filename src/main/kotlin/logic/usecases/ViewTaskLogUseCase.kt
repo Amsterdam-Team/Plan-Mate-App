@@ -7,20 +7,13 @@ import logic.repository.LogRepository
 import java.util.UUID
 
 class ViewTaskLogsUseCase(
-    private val logRepository : LogRepository
+    private val logRepository : LogRepository,
+    private val validationInputUseCase: ValidateInputUseCase
 ) {
 
     fun viewTaskLogs(taskId : String) : List<LogItem>{
-        val uuid = validateUUIDFormat(taskId)
-        val logs = logRepository.viewLogsById(uuid)
+        if(!validationInputUseCase.isValidUUID(taskId)) throw InvalidTaskIDException
+        val logs = logRepository.viewLogsById(UUID.fromString(taskId))
         return logs
-    }
-
-    private fun validateUUIDFormat(uuidString: String): UUID {
-        return try {
-            UUID.fromString(uuidString.trim())
-        } catch (e: IllegalArgumentException) {
-            throw InvalidTaskIDException
-        }
     }
 }
