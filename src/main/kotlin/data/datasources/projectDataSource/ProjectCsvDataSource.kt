@@ -26,6 +26,11 @@ class ProjectCsvDataSource (
     }
 
     override fun insertProject(project: Project): Boolean {
+        val projects = getAllProjects()
+        val exists = projects.find { project.id == it.id }
+        if (exists != null){
+            return false
+        }
         val line = csvParser.serialize(project)
         return try {
             fileManager.appendLine(line)
