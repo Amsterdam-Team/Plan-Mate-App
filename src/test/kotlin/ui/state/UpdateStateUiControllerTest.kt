@@ -37,7 +37,7 @@ class UpdateStateUiControllerTest {
         val newState = "Completed"
         val slot = captureSlot()
         every { consoleIO.println(capture(slot)) } just Runs
-        every { usecase.updateState(projectID, oldState, newState) } just runs
+        every { usecase.updateState(projectID, oldState, newState) } returns true
         //When
         uiController.execute()
         //Then
