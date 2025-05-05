@@ -18,6 +18,8 @@ sealed class PlanMateException : Exception() {
         data object InvalidTaskIDException : ValidationException()
         data object InvalidProjectNameException : ValidationException()
         data object InvalidProjectIDException : ValidationException()
+        data object UserAlreadyExistsException : ValidationException()
+        data object StateAlreadyExistsException : ValidationException()
         data object EmptyDataException : ValidationException()
 
         data object EmptyProjectStatesException : ValidationException()
@@ -48,7 +50,7 @@ sealed class PlanMateException : Exception() {
 
     sealed class ExistException : PlanMateException() {
         data object ProjectAlreadyExistsException : ExistException()
-        data object TaskAlreadyExistsException : ExistException()       
+        data object TaskAlreadyExistsException : ExistException()
     }
 
 }
