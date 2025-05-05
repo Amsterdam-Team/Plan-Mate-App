@@ -15,4 +15,7 @@ class ValidateInputUseCase {
     } catch (_: IllegalArgumentException) {
         false
     }
+    fun areIdentical(oldName: String , newName: String):Boolean{
+        return oldName.trim() == newName.trim()
+    }
 }
