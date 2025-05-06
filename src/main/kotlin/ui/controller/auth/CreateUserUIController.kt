@@ -1,6 +1,6 @@
 package ui.controller.auth
 
-import logic.usecases.user.CreateUserUseCase
+import logic.usecases.auth.CreateUserUseCase
 import ui.console.ConsoleIO
 import ui.controller.base.BaseUIController
 import ui.utils.tryToExecute
