@@ -1,7 +1,6 @@
 package logic.usecases
 
 import logic.entities.User
-import logic.exception.PlanMateException
 import logic.repository.AuthRepository
 import ui.utils.md5Hash
 

@@ -3,9 +3,7 @@ package ui.controllers
 import logic.usecases.user.CreateUserUseCase
 import ui.console.ConsoleIO
 import ui.controller.BaseUIController
-import ui.utils.printAsASuccessState
 import ui.utils.tryToExecute
-import utils.ResultStatus
 
 class CreateUserUIController(
     private val createUserUseCase: CreateUserUseCase,

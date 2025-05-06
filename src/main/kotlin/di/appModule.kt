@@ -37,8 +37,6 @@ import logic.usecases.task.GetAllTasksByProjectIdUseCase
 import logic.usecases.task.GetTaskByIdUseCase
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import ui.DeleteProjectUiController
-import ui.EditTaskUiController
 import ui.ViewTaskLogsUIController
 import ui.console.ConsoleIO
 import ui.console.ConsoleIOImpl
@@ -47,8 +45,10 @@ import ui.task.DeleteTaskUIController
 import ui.controllers.UpdateStateUiController
 import ui.menuHandler.AdminMenuHandler
 import ui.menuHandler.MateMenuHandler
+import ui.project.DeleteProjectUiController
 import ui.project.GetProjectUIController
 import ui.project.ViewProjectHistoryUIController
+import ui.task.EditTaskUiController
 import java.util.*
 
 val appModule = module {

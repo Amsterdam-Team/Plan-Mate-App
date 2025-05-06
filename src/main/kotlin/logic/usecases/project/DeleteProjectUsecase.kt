@@ -1,9 +1,7 @@
 package logic.usecases.project
 
 import logic.entities.User
-import logic.exception.PlanMateException
 import logic.exception.PlanMateException.AuthorizationException.AdminPrivilegesRequiredException
-import logic.exception.PlanMateException.DataSourceException.EmptyDataException
 import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
 import logic.repository.ProjectRepository
 import logic.usecases.ValidateInputUseCase

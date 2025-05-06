@@ -1,7 +1,5 @@
 package logic.usecases.task
 
-import logic.entities.Task
-import logic.exception.PlanMateException
 import logic.exception.PlanMateException.DataSourceException.EmptyDataException
 import logic.exception.PlanMateException.ValidationException.InvalidStateNameException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException

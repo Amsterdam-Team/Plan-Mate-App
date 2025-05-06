@@ -1,14 +1,11 @@
 package logic.usecases.project
 
 import logic.entities.Project
-import logic.exception.PlanMateException
 import logic.exception.PlanMateException.ValidationException.InvalidUUIDFormatException
-import logic.exception.PlanMateException.NotFoundException.StateNotFoundException
 import logic.repository.ProjectRepository
 import logic.usecases.ValidateInputUseCase
 import logic.usecases.task.GetAllTasksByProjectIdUseCase
-import ui.utils.Validator
-import java.util.*
+import java.util.UUID
 
 class GetProjectDetailsUseCase(
     private val projectRepository: ProjectRepository,

@@ -5,12 +5,12 @@ import logic.usecases.LoginUseCase
 import org.koin.core.context.startKoin
 import org.koin.java.KoinJavaComponent.getKoin
 import ui.console.ConsoleIO
-
 import ui.controller.CreateTaskUIController
 import ui.controllers.CreateProjectUIController
 import ui.controllers.UpdateStateUiController
 import ui.menuHandler.AdminMenuHandler
 import ui.menuHandler.MateMenuHandler
+import ui.project.DeleteProjectUiController
 import ui.project.GetProjectUIController
 import ui.project.ViewProjectHistoryUIController
 

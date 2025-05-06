@@ -6,7 +6,6 @@ import logic.exception.PlanMateException.ValidationException.InvalidUsernameExce
 import logic.repository.AuthRepository
 import logic.usecases.ValidateInputUseCase
 import ui.utils.md5Hash
-import utils.ResultStatus
 import java.util.UUID
 
 class CreateUserUseCase(private val repository: AuthRepository, private val validateInputUseCase: ValidateInputUseCase) {
