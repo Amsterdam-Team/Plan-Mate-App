@@ -1,25 +1,16 @@
 package logic.usecases
 
 import logic.entities.User
-import logic.exception.PlanMateException.ValidationException.InvalidPasswordException
-import logic.exception.PlanMateException.ValidationException.InvalidUsernameException
+import logic.exception.PlanMateException
 import logic.repository.AuthRepository
+import ui.utils.md5Hash
 
 class LoginUseCase(
     private val authRepository : AuthRepository
 ) {
 
-    fun verifyUserState(username : String , password : String): User{
-        if(!validateName(username)) throw InvalidUsernameException
-        if(!validatePassword(password)) throw InvalidPasswordException
-
-        val userData = authRepository.login(username,password)
+    fun validateUserCredentials(username : String, password : String): User{
+        val userData = authRepository.login(username, md5Hash(password))
         return userData
     }
-
-    private fun validateName(username: String): Boolean =
-        Regex("^[A-Za-z][A-Za-z0-9]{2,}$").matches(username)
-
-    private fun validatePassword(password: String): Boolean =
-        Regex("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{7,}$").matches(password)
 }
