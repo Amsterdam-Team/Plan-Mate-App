@@ -1,14 +1,19 @@
 package data.repository.task
 
+import com.google.common.truth.Truth.assertThat
 import data.datasources.CsvDataSource
+import data.datasources.taskDataSource.TaskDataSourceInterface
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
 import logic.entities.Task
+import logic.exception.PlanMateException
 import logic.exception.PlanMateException.DataSourceException.EmptyDataException
 import logic.exception.PlanMateException.DataSourceException.EmptyFileException
+import logic.exception.PlanMateException.NotFoundException
 import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
+import logic.repository.TaskRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
@@ -17,15 +22,15 @@ import java.util.UUID.randomUUID
 
 class EditTasKRepositoryTest {
 
-    lateinit var dataSource: CsvDataSource<Task>
+    lateinit var dataSource: TaskDataSourceInterface
     lateinit var repository: TaskRepositoryImpl
-    lateinit var authTask: Task
+    lateinit var authenticationTask: Task
 
     @BeforeEach
     fun setUp() {
         dataSource = mockk()
-        repository = TaskRepositoryImpl(mockk())
-        authTask = Task(
+        repository = TaskRepositoryImpl(dataSource)
+        authenticationTask = Task(
             id = randomUUID(),
             name = "add auth function",
             projectId = randomUUID(),
@@ -35,41 +40,39 @@ class EditTasKRepositoryTest {
     }
 
     @Test
-    fun `should edit task successfully when editing function complete successfully`() {
+    fun `should return true when editing task name complete successfully`() {
+        every { dataSource.updateTaskName(taskId = authenticationTask.id, newName = "new name") } returns true
+        val result = repository.updateTaskNameByID(
+            taskId = authenticationTask.id,
+            newName = "new name"
+        )
+        assertThat(result).isTrue()
 
-        every {dataSource.getAll()} returns listOf(authTask)
-        every { dataSource.saveAll(any())} returns Unit
 
-        assertDoesNotThrow {
-            repository.updateTask(authTask.copy(name= "implement authentication"))
-        }
     }
 
     @Test
-    fun `should throw not found exception when editing or updating not existed task`() {
+    fun `should return true when editing task state complete successfully`() {
+        every { dataSource.updateTaskState(taskId = authenticationTask.id, newState = "new state") } returns true
+        val result = repository.updateStateNameByID(
+            taskId = authenticationTask.id,
+            newState = "new state"
+        )
+        assertThat(result).isTrue()
 
-        every{dataSource.getAll()} returns listOf(authTask)
-
-        val uiTask= Task( id = randomUUID(),
-            name = "add ui ",
-            projectId = randomUUID(),
-            state = "todo")
-        assertThrows<TaskNotFoundException> {
-            repository.updateTaskNameByID(uiTask.id, "add ui structure")
-        }
     }
 
     @Test
-    fun `should throw empty data exception when editing or updating and there is no tasks`() {
-
-        every{dataSource.getAll()} throws EmptyFileException
-        val uiTask= Task( id = randomUUID(),
-            name = "add ui ",
-            projectId = randomUUID(),
-            state = "todo")
-        assertThrows<EmptyDataException> {
-            repository.updateTaskNameByID(uiTask.id, "add ui structure")
+    fun `should throw task not found when editing or updating non existed task`() {
+        every { dataSource.updateTaskState(taskId = authenticationTask.id, newState = "new state") } throws TaskNotFoundException
+        assertThrows<NotFoundException> {
+            repository.updateStateNameByID(
+                taskId = authenticationTask.id,
+                newState = "new state"
+            )
         }
+
+
     }
 
 }

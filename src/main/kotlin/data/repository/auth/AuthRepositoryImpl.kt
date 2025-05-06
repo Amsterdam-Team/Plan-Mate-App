@@ -1,30 +1,17 @@
 package data.repository.auth
 
-import data.datasources.CsvDataSource
-import data.datasources.DataSource
+import data.datasources.userDataSource.UserDataSourceInterface
 import logic.entities.User
-import logic.exception.PlanMateException.AuthorizationException.UserNotFoundException
-import logic.exception.PlanMateException.AuthorizationException.WrongPasswordException
-import logic.exception.PlanMateException.AuthorizationException.WrongUsernameException
 import logic.repository.AuthRepository
 
 class AuthRepositoryImpl(
-    private val dataSource : DataSource
+    private val userDataSource : UserDataSourceInterface
 ): AuthRepository {
     override fun createUser(user: User) {
     }
 
     override fun login(username: String, password: String): User {
-        val allUsers = dataSource.getAll()
-        val user = findUser(username,allUsers)?: throw WrongUsernameException
-        if(user.password!=password) WrongPasswordException
-
+        val user = userDataSource.findUserByCredentials(username,password)
         return user
-    }
-
-    private fun findUser(username: String ,allUsers: List<Any>): User? {
-        return allUsers
-            .map { it as User }
-            .find { it.username == username }
     }
 }

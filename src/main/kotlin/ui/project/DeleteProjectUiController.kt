@@ -1,22 +1,21 @@
-package ui
+package ui.project
 
 import logic.usecases.project.DeleteProjectUseCase
 import ui.console.ConsoleIO
 import ui.controller.BaseUIController
 import ui.utils.tryToExecute
 
-class DeleteProjectUiController(val deleteProjectUseCase: DeleteProjectUseCase, val consoleIO: ConsoleIO): BaseUIController {
+class DeleteProjectUiController(val deleteProjectUseCase: DeleteProjectUseCase, val consoleIO: ConsoleIO):
+    BaseUIController {
     override fun execute() {
         val projectId = getProjectId()
         tryToExecute<Boolean>(
-           action =  {action(projectId)},
-            onSuccess = {onSuccess()}
+            action = { deleteProjectUseCase.deleteProject(projectId = projectId)},
+            onSuccess = { onSuccess(it) }
         )
     }
 
-    private fun action(id: String): Boolean{
-        return deleteProjectUseCase.deleteProject(projectId = id)
-    }
+
     private fun getProjectId(): String{
         consoleIO.println("please enter project id here: ")
         val projectId = consoleIO.readFromUser()
@@ -26,8 +25,13 @@ class DeleteProjectUiController(val deleteProjectUseCase: DeleteProjectUseCase, 
             }
         }
     }
-    private fun onSuccess(){
-        consoleIO.println("Project deleted successfully")
+    private fun onSuccess(result: Boolean){
+        if (result){
+            consoleIO.println("Project deleted successfully")
+
+        }else{
+            consoleIO.println("Failed deleting project")
+        }
     }
 
 

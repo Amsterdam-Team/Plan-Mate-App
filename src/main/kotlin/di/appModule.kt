@@ -25,7 +25,7 @@ import logic.usecases.ValidateInputUseCase
 import logic.usecases.ViewTaskLogsUseCase
 import logic.usecases.project.CreateProjectUseCase
 import logic.usecases.project.DeleteProjectUseCase
-import logic.usecases.project.GetProjectsUseCase
+import logic.usecases.project.GetProjectDetailsUseCase
 import logic.usecases.project.GetProjectHistoryUseCase
 import logic.usecases.state.DeleteStateUseCase
 import logic.usecases.state.GetProjectStatesUseCase
@@ -84,7 +84,7 @@ val appModule = module {
 
     single { CreateProjectUseCase(get(), User(id = UUID.randomUUID(), username = "fsef", password = "fsefs", isAdmin = true)) }
     single { DeleteProjectUseCase(get()) }
-    single { GetProjectsUseCase(get(), get()) }
+    single { GetProjectDetailsUseCase(get(),get(), get()) }
 
     single { DeleteStateUseCase(get()) }
     single { UpdateStateUseCase(get()) }
@@ -98,7 +98,7 @@ val appModule = module {
     single { DeleteTaskUseCase(get()) }
 
     single { LoginUseCase(get()) }
-    single { ViewProjectHistoryUseCase(get()) }
+    single { GetProjectHistoryUseCase(get()) }
     single { ViewTaskLogsUseCase(get(),get()) }
 
 
