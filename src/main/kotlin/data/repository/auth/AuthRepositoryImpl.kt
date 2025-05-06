@@ -8,7 +8,7 @@ class AuthRepositoryImpl(
     private val userDataSource : UserDataSourceInterface
 ): AuthRepository {
     override fun createUser(user: User): Boolean {
-        return true
+        return userDataSource.insertUser(user)
     }
 
     override fun login(username: String, password: String): User {
