@@ -35,4 +35,9 @@ class UserCsvDataSource(
     override fun replaceAllUsers(users: List<User>): Boolean {
         TODO("Not yet implemented")
     }
+
+    override fun findUserByCredentials(username: String, password: String): User {
+
+        TODO("Not yet implemented")
+    }
 }
