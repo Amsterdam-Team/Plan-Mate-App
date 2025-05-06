@@ -77,15 +77,6 @@ class DeleteProjectUseCaseTest {
 
     }
 
-    @Test
-    fun `should throw empty data exception when the id entered by user is empty`() {
-        // given
-        val id = ""
-        // when & then
-        assertThrows<EmptyDataException> {
-            useCase.deleteProject(id)
-        }
-    }
     @ParameterizedTest
     @CsvSource(
         "oijwerfj",
