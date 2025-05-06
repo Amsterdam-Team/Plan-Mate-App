@@ -1,6 +1,7 @@
 package logic.usecases.project
 
 import com.google.common.truth.Truth.assertThat
+import io.mockk.Awaits
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
@@ -31,7 +32,7 @@ class CreateStateUseCaseTest {
         // Given
         val project = createProject()
         val newState = "In Review"
-        every { repository.addStateById(project.id, newState) } just Runs
+        every { repository.addStateById(project.id, newState) } just Awaits
 
         // When
         val result = useCase.execute(project.id, newState)

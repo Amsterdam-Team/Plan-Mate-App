@@ -58,7 +58,6 @@ val appModule = module {
     val project = named("project")
     val log = named("log")
 
-
     single { UserCsvParser() }
     single { TaskCsvParser() }
     single { ProjectCsvParser() }
@@ -74,7 +73,6 @@ val appModule = module {
     single<DataSource>(project) { CsvDataSource(get<FileManager<Project>>(project), get<ProjectCsvParser>()) }
     single<DataSource>(log) { CsvDataSource(get<FileManager<LogItem>>(log), get<LogItemCsvParser>()) }
 
-
     single<AuthRepository> { AuthRepositoryImpl(get(user)) }
     single<TaskRepository> { TaskRepositoryImpl(get(task)) }
     single<ProjectRepository> { ProjectRepositoryImpl(get(project)) }
@@ -83,16 +81,16 @@ val appModule = module {
     single { ValidateInputUseCase() }
 
     single { CreateProjectUseCase(get(), User(id = UUID.randomUUID(), username = "fsef", password = "fsefs", isAdmin = true)) }
-    single { DeleteProjectUseCase(get()) }
+    single { DeleteProjectUseCase(get(), get(), get()) }
     single { GetProjectDetailsUseCase(get(),get(), get()) }
 
     single { DeleteStateUseCase(get()) }
-    single { UpdateStateUseCase(get()) }
+    single { UpdateStateUseCase(get(), get(), get()) }
     single { GetProjectStatesUseCase(get()) }
     single { GetTaskStateUseCase(get()) }
 
     single { CreateTaskUseCase(get(), get(), get()) }
-    single { EditTaskUseCase(get()) }
+    single { EditTaskUseCase(get(), get()) }
     single { GetAllTasksByProjectIdUseCase(get()) }
     single { GetTaskByIdUseCase(get()) }
     single { DeleteTaskUseCase(get()) }
@@ -100,7 +98,6 @@ val appModule = module {
     single { LoginUseCase(get()) }
     single { GetProjectHistoryUseCase(get()) }
     single { ViewTaskLogsUseCase(get(),get()) }
-
 
     single<ConsoleIO> { ConsoleIOImpl() }
 

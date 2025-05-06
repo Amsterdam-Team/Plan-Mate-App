@@ -1,7 +1,6 @@
 package ui.project
 
 
-import console.ConsoleIO
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -10,6 +9,7 @@ import logic.usecases.project.helper.ViewProjectHistoryTestFactory.LOGS_FOR_PROJ
 import logic.usecases.project.helper.ViewProjectHistoryTestFactory.PROJECT_1
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import ui.console.ConsoleIO
 import ui.controller.project.ViewProjectHistoryUIController
 import ui.utils.formatLogItem
 

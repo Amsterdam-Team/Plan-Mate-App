@@ -1,6 +1,7 @@
 package logic.usecases.auth
 
 import com.google.common.truth.Truth.assertThat
+import io.mockk.Awaits
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
@@ -29,7 +30,7 @@ class CreateUserUseCaseTest {
     fun `should return success when username and password are valid`() {
         // Given
         val user = createUser()
-        every { repository.createUser(any()) } just Runs
+        every { repository.createUser(any()) } just Awaits
 
         // When
         val result = useCase.execute(user.username, user.password, user.isAdmin)
