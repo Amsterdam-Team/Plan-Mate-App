@@ -13,19 +13,22 @@ import logic.entities.LogItem
 import kotlinx.datetime.TimeZone
 
 
-class EditProjectNameUseCase(
+class EditProjectUseCase(
     private val projectRepository: ProjectRepository,
     private val validateInputUseCase: ValidateInputUseCase,
     private val logRepository: LogRepository
-) {
+)  {
 
-    fun execute(user: User, projectId: UUID, newName: String) {
+    fun editProjectName(user: User, projectId: UUID, newName: String) : Boolean {
         validateAdmin(user)
         validateName(newName)
         val project = ensureProjectExists(projectId)
         validateProjectNameNotTaken(projectId, newName)
-        updateProjectName(projectId, newName)
-        logProjectNameChange(project, newName, user)
+        val updated = updateProjectName(projectId, newName)
+        if (updated) {
+            logProjectNameChange(project, newName, user)
+        }
+        return updated
     }
 
     private fun validateAdmin(user: User) {
@@ -44,9 +47,8 @@ class EditProjectNameUseCase(
         return projectRepository.getProject(projectId)
     }
 
-    private fun updateProjectName(projectId: UUID, newName: String) {
-      projectRepository.updateProjectNameById(projectId, newName)
-
+    private fun updateProjectName(projectId: UUID, newName: String) : Boolean {
+      return projectRepository.updateProjectNameById(projectId, newName)
     }
 
     private fun validateProjectNameNotTaken(projectId: UUID, newName: String) {
