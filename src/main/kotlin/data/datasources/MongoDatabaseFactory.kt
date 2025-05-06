@@ -8,7 +8,7 @@ import org.bson.UuidRepresentation
 
 object MongoDatabaseFactory {
 
-    private val connectionString = System.getenv("MONGO_DB_URI")
+    private const val connectionString = "mongodb+srv://7amasa:9LlgpCLbd99zoRrJ@amsterdam.qpathz3.mongodb.net/?retryWrites=true&w=majority&appName=Amsterdam"
 
     private val settings = MongoClientSettings.builder()
         .applyConnectionString(ConnectionString(connectionString))
