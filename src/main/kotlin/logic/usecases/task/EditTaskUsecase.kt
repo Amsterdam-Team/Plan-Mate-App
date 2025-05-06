@@ -5,7 +5,7 @@ import logic.exception.PlanMateException.ValidationException.InvalidStateNameExc
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskNameException
 import logic.repository.TaskRepository
-import logic.usecases.ValidateInputUseCase
+import logic.usecases.validation.ValidateInputUseCase
 import java.util.UUID
 
 class EditTaskUseCase(val taskRepository: TaskRepository, val validateInputUseCase: ValidateInputUseCase) {

@@ -1,8 +1,7 @@
-package logic.usecases
+package logic.usecases.auth
 
 import logic.entities.User
 import logic.repository.AuthRepository
-import ui.utils.md5Hash
 
 class LoginUseCase(
     private val authRepository : AuthRepository

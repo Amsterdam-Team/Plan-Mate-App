@@ -4,6 +4,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import logic.usecases.project.GetAllProjectsUseCase
 import org.junit.jupiter.api.BeforeEach
+import ui.controller.project.ViewAllProjectsUIController
 import kotlin.test.Test
 
 class ViewAllProjectsUIControllerTest {

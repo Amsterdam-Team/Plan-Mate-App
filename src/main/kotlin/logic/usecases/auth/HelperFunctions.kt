@@ -1,4 +1,4 @@
-package ui.utils
+package logic.usecases.auth
 
 import java.security.MessageDigest
 

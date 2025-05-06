@@ -2,7 +2,7 @@ package logic.usecases.auth
 
 import logic.entities.User
 import logic.repository.AuthRepository
-import utils.ResultStatus
+import ui.utils.ResultStatus
 import java.util.UUID
 
 class CreateUserUseCase(private val repository: AuthRepository) {

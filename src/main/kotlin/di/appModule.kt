@@ -20,9 +20,9 @@ import logic.repository.LogRepository
 import logic.repository.ProjectRepository
 import logic.repository.TaskRepository
 import logic.usecases.task.DeleteTaskUseCase
-import logic.usecases.LoginUseCase
-import logic.usecases.ValidateInputUseCase
-import logic.usecases.ViewTaskLogsUseCase
+import logic.usecases.auth.LoginUseCase
+import logic.usecases.validation.ValidateInputUseCase
+import logic.usecases.task.ViewTaskLogsUseCase
 import logic.usecases.project.CreateProjectUseCase
 import logic.usecases.project.DeleteProjectUseCase
 import logic.usecases.project.GetProjectDetailsUseCase
@@ -37,18 +37,18 @@ import logic.usecases.task.GetAllTasksByProjectIdUseCase
 import logic.usecases.task.GetTaskByIdUseCase
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import ui.ViewTaskLogsUIController
+import ui.controller.task.ViewTaskLogsUIController
 import ui.console.ConsoleIO
 import ui.console.ConsoleIOImpl
-import ui.controllers.CreateProjectUIController
-import ui.task.DeleteTaskUIController
-import ui.controllers.UpdateStateUiController
+import ui.controller.project.CreateProjectUIController
+import ui.controller.task.DeleteTaskUIController
+import ui.controller.state.UpdateStateUiController
 import ui.menuHandler.AdminMenuHandler
 import ui.menuHandler.MateMenuHandler
-import ui.project.DeleteProjectUiController
-import ui.project.GetProjectUIController
-import ui.project.ViewProjectHistoryUIController
-import ui.task.EditTaskUiController
+import ui.controller.project.DeleteProjectUiController
+import ui.controller.project.GetProjectUIController
+import ui.controller.project.ViewProjectHistoryUIController
+import ui.controller.task.EditTaskUiController
 import java.util.*
 
 val appModule = module {

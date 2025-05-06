@@ -1,7 +1,7 @@
 package logic.usecases.project
 
 import logic.repository.ProjectRepository
-import utils.ResultStatus
+import ui.utils.ResultStatus
 import java.util.UUID
 
 class CreateStateUseCase(private val repository: ProjectRepository) {

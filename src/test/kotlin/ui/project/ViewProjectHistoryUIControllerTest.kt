@@ -10,7 +10,8 @@ import logic.usecases.project.helper.ViewProjectHistoryTestFactory.LOGS_FOR_PROJ
 import logic.usecases.project.helper.ViewProjectHistoryTestFactory.PROJECT_1
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import utils.formatLogItem
+import ui.controller.project.ViewProjectHistoryUIController
+import ui.utils.formatLogItem
 
 class ViewProjectHistoryUIControllerTest {
 

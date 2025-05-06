@@ -1,4 +1,4 @@
-package utils
+package ui.utils
 
 import logic.entities.Project
 import logic.entities.Task

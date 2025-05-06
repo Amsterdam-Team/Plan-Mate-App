@@ -6,8 +6,7 @@ import io.mockk.mockk
 import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.repository.LogRepository
-import logic.usecases.ValidateInputUseCase
-import logic.usecases.ViewTaskLogsUseCase
+import logic.usecases.validation.ValidateInputUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

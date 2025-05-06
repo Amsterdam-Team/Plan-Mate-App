@@ -6,7 +6,7 @@ import io.mockk.mockk
 import logic.exception.PlanMateException.AuthorizationException.WrongPasswordException
 import logic.exception.PlanMateException.AuthorizationException.WrongUsernameException
 import logic.repository.AuthRepository
-import logic.usecases.LoginUseCase
+import logic.usecases.auth.LoginUseCase
 import logic.usecases.testFactory.validUserData
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

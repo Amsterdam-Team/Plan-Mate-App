@@ -10,6 +10,7 @@ import logic.usecases.testFactory.ValidateInputUseCaseTestFactory.NAME_WITH_UNDE
 import logic.usecases.testFactory.ValidateInputUseCaseTestFactory.SHORT_NAME
 import logic.usecases.testFactory.ValidateInputUseCaseTestFactory.VALID_NAME
 import logic.usecases.testFactory.ValidateInputUseCaseTestFactory.VALID_UUID
+import logic.usecases.validation.ValidateInputUseCase
 import org.junit.jupiter.api.Test
 
 class ValidateInputUseCaseTest {

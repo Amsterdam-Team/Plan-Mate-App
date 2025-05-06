@@ -1,6 +1,6 @@
 package ui.menuHandler
 
-import ui.controller.BaseUIController
+import ui.controller.base.BaseUIController
 import ui.utils.printAsAFailState
 import ui.utils.printAsASuccessState
 

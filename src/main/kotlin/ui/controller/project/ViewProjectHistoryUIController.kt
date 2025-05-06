@@ -1,10 +1,10 @@
-package ui.project
+package ui.controller.project
 
-import console.ConsoleIO
 import logic.usecases.project.GetProjectHistoryUseCase
-import ui.controller.BaseUIController
+import ui.console.ConsoleIO
+import ui.controller.base.BaseUIController
 import ui.utils.tryToExecute
-import utils.formatLogItem
+import ui.utils.formatLogItem
 
 class ViewProjectHistoryUIController(
     private val getProjectHistoryUseCase: GetProjectHistoryUseCase,

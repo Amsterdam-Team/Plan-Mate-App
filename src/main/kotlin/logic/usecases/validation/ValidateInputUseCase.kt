@@ -1,4 +1,4 @@
-package logic.usecases
+package logic.usecases.validation
 
 import java.util.UUID
 

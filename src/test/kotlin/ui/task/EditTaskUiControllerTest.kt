@@ -7,6 +7,7 @@ import logic.usecases.task.EditTaskUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import ui.console.ConsoleIOImpl
+import ui.controller.task.EditTaskUiController
 
 class EditTaskUiControllerTest {
     lateinit var useCase: EditTaskUseCase

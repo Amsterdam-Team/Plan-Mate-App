@@ -1,9 +1,9 @@
-package ui
+package ui.controller.auth
 
 import logic.entities.User
-import logic.usecases.LoginUseCase
+import logic.usecases.auth.LoginUseCase
 import ui.console.ConsoleIO
-import ui.controller.BaseUIController
+import ui.controller.base.BaseUIController
 import ui.menuHandler.AdminMenuHandler
 import ui.menuHandler.MateMenuHandler
 import ui.utils.tryToExecute

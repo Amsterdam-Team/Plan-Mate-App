@@ -9,7 +9,7 @@ import logic.exception.PlanMateException.ValidationException.InvalidProjectIDExc
 import logic.exception.PlanMateException.NotFoundException.StateNotFoundException
 import logic.repository.ProjectRepository
 import logic.repository.TaskRepository
-import logic.usecases.ValidateInputUseCase
+import logic.usecases.validation.ValidateInputUseCase
 import logic.usecases.testFactory.CreateTaskTestFactory.INVALID_PROJECT_ID
 import logic.usecases.testFactory.CreateTaskTestFactory.INVALID_STATE
 import logic.usecases.testFactory.CreateTaskTestFactory.INVALID_TASK_NAME

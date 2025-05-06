@@ -8,7 +8,7 @@ import logic.exception.PlanMateException.ValidationException.InvalidProjectIDExc
 import logic.exception.PlanMateException.AuthorizationException.AdminPrivilegesRequiredException
 import logic.exception.PlanMateException.ValidationException.SameStateNameException
 import logic.exception.PlanMateException.ValidationException.InvalidStateNameException
-import logic.usecases.ValidateInputUseCase
+import logic.usecases.validation.ValidateInputUseCase
 
 class UpdateStateUseCase(
     private val projectRepository: ProjectRepository,

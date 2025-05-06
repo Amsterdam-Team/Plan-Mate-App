@@ -14,6 +14,7 @@ import logic.exception.PlanMateException.NotFoundException.StateNotFoundExceptio
 import logic.usecases.task.CreateTaskUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import ui.controller.task.CreateTaskUIController
 import ui.testFactory.CreateTaskUIControllerTestFactory.INVALID_PROJECT_ID_ERROR_MESSAGE
 import ui.testFactory.CreateTaskUIControllerTestFactory.INVALID_STATE_NAME_ERROR_MESSAGE
 import ui.testFactory.CreateTaskUIControllerTestFactory.INVALID_TASK_NAME_ERROR_MESSAGE

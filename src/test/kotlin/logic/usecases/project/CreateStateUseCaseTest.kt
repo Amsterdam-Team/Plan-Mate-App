@@ -11,7 +11,7 @@ import logic.exception.PlanMateException.ValidationException.SameStateNameExcept
 import logic.repository.ProjectRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import utils.ResultStatus
+import ui.utils.ResultStatus
 import utils.TestDataFactory.createProject
 import java.util.UUID
 

@@ -1,13 +1,13 @@
-package ui.controllers
+package ui.controller.state
 
 import logic.usecases.state.UpdateStateUseCase
-import ui.controller.BaseUIController
+import ui.controller.base.BaseUIController
 import ui.utils.tryToExecute
 
 class UpdateStateUiController(
     private val editStateUseCase: UpdateStateUseCase,
     private val consoleIO: ui.console.ConsoleIO
-) :BaseUIController{
+) : BaseUIController {
 
     override fun execute(){
         consoleIO.println("Enter project ID :)")

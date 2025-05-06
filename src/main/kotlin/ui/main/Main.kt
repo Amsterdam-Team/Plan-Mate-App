@@ -1,18 +1,20 @@
-package ui
+package ui.main
 
 import di.appModule
-import logic.usecases.LoginUseCase
+import logic.usecases.auth.LoginUseCase
 import org.koin.core.context.startKoin
 import org.koin.java.KoinJavaComponent.getKoin
 import ui.console.ConsoleIO
-import ui.controller.CreateTaskUIController
-import ui.controllers.CreateProjectUIController
-import ui.controllers.UpdateStateUiController
+import ui.controller.task.CreateTaskUIController
+import ui.controller.project.CreateProjectUIController
+import ui.controller.auth.LoginUIController
+import ui.controller.state.UpdateStateUiController
 import ui.menuHandler.AdminMenuHandler
 import ui.menuHandler.MateMenuHandler
-import ui.project.DeleteProjectUiController
-import ui.project.GetProjectUIController
-import ui.project.ViewProjectHistoryUIController
+import ui.controller.project.DeleteProjectUiController
+import ui.controller.project.GetProjectUIController
+import ui.controller.project.ViewProjectHistoryUIController
+import ui.controller.task.ViewTaskLogsUIController
 
 
 fun main() {

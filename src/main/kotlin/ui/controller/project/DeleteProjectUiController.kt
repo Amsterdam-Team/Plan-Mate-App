@@ -1,8 +1,8 @@
-package ui.project
+package ui.controller.project
 
 import logic.usecases.project.DeleteProjectUseCase
 import ui.console.ConsoleIO
-import ui.controller.BaseUIController
+import ui.controller.base.BaseUIController
 import ui.utils.tryToExecute
 
 class DeleteProjectUiController(val deleteProjectUseCase: DeleteProjectUseCase, val consoleIO: ConsoleIO):

@@ -1,17 +1,12 @@
 package logic.usecases.project
 
 import com.google.common.truth.Truth.assertThat
-import data.repository.project.ProjectRepositoryImpl
-import data.repository.task.TaskRepositoryImpl
 import io.mockk.*
 import logic.entities.User
-import logic.exception.PlanMateException
 import logic.exception.PlanMateException.AuthorizationException.AdminPrivilegesRequiredException
-import logic.exception.PlanMateException.DataSourceException.EmptyDataException
 import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
 import logic.repository.ProjectRepository
-import logic.repository.TaskRepository
-import logic.usecases.ValidateInputUseCase
+import logic.usecases.validation.ValidateInputUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -29,7 +24,7 @@ class DeleteProjectUseCaseTest {
     fun setUp() {
         repository = mockk(relaxed = true)
         currentUser = User(id = UUID.randomUUID(), username = "omer faris", isAdmin = true, password = "7584848")
-        useCase = DeleteProjectUseCase(repository, currentUser,ValidateInputUseCase())
+        useCase = DeleteProjectUseCase(repository, currentUser, ValidateInputUseCase())
         dummyProjectId = UUID.randomUUID()
     }
 

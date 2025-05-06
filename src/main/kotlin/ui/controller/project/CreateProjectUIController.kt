@@ -1,12 +1,13 @@
-package ui.controllers
+package ui.controller.project
 
 import logic.entities.Project
 import logic.usecases.project.CreateProjectUseCase
-import ui.controller.BaseUIController
+import ui.controller.base.BaseUIController
 import ui.utils.tryToExecute
 import java.util.UUID
 
-class CreateProjectUIController(private val createProjectUseCase: CreateProjectUseCase) : BaseUIController {
+class CreateProjectUIController(private val createProjectUseCase: CreateProjectUseCase) :
+    BaseUIController {
     override fun execute() {
         tryToExecute(
             action = ::startCreatingAProject, onSuccess = { project -> createProjectUseCase.createProject(project) })

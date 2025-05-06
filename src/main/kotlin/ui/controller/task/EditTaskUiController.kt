@@ -1,11 +1,12 @@
-package ui.task
+package ui.controller.task
 
 import logic.usecases.task.EditTaskUseCase
 import ui.console.ConsoleIO
-import ui.controller.BaseUIController
+import ui.controller.base.BaseUIController
 import ui.utils.tryToExecute
 
-class EditTaskUiController(val editTaskUseCase: EditTaskUseCase, val consoleIO: ConsoleIO) : BaseUIController {
+class EditTaskUiController(val editTaskUseCase: EditTaskUseCase, val consoleIO: ConsoleIO) :
+    BaseUIController {
     override fun execute() {
 
 

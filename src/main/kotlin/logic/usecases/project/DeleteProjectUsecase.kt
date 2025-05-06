@@ -4,7 +4,7 @@ import logic.entities.User
 import logic.exception.PlanMateException.AuthorizationException.AdminPrivilegesRequiredException
 import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
 import logic.repository.ProjectRepository
-import logic.usecases.ValidateInputUseCase
+import logic.usecases.validation.ValidateInputUseCase
 import java.util.UUID
 
 class DeleteProjectUseCase(

@@ -8,6 +8,7 @@ import io.mockk.verify
 import logic.usecases.task.DeleteTaskUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import ui.controller.task.DeleteTaskUIController
 
 class DeleteTaskUIControllerTest {
 

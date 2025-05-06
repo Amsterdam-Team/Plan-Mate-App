@@ -7,6 +7,7 @@ import logic.usecases.project.DeleteProjectUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import ui.console.ConsoleIOImpl
+import ui.controller.project.DeleteProjectUiController
 import java.util.UUID
 
 class DeleteProjectUiControllerTest {

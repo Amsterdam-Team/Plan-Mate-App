@@ -1,8 +1,8 @@
-package ui.task
+package ui.controller.task
 
 import console.ConsoleIO
 import logic.usecases.task.DeleteTaskUseCase
-import ui.controller.BaseUIController
+import ui.controller.base.BaseUIController
 import ui.utils.tryToExecute
 
 class DeleteTaskUIController(

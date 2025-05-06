@@ -1,6 +1,6 @@
 package ui.menuHandler
 
-import ui.controller.BaseUIController
+import ui.controller.base.BaseUIController
 
 
 class AdminMenuHandler(private val adminFeatureControllers: Map<Int, BaseUIController>): MainMenuHandler() {

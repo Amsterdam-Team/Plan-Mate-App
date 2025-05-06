@@ -8,10 +8,10 @@ import io.mockk.just
 import io.mockk.mockk
 import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
-import logic.usecases.ViewTaskLogsUseCase
+import logic.usecases.task.ViewTaskLogsUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import ui.ViewTaskLogsUIController
+import ui.controller.task.ViewTaskLogsUIController
 import logic.usecases.testFactory.INVALID_ID_FORMAT
 import logic.usecases.testFactory.TASK_NOT_FOUND
 import logic.usecases.testFactory.invalidId

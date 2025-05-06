@@ -1,8 +1,8 @@
-package ui
+package ui.controller.task
 
-import logic.usecases.ViewTaskLogsUseCase
+import logic.usecases.task.ViewTaskLogsUseCase
 import ui.console.ConsoleIO
-import ui.controller.BaseUIController
+import ui.controller.base.BaseUIController
 import ui.utils.tryToExecute
 
 class ViewTaskLogsUIController(

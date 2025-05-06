@@ -2,19 +2,13 @@ package logic.usecases.project
 
 import com.google.common.truth.Truth.assertThat
 import io.mockk.*
-import logic.entities.Task
-import logic.exception.PlanMateException
 import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
-import logic.exception.PlanMateException.ValidationException.EmptyDataException
 import logic.exception.PlanMateException.ValidationException.InvalidUUIDFormatException
 
 import logic.repository.ProjectRepository
-import logic.repository.TaskRepository
-import logic.usecases.ValidateInputUseCase
+import logic.usecases.validation.ValidateInputUseCase
 import logic.usecases.project.helper.createProject
 import logic.usecases.task.GetAllTasksByProjectIdUseCase
-import logic.usecases.task.GetTaskByIdUseCase
-import logic.usecases.testFactory.CreateTaskTestFactory
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -26,7 +20,7 @@ class GetProjectsUseCaseTest() {
 
     private lateinit var repository: ProjectRepository
     private lateinit var tasksUseCase: GetAllTasksByProjectIdUseCase
-    private lateinit var validationUseCase:ValidateInputUseCase
+    private lateinit var validationUseCase: ValidateInputUseCase
     private lateinit var useCase: GetProjectDetailsUseCase
 
 

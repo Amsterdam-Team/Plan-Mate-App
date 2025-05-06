@@ -1,9 +1,10 @@
-package logic.usecases
+package logic.usecases.task
 
 import logic.entities.LogItem
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 
 import logic.repository.LogRepository
+import logic.usecases.validation.ValidateInputUseCase
 import java.util.UUID
 
 class ViewTaskLogsUseCase(

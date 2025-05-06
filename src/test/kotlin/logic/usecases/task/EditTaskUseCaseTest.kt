@@ -3,20 +3,14 @@ package logic.usecases.task
 import com.google.common.truth.Truth.assertThat
 import data.repository.task.TaskRepositoryImpl
 import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
-import io.mockk.runs
 import logic.entities.Task
-import logic.exception.PlanMateException
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
-import logic.exception.PlanMateException.NotFoundException.*
-import logic.exception.PlanMateException.ValidationException.InvalidProjectNameException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskNameException
-import logic.usecases.ValidateInputUseCase
-import logic.usecases.testFactory.CreateTaskTestFactory
+import logic.usecases.validation.ValidateInputUseCase
 import java.util.*
 
 class EditTaskUseCaseTest {

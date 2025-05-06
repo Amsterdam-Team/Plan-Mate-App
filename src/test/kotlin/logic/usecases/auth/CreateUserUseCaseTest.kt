@@ -11,7 +11,7 @@ import logic.exception.PlanMateException.ValidationException.UserAlreadyExistsEx
 import logic.repository.AuthRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import utils.ResultStatus
+import ui.utils.ResultStatus
 import utils.TestDataFactory.createUser
 
 class CreateUserUseCaseTest {
