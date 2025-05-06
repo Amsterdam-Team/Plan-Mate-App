@@ -8,7 +8,6 @@ import logic.exception.PlanMateException.AuthorizationException.WrongUsernameExc
 import logic.repository.AuthRepository
 
 class AuthRepositoryImpl(
-    private val dataSource: DataSource,
     private val userDataSource: UserDataSourceInterface
 ) : AuthRepository {
     override fun createUser(user: User): Boolean {
