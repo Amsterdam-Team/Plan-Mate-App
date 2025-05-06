@@ -3,13 +3,17 @@ package logic.usecases.project
 import com.google.common.truth.Truth.assertThat
 import io.mockk.*
 import logic.entities.Task
+import logic.exception.PlanMateException
 import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
 import logic.exception.PlanMateException.ValidationException.EmptyDataException
-import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
+import logic.exception.PlanMateException.ValidationException.InvalidUUIDFormatException
 
 import logic.repository.ProjectRepository
 import logic.repository.TaskRepository
+import logic.usecases.ValidateInputUseCase
 import logic.usecases.project.helper.createProject
+import logic.usecases.task.GetAllTasksByProjectIdUseCase
+import logic.usecases.task.GetTaskByIdUseCase
 import logic.usecases.testFactory.CreateTaskTestFactory
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -21,8 +25,9 @@ import java.util.UUID
 class GetProjectsUseCaseTest() {
 
     private lateinit var repository: ProjectRepository
-    private lateinit var taskRepo:TaskRepository
-    private lateinit var useCase: GetProjectsUseCase
+    private lateinit var tasksUseCase: GetAllTasksByProjectIdUseCase
+    private lateinit var validationUseCase:ValidateInputUseCase
+    private lateinit var useCase: GetProjectDetailsUseCase
 
 
     private val projectOneId = UUID.randomUUID()
@@ -43,122 +48,61 @@ class GetProjectsUseCaseTest() {
         )
     )
 
-    private val tasksForProjectOne = listOf(
-        CreateTaskTestFactory.validTask.copy(id = projectOneId),
-        CreateTaskTestFactory.validTask.copy(id = projectOneId),
-        CreateTaskTestFactory.validTask.copy(id = projectOneId),
-        CreateTaskTestFactory.validTask.copy(id = projectOneId),
-    )
 
     @BeforeEach
     fun setUp() {
         repository = mockk(relaxed = true)
-        taskRepo = mockk(relaxed = true)
-        useCase = GetProjectsUseCase(repository,taskRepo)
+        tasksUseCase = mockk(relaxed = true)
+        validationUseCase = mockk(relaxed = true)
+        useCase = GetProjectDetailsUseCase(repository,tasksUseCase,validationUseCase)
         every { repository.getProjects() } returns projects
     }
 
     @Test
     fun `should return correct project when project id exists in projects`() {
-        val projectID = "2b19ee75-2b4c-430f-bad8-dfa6b14709d9"
-        val projects = listOf(
-            createProject(
-                UUID.fromString(projectID),
-                "PlanMate", listOf(), listOf()
-            )
-        )
         //Given
-        every { repository.getProjects() } returns projects
+        every { repository.getProject(projectOneId)} returns projects[0]
+        every { validationUseCase.isValidUUID(projectOneId.toString()) } returns true
         //When
-        val result = useCase.getProject(projectID)
+        val result = useCase(projectOneId.toString())
         //Then
         assertThat(result).isIn(projects)
     }
 
     @Test
-    fun `should throw InvalidProjectIDException when projectID does not exist in Projects`() {
-        val projectID ="2b19ee75-2b4c-430f-bad8-dfa6b14709d9"
-        val projects = listOf(
-            createProject(
-                UUID.fromString("2b19ee75-2b4c-430f-bad8-dfa6b14709d0"),
-                "PlanMate", listOf(), listOf()
-            )
-        )
+    fun `should throw ProjectNotFoundException when projectID does not exist in Projects`() {
         //Given
-        every { repository.getProjects() } returns projects
+        every { repository.getProject(UUID.fromString("db373589-b656-4e68-a7c0-2ccc705ca169")) } throws ProjectNotFoundException
+        every { validationUseCase.isValidUUID("db373589-b656-4e68-a7c0-2ccc705ca169") } returns true
+
         //When&Then
         assertThrows<ProjectNotFoundException> {
-            useCase.getProject(projectID)
+            useCase("db373589-b656-4e68-a7c0-2ccc705ca169")
         }
     }
 
-    @Test
-    fun `should throw EmptyDataException when projects is empty`() {
-        val projectID ="2b19ee75-2b4c-430f-bad8-dfa6b14709d9"
-        //Given
-        every { repository.getProjects() } returns emptyList()
-        //When&Then
-        assertThrows<EmptyDataException> {
-            useCase.getProject(projectID)
-        }
-    }
 
     @ParameterizedTest
     @ValueSource(
         strings = [
         " ",
         "id",
-        "db373589-b656-4e68 a7c0-2ccc705ca169",
+        "db373589-b656-4e68  a7c0-2ccc705ca169",
         " db373589-b656#4e68@a7c0-2ccc705ca169"
         ]
     )
-    fun `should throw ProjectNotFoundException error when project ID is not a valid UUID`(invalidID:String) {
+    fun `should throw InvalidUUIDFormatException error when project ID is not a valid UUID`(invalidID:String) {
         //Given
         val projectID = invalidID
 
         //When & Then
-        assertThrows<InvalidProjectIDException> {
-            useCase.getProject(projectID)
+        assertThrows<InvalidUUIDFormatException> {
+            useCase(projectID)
         }
 
     }
 
 
-    @Test
-    fun `should link projectOne with matching tests when given tasks with projectOneId`(){
-        // Given
-        every { taskRepo.getAllTasksByProjectId(projectOneId) } returns tasksForProjectOne
 
-        // When
-        val result = useCase.getAllProjects()
-
-        // Then
-        val projectOne = result.find { it.id == projectOneId }
-        assertThat(tasksForProjectOne.toSet()).isEqualTo(projectOne?.tasks?.toSet())
-    }
-
-    @Test
-    fun `should link projectTwo with empty list when no tasks exist with this project id`(){
-        // Given
-        every { taskRepo.getAllTasksByProjectId(projectTwoId) } returns emptyList()
-
-        // When
-        val result = useCase.getAllProjects()
-
-        // Then
-        val projectTwo = result.find { it.id == projectTwoId }
-        assertThat(emptyList<Task>()).isEqualTo(projectTwo?.tasks)
-    }
-
-    @Test
-    fun `should return all projects even when no tasks can be linked`(){
-        // When
-        val result = useCase.getAllProjects()
-
-        // Then
-        val returnedIds = result.map { it.id }.toSet()
-        val expectedIds = projects.map { it.id }.toSet()
-        assertThat(expectedIds).isEqualTo(returnedIds)
-    }
 
 }

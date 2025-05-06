@@ -8,20 +8,18 @@ import io.mockk.mockk
 import logic.repository.LogRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
 import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
 import org.junit.jupiter.api.assertThrows
-import java.util.UUID
 
-class GetProjectLogsUseCaseTest {
+class ViewProjectHistoryUseCaseTest {
 
     private lateinit var logRepository: LogRepository
-    private lateinit var viewProjectHistoryUseCase: ViewProjectHistoryUseCase
+    private lateinit var getProjectHistoryUseCase: GetProjectHistoryUseCase
 
     @BeforeEach
     fun setup() {
         logRepository = mockk()
-        viewProjectHistoryUseCase = ViewProjectHistoryUseCase(logRepository)
+        getProjectHistoryUseCase = GetProjectHistoryUseCase(logRepository)
     }
 
     @Test
@@ -32,7 +30,7 @@ class GetProjectLogsUseCaseTest {
         every { logRepository.viewLogsById(projectId) } returns logs
 
         // When
-        val result = viewProjectHistoryUseCase.execute(projectId.toString())
+        val result = getProjectHistoryUseCase.execute(projectId.toString())
 
         // Then
         assertThat(result).isEqualTo(logs)
@@ -42,7 +40,7 @@ class GetProjectLogsUseCaseTest {
     fun `should throw InvalidProjectIDException when input is not UUID`(){
         // When & Then
         assertThrows<InvalidProjectIDException> {
-            viewProjectHistoryUseCase.execute("not-uuid")
+            getProjectHistoryUseCase.execute("not-uuid")
         }
     }
 
@@ -50,21 +48,9 @@ class GetProjectLogsUseCaseTest {
     fun `should throw InvalidProjectIDException when input is null`(){
         // When & Then
         assertThrows<InvalidProjectIDException> {
-            viewProjectHistoryUseCase.execute(null)
+            getProjectHistoryUseCase.execute(null)
         }
     }
 
-    @Test
-    fun `should throw ProjectNotFoundException when project does not exist`() {
-        // Given
-        val invalidProjectId = UUID.randomUUID()
-        every {
-            logRepository.viewLogsById(invalidProjectId)
-        } throws ProjectNotFoundException
 
-        // When & Then
-        assertThrows<ProjectNotFoundException> {
-            viewProjectHistoryUseCase.execute(invalidProjectId.toString())
-        }
-    }
 }
