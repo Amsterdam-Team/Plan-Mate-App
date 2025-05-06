@@ -33,9 +33,9 @@ fun getErrorMessageByException(exception: Exception): String {
 
         is UserNotFoundException -> "User not found. Please check the user ID or try again."
 
-        is InvalidUsernameException -> "The username you entered is not valid. Please try a different one."
+        is InvalidUsernameException -> "The username you entered is not valid. UserName must not be empty field and should be at least 3 characters. You can use numbers, hyphen, spaces and under scores"
 
-        is InvalidPasswordException -> "The password you entered is not valid. Please follow the password rules."
+        is InvalidPasswordException -> "The password you entered is not valid. The password must be at least 8 characters length."
 
         is InvalidStateNameException -> "The state name is not valid. State name must be not be empty and contain at least 3 characters"
 
@@ -62,6 +62,7 @@ fun getErrorMessageByException(exception: Exception): String {
 
         is SameStateNameException -> "Current state and new state are identical. No changes applied."
         is TaskLogsNotFound -> "This task not have any logs till now..."
+        is InvalidUUIDFormatException -> "Invalid UUID Format"
 
         is EmptyDataException -> "You must enter some data, this field cannot be empty"
 

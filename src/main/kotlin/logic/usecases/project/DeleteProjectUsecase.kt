@@ -10,8 +10,7 @@ class DeleteProjectUseCase(val projectRepository: ProjectRepository){
 
     fun deleteProject(projectId: String): Boolean {
         validateId(projectId)
-        projectRepository.deleteProject(UUID.fromString(projectId))
-        return true
+        return projectRepository.deleteProject(UUID.fromString(projectId))
     }
 
     private fun validateId(id: String) {

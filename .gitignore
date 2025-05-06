@@ -9,6 +9,8 @@ build/
 .idea/jarRepositories.xml
 .idea/compiler.xml
 .idea/libraries/
+.idea/misc.xml
+.idea/gradle.xml
 .idea/*
 *.iws
 *.iml
@@ -47,3 +49,4 @@ bin/
 
 gradle.properties
 local.properties
+project.csv
