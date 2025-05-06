@@ -7,6 +7,7 @@ import logic.exception.PlanMateException.AuthorizationException.WrongPasswordExc
 import logic.exception.PlanMateException.AuthorizationException.WrongUsernameException
 import logic.repository.AuthRepository
 import logic.usecases.auth.LoginUseCase
+import logic.usecases.auth.md5Hash
 import logic.usecases.testFactory.validUserData
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -28,8 +29,9 @@ class LoginUseCaseTest {
         //Given
         val username= "Hend"
         val password = "H123456"
+        val hashedPassword = md5Hash(password)
         //When
-        every { repository.login(username, password) } returns validUserData()
+        every { repository.login(username, hashedPassword) } returns validUserData()
         //then
         val returnedUser = useCase.validateUserCredentials(username, password)
         assertThat(returnedUser).isEqualTo(validUserData())
@@ -40,11 +42,12 @@ class LoginUseCaseTest {
         //Given
         val username= "Hen"
         val password = "H123456"
+        val hashedPassword = md5Hash(password)
 
         every {
             repository.login(
                 username,
-                password
+                hashedPassword
             )
         } throws WrongUsernameException
 
@@ -59,11 +62,12 @@ class LoginUseCaseTest {
         //Given
         val username= "Hend"
         val password = "H123457"
+        val hashedPassword = md5Hash(password)
 
         every {
             repository.login(
                 username,
-                password
+                hashedPassword
             )
         } throws WrongPasswordException
 
