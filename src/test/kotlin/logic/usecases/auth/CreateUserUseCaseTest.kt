@@ -1,93 +1,86 @@
 package logic.usecases.auth
 
+import com.google.common.truth.ExpectFailure.assertThat
 import com.google.common.truth.Truth.assertThat
-import io.mockk.Awaits
-import io.mockk.Runs
-import io.mockk.every
-import io.mockk.just
-import io.mockk.mockk
+import io.mockk.*
+import logic.entities.User
+import logic.exception.PlanMateException
 import logic.exception.PlanMateException.ValidationException.InvalidPasswordException
 import logic.exception.PlanMateException.ValidationException.InvalidUsernameException
-import logic.exception.PlanMateException.ValidationException.UserAlreadyExistsException
 import logic.repository.AuthRepository
+import logic.usecases.validation.ValidateInputUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import ui.utils.ResultStatus
-import utils.TestDataFactory.createUser
+import org.junit.jupiter.api.assertThrows
 
 class CreateUserUseCaseTest {
 
-    private lateinit var repository: AuthRepository
+    private lateinit var authRepository: AuthRepository
+    private lateinit var validator: ValidateInputUseCase
     private lateinit var useCase: CreateUserUseCase
 
     @BeforeEach
-    fun setup() {
-        repository = mockk(relaxed = true)
-        useCase = CreateUserUseCase(repository)
+    fun setUp() {
+        authRepository = mockk()
+        validator = mockk()
+        useCase = CreateUserUseCase(authRepository, validator)
     }
 
     @Test
-    fun `should return success when username and password are valid`() {
-        // Given
-        val user = createUser()
-        every { repository.createUser(any()) } just Awaits
+    fun `should create user successfully when input is valid`() {
+        // Arrange
+        val username = "john_doe"
+        val password = "securePassword123"
+        every { validator.isValidName(username) } returns true
+        every { authRepository.createUser(any()) } returns true
 
-        // When
-        val result = useCase.execute(user.username, user.password, user.isAdmin)
+        // Act
+        val result = useCase.execute(username, password)
 
-        // Then
-        assertThat(result).isInstanceOf(ResultStatus.Success::class.java)
+        // Assert
+        assertThat(result).isTrue()
+        verify(exactly = 1) { authRepository.createUser(match {
+            it.username == username &&
+                    it.password == md5Hash(password) &&
+                    !it.isAdmin
+        }) }
     }
 
     @Test
-    fun `should return error when username already exists`() {
-        // Given
-        val user = createUser(username = "mohammad")
-        every { repository.createUser(any()) } throws UserAlreadyExistsException
+    fun `should throw InvalidUsernameException when username is invalid`() {
+        // Arrange
+        val invalidUsername = "!!@@"
+        every { validator.isValidName(invalidUsername) } returns false
 
-        // When
-        val result = useCase.execute(user.username, user.password, user.isAdmin)
+        // Act & Assert
+        assertThrows<InvalidUsernameException> { useCase.execute(invalidUsername, "ValidPassword123") }
 
-        // Then
-        assertThat((result as ResultStatus.Error).exception).isInstanceOf(UserAlreadyExistsException::class.java)
     }
 
     @Test
-    fun `should return error when password is blank`() {
-        // Given
-        val username = "mohammad"
-        val blankPassword = "  "
+    fun `should throw InvalidPasswordException when password is blank`() {
+        every { validator.isValidName("validUser") } returns true
 
-        // When
-        val result = useCase.execute(username, blankPassword, false)
-
-        // Then
-        assertThat((result as ResultStatus.Error).exception).isInstanceOf(InvalidPasswordException::class.java)
+        assertThrows<InvalidPasswordException> { useCase.execute("validUser", " ") }
     }
 
     @Test
-    fun `should return error when username is blank`() {
-        // Given
-        val blankUsername = "  "
-        val password = "123456"
+    fun `should throw InvalidPasswordException when password is too short`() {
+        every { validator.isValidName("validUser") } returns true
 
-        // When
-        val result = useCase.execute(blankUsername, password, false)
-
-        // Then
-        assertThat((result as ResultStatus.Error).exception).isInstanceOf(InvalidUsernameException::class.java)
+        assertThrows<InvalidPasswordException> { useCase.execute("validUser", "short") }
+           
     }
 
     @Test
-    fun `should return error when both username and password are blank`() {
-        // Given
-        val blankUsername = "    "
-        val blankPassword = "    "
+    fun `should hash the password before saving`() {
+        val username = "user"
+        val password = "MySecretPassword"
+        every { validator.isValidName(username) } returns true
+        every { authRepository.createUser(any()) } returns true
 
-        // When
-        val result = useCase.execute(blankUsername, blankPassword, false)
+        useCase.execute(username, password)
 
-        // Then
-        assertThat((result as ResultStatus.Error).exception).isInstanceOf(InvalidUsernameException::class.java)
+        verify { authRepository.createUser(match { it.password == md5Hash(password) }) }
     }
 }
