@@ -2,10 +2,16 @@ package logic.usecases.project
 
 import com.google.common.truth.Truth.assertThat
 import data.repository.project.ProjectRepositoryImpl
+import data.repository.task.TaskRepositoryImpl
 import io.mockk.*
+import logic.entities.User
 import logic.exception.PlanMateException
+import logic.exception.PlanMateException.AuthorizationException.AdminPrivilegesRequiredException
 import logic.exception.PlanMateException.DataSourceException.EmptyDataException
 import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
+import logic.repository.ProjectRepository
+import logic.repository.TaskRepository
+import logic.usecases.ValidateInputUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -14,14 +20,16 @@ import org.junit.jupiter.params.provider.CsvSource
 import java.util.UUID
 
 class DeleteProjectUseCaseTest {
-    lateinit var repository: ProjectRepositoryImpl
+    lateinit var repository: ProjectRepository
     lateinit var useCase: DeleteProjectUseCase
     lateinit var dummyProjectId: UUID
+    lateinit var currentUser: User
 
     @BeforeEach
     fun setUp() {
         repository = mockk(relaxed = true)
-        useCase = DeleteProjectUseCase(repository)
+        currentUser = User(id = UUID.randomUUID(), username = "omer faris", isAdmin = true, password = "7584848")
+        useCase = DeleteProjectUseCase(repository, currentUser,ValidateInputUseCase())
         dummyProjectId = UUID.randomUUID()
     }
 
@@ -34,6 +42,19 @@ class DeleteProjectUseCaseTest {
 
         // then
         assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `should throw admin Privileges required when non admin user try to e a project`() {
+        // given
+        val nonAdminUser = User(id = UUID.randomUUID(), username = "ahmed faris", password = "858585", isAdmin = false)
+        useCase = DeleteProjectUseCase(repository,nonAdminUser, ValidateInputUseCase())
+        currentUser = nonAdminUser
+        // when
+
+        assertThrows<AdminPrivilegesRequiredException> {
+            useCase.deleteProject(dummyProjectId.toString())
+        }
     }
 
     @Test
