@@ -21,11 +21,9 @@ class AddStateUseCase(
 
     fun execute(projectId: String, state: String): Boolean{
         if(!validateInputUseCase.isValidName(state)) throw InvalidStateNameException
-        if(projectId.isEmpty() || projectId.isBlank()) throw EmptyDataException
         if(!validateInputUseCase.isValidUUID(projectId)) throw InvalidProjectIDException
         if(!user.isAdmin) throw AdminPrivilegesRequiredException
         return repository.addStateById(UUID.fromString(projectId), state)
 
     }
-
 }
