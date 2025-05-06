@@ -1,73 +1,89 @@
-package ui.controllers
+package ui.project
 
 import com.google.common.truth.Truth.assertThat
-import io.mockk.mockk
+import console.ConsoleIO
+import io.mockk.*
+import logic.exception.PlanMateException
+import logic.exception.PlanMateException.ValidationException.InvalidProjectNameException
 import logic.usecases.project.CreateProjectUseCase
-import org.junit.jupiter.api.AfterEach
+import logic.usecases.testFactories.CreateProjectTestFactory.inValidProjectNameTest
+import logic.usecases.testFactories.CreateProjectTestFactory.validProjectTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.io.ByteArrayInputStream
+import ui.controllers.CreateProjectUIController
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
 
 class CreateProjectUIControllerTest {
     private lateinit var useCase: CreateProjectUseCase
     private lateinit var controller: CreateProjectUIController
-    private val standardOut = System.out
-    private val outContent = ByteArrayOutputStream()
+    private lateinit var consoleIo: ConsoleIO
+    private lateinit var outContent: ByteArrayOutputStream
 
     @BeforeEach
     fun setup() {
         useCase = mockk(relaxed = true)
-        controller = CreateProjectUIController(useCase)
+        consoleIo = mockk()
+        controller = CreateProjectUIController(useCase, consoleIo)
+        outContent = ByteArrayOutputStream()
         System.setOut(PrintStream(outContent))
-    }
-
-    @AfterEach
-    fun tearDown() {
-        System.setOut(standardOut)
+        every { consoleIo.println(any()) } just Runs
     }
 
     @Test
-    fun `should print project name shouldn't be empty when the name is empty`() {
-        //given
-        val inputProjectName = "\n"
-        System.setIn(ByteArrayInputStream(inputProjectName.toByteArray()))
+    fun `should call create project use case only once when user enter all inputs`() {
+        every { useCase.createProject(any(), any()) } returns true
+        every { consoleIo.readFromUser() } returnsMany listOf(
+            validProjectTest.name, validProjectTest.states.joinToString(", ")
+        )
 
-        //when
         controller.execute()
 
-        //then
-        val output = outContent.toString()
-        assertThat(output).contains("Project name shouldn't be empty,Please enter the project name")
+        verify(exactly = 1) {
+            useCase.createProject(validProjectTest.name, validProjectTest.states)
+        }
     }
 
     @Test
-    fun `should print The project name is not valid when the name is invalid`() {
-        //given
-        val inputProjectName = "13515#$%#$"
-        System.setIn(ByteArrayInputStream(inputProjectName.toByteArray()))
+    fun `should show success message when project is created successfully`() {
+        // Given
+        every { consoleIo.readFromUser() } returnsMany listOf(
+            validProjectTest.name, validProjectTest.states.toString()
+        )
+        every { useCase.createProject(any(), any()) } returns true
 
-        //when
+        // When
         controller.execute()
 
-        //then
-        val output = outContent.toString()
-        assertThat(output).contains("The project name is not valid. Please enter a valid project name.")
+        // Then
+        verify { consoleIo.println("✅ Your project has been Created Successfully") }
     }
 
     @Test
-    fun `should print project states shouldn't be empty when the state is empty`() {
-        //given
-        val inputProjectState = "\n"
-        System.setIn(ByteArrayInputStream(inputProjectState.toByteArray()))
+    fun `should show error message when input project name is invalid`() {
+        every { consoleIo.readFromUser() } returnsMany listOf(
+            inValidProjectNameTest.name, inValidProjectNameTest.states.toString(), "CANCEL"
+        )
+        every { useCase.createProject(any(), any()) } throws InvalidProjectNameException
 
-        //when
+
         controller.execute()
 
-        //then
-        val output = outContent.toString()
-        assertThat(output).contains("Project states shouldn't be empty,Please enter the project states")
+        assertThat(outContent.toString()).contains("The project name is not valid. Please enter a valid project name.")
     }
 
+    @Test
+    fun `should show error message when input project states is invalid`() {
+        every { consoleIo.readFromUser() } returnsMany listOf(
+            inValidProjectNameTest.name, inValidProjectNameTest.states.toString(), "CANCEL"
+        )
+        every {
+            useCase.createProject(
+                any(), any()
+            )
+        } throws PlanMateException.ValidationException.InvalidStateNameException
+        controller.execute()
+
+        assertThat(outContent.toString()).contains("The state name is not valid. Please enter a valid name.")
+    }
 }
