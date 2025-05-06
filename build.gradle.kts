@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "1.9.0"
+    kotlin("plugin.serialization") version "1.9.0"
 }
 
 group = "org.amsterdam.planmate"
@@ -23,6 +24,21 @@ dependencies {
     implementation("io.insert-koin:koin-core:4.0.2")
 
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.0")
+
+    implementation("io.ktor:ktor-server-core:2.3.3")
+    implementation("io.ktor:ktor-server-netty:2.3.3")
+
+    implementation("io.ktor:ktor-client-cio:2.3.3")
+    implementation("io.ktor:ktor-client-core:2.3.3")
+    implementation("io.insert-koin:koin-ktor:3.5.3")
+    implementation("io.ktor:ktor-server-content-negotiation:2.3.3")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+    implementation(platform("org.mongodb:mongodb-driver-bom:5.4.0"))
+
+    implementation("org.mongodb:mongodb-driver-kotlin-coroutine")
+    implementation("org.mongodb:bson-kotlinx:5.4.0")
+    implementation("ch.qos.logback:logback-classic:1.4.11")
 }
 
 tasks.test {

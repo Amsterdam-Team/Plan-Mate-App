@@ -4,24 +4,24 @@ import logic.entities.Project
 import java.util.UUID
 
 interface ProjectDataSourceInterface {
-    fun getAllProjects(): List<Project>
+    suspend fun getAllProjects(): List<Project>
 
-    fun getProjectById(projectId: UUID): Project
+    suspend fun getProjectById(projectId: UUID): Project
 
-    fun insertProject(project: Project): Boolean
+    suspend fun insertProject(project: Project): Boolean
 
-    fun deleteProject(projectId: UUID): Boolean
+    suspend fun deleteProject(projectId: UUID): Boolean
 
 
-    fun updateProjectName(projectId: UUID, newName: String): Boolean
+    suspend fun updateProjectName(projectId: UUID, newName: String): Boolean
 
-    fun replaceAllProjects(projects: List<Project>): Boolean
+    suspend fun replaceAllProjects(projects: List<Project>): Boolean
 
-    fun insertProjectState(projectId: UUID, state: String): Boolean
+    suspend fun insertProjectState(projectId: UUID, state: String): Boolean
 
-    fun getProjectStates(projectId: UUID): List<String>
+    suspend fun getProjectStates(projectId: UUID): List<String>
 
-    fun deleteProjectState(projectId: UUID, state: String): Boolean
+    suspend fun deleteProjectState(projectId: UUID, state: String): Boolean
 
-    fun updateProjectState(projectId: UUID, oldState: String, newState: String): Boolean
+    suspend fun updateProjectState(projectId: UUID, oldState: String, newState: String): Boolean
 }

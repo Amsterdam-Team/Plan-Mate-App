@@ -4,15 +4,15 @@ import logic.entities.LogItem
 import java.util.UUID
 
 interface LogDataSourceInterface {
-    fun getAllLogs(): List<LogItem>
+    suspend fun getAllLogs(): List<LogItem>
 
-    fun getLogsByEntityId(entityId: UUID): List<LogItem>
+    suspend fun getLogsByEntityId(entityId: UUID): List<LogItem>
 
-    fun getLogById(logId: UUID): LogItem
+    suspend fun getLogById(logId: UUID): LogItem
 
-    fun insertLog(logItem: LogItem): Boolean
+    suspend fun insertLog(logItem: LogItem): Boolean
 
-    fun deleteLog(logId: UUID): Boolean
+    suspend fun deleteLog(logId: UUID): Boolean
 
-    fun replaceAllLogs(logs: List<LogItem>): Boolean
+    suspend fun replaceAllLogs(logs: List<LogItem>): Boolean
 }
