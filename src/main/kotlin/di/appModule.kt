@@ -20,12 +20,12 @@ import logic.repository.LogRepository
 import logic.repository.ProjectRepository
 import logic.repository.TaskRepository
 import logic.usecases.task.DeleteTaskUseCase
-import logic.usecases.auth.LoginUseCase
-import logic.usecases.validation.ValidateInputUseCase
-import logic.usecases.task.ViewTaskLogsUseCase
+import logic.usecases.LoginUseCase
+import logic.usecases.ValidateInputUseCase
+import logic.usecases.ViewTaskLogsUseCase
 import logic.usecases.project.CreateProjectUseCase
 import logic.usecases.project.DeleteProjectUseCase
-import logic.usecases.project.GetProjectDetailsUseCase
+import logic.usecases.project.GetProjectsUseCase
 import logic.usecases.project.GetProjectHistoryUseCase
 import logic.usecases.state.DeleteStateUseCase
 import logic.usecases.state.GetProjectStatesUseCase
@@ -37,18 +37,18 @@ import logic.usecases.task.GetAllTasksByProjectIdUseCase
 import logic.usecases.task.GetTaskByIdUseCase
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import ui.controller.task.ViewTaskLogsUIController
+import ui.DeleteProjectUiController
+import ui.EditTaskUiController
+import ui.ViewTaskLogsUIController
 import ui.console.ConsoleIO
 import ui.console.ConsoleIOImpl
-import ui.controller.project.CreateProjectUIController
-import ui.controller.task.DeleteTaskUIController
-import ui.controller.state.UpdateStateUiController
+import ui.controllers.CreateProjectUIController
+import ui.task.DeleteTaskUIController
+import ui.controllers.UpdateStateUiController
 import ui.menuHandler.AdminMenuHandler
 import ui.menuHandler.MateMenuHandler
-import ui.controller.project.DeleteProjectUiController
-import ui.controller.project.GetProjectUIController
-import ui.controller.project.ViewProjectHistoryUIController
-import ui.controller.task.EditTaskUiController
+import ui.project.GetProjectUIController
+import ui.project.ViewProjectHistoryUIController
 import java.util.*
 
 val appModule = module {
@@ -58,10 +58,8 @@ val appModule = module {
     val project = named("project")
     val log = named("log")
 
-    single { UserCsvParser() }
-    single { TaskCsvParser() }
-    single { ProjectCsvParser() }
-    single { LogItemCsvParser() }
+
+    single { ViewAllTaksByProjectIdUIController(get()) }
 
     single(user) { FileManager.create<User>() }
     single(task) { FileManager.create<Task>() }
@@ -73,6 +71,7 @@ val appModule = module {
     single<DataSource>(project) { CsvDataSource(get<FileManager<Project>>(project), get<ProjectCsvParser>()) }
     single<DataSource>(log) { CsvDataSource(get<FileManager<LogItem>>(log), get<LogItemCsvParser>()) }
 
+
     single<AuthRepository> { AuthRepositoryImpl(get(user)) }
     single<TaskRepository> { TaskRepositoryImpl(get(task)) }
     single<ProjectRepository> { ProjectRepositoryImpl(get(project)) }
@@ -81,23 +80,19 @@ val appModule = module {
     single { ValidateInputUseCase() }
 
     single { CreateProjectUseCase(get(), User(id = UUID.randomUUID(), username = "fsef", password = "fsefs", isAdmin = true)) }
-    single { DeleteProjectUseCase(get(), get(), get()) }
-    single { GetProjectDetailsUseCase(get(),get(), get()) }
+    single { DeleteProjectUseCase(get()) }
+    single { GetProjectsUseCase(get(), get()) }
 
     single { DeleteStateUseCase(get()) }
-    single { UpdateStateUseCase(get(), get(), get()) }
+    single { UpdateStateUseCase(get()) }
     single { GetProjectStatesUseCase(get()) }
     single { GetTaskStateUseCase(get()) }
 
-    single { CreateTaskUseCase(get(), get(), get()) }
-    single { EditTaskUseCase(get(), get()) }
-    single { GetAllTasksByProjectIdUseCase(get()) }
-    single { GetTaskByIdUseCase(get()) }
-    single { DeleteTaskUseCase(get()) }
-
-    single { LoginUseCase(get()) }
-    single { GetProjectHistoryUseCase(get()) }
-    single { ViewTaskLogsUseCase(get(),get()) }
+// DataSourceInterface
+    single<TaskDataSourceInterface> { TaskCsvDataSource(get<DataSource>(task) as CsvDataSource<Task>) }
+    single<UserDataSourceInterface> { UserCsvDataSource(get<DataSource>(user) as CsvDataSource<User>) }
+    single<ProjectDataSourceInterface> { ProjectCsvDataSource(get<DataSource>(project) as CsvDataSource<Project>) }
+    single<LogDataSourceInterface> { LogCsvDataSource(get<DataSource>(project) as CsvDataSource<LogItem>) }
 
     single<ConsoleIO> { ConsoleIOImpl() }
 
@@ -114,6 +109,7 @@ val appModule = module {
     single { EditTaskUiController(get(), get()) }
 
 
-    single { ViewTaskLogsUIController(get(),get()) }
+
+    single { ViewTaskLogsUIController(get(), get()) }
 
 }
