@@ -3,54 +3,59 @@ package logic.usecases.task
 import logic.entities.Task
 import logic.exception.PlanMateException
 import logic.exception.PlanMateException.DataSourceException.EmptyDataException
+import logic.exception.PlanMateException.ValidationException.InvalidStateNameException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskNameException
 import logic.repository.TaskRepository
+import logic.usecases.ValidateInputUseCase
 import java.util.UUID
 
-class EditTaskUseCase(val taskRepository: TaskRepository) {
-
-    fun editTaskName(taskId: String, newName: String):Boolean {
-
-        validateStringInput(newName)
-        validateId(taskId)
-        val task = taskRepository.getTaskById(UUID.fromString(taskId))
-
-        taskRepository.updateTask(task.copy(name = newName))
-        return true
-    }
-
-    fun editTaskNameAndState(taskId: String, newName: String, newState :String): Boolean{
-        validateStringInput(newName)
-        validateStringInput(newState)
-        validateId(taskId)
-        val task = taskRepository.getTaskById(UUID.fromString(taskId))
-        taskRepository.updateTask(task.copy(name = newName, state = newState))
-        return true
-    }
-    fun validateInput(taskId:String, name: String){
-
-    }
+class EditTaskUseCase(val taskRepository: TaskRepository, val validateInputUseCase: ValidateInputUseCase) {
 
 
-    fun validateStringInput(name:String){
-        if (name.isEmpty() || name.isBlank()){
-            throw EmptyDataException
+    fun editTask(taskId: String, newName: String, newState: String): Boolean {
+        validateTaskInputs(taskId, newName, newState)
+
+        val uuid = parseId(taskId)
+
+        val existingTask = taskRepository.getTaskById(uuid)
+
+        var updated = false
+
+        if (existingTask.name != newName) {
+            updated = taskRepository.updateTaskNameByID(uuid, newName) || updated
         }
-        if (name.contains(regex = Regex(pattern = "[^a-zA-Z\\s]"))){
+
+        if (existingTask.state != newState) {
+            updated = taskRepository.updateStateNameByID(uuid, newState) || updated
+        }
+
+        return updated
+    }
+
+
+
+    private fun validateTaskInputs(taskId:String ,name:String, state:String): Boolean{
+        if (! validateInputUseCase.isValidName(name)){
             throw InvalidTaskNameException
         }
-    }
-    fun validateId(id:String){
-        if (id.isEmpty() || id.isBlank()){
-            throw EmptyDataException
+        if(! validateInputUseCase.isValidName(state)){
+            throw InvalidStateNameException
         }
+        if (! validateInputUseCase.isValidUUID(taskId)){
+            throw InvalidTaskIDException
+        }
+        return true
 
-        try {
+    }
+
+    private fun parseId(id: String): UUID {
+        if (id.isBlank()) throw EmptyDataException
+
+        return try {
             UUID.fromString(id)
-        } catch (e: IllegalArgumentException){
+        } catch (e: IllegalArgumentException) {
             throw InvalidTaskIDException
         }
     }
-
 }

@@ -1,6 +1,8 @@
 package data.repository.project
 
 import data.datasources.CsvDataSource
+import com.google.common.truth.Truth.assertThat
+import data.datasources.projectDataSource.ProjectDataSourceInterface
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -19,62 +21,43 @@ import java.util.UUID
 import java.util.UUID.randomUUID
 
 class DeleteProjectRepositoryTest {
-    lateinit var dataSource: CsvDataSource<Project>
+    lateinit var dataSource: ProjectDataSourceInterface
     lateinit var repository: ProjectRepositoryImpl
     lateinit var dummyId: UUID
 
     @BeforeEach
     fun setUp() {
-        dataSource = mockk()
-        repository = ProjectRepositoryImpl(mockk())
+        dataSource = mockk(relaxed = true)
+        repository = ProjectRepositoryImpl(dataSource)
         dummyId = randomUUID()
 
     }
 
     @Test
-    fun `should delete project successfully when project is already exist`() {
+    fun `should return true when deleting project complete successfully`() {
         // given
-        every {dataSource.getAll()} returns someProjects
-        every { dataSource.saveAll(any()) } just runs
-        assertDoesNotThrow {
+        every { dataSource.deleteProject(someProjects[0].id) } returns true
+        // when
+        val result = repository.deleteProject(someProjects[0].id)
+
+        // then
+        assertThat(result).isTrue()
+
+    }
+
+
+
+    @Test
+    fun `should throw project not found when deleting project not exist`() {
+        // given
+        every { dataSource.deleteProject(someProjects[0].id) } throws ProjectNotFoundException
+
+        // when & then
+        assertThrows <ProjectNotFoundException> {
             repository.deleteProject(someProjects[0].id)
 
         }
     }
-
-
-    @Test
-    fun `should call getAll and saveAll function form datasource  when trying to delete project`(){
-        every {dataSource.getAll()} returns someProjects
-        every { dataSource.saveAll(any()) } just runs
-        repository.deleteProject(someProjects[0].id)
-
-        verify(exactly = 1) { dataSource.getAll() }
-        verify(exactly = 1) {  dataSource.saveAll(any()) }
-
-    }
-
-    @Test
-    fun `should throw not found exception when deleting project not exist`() {
-        every {dataSource.getAll()} returns someProjects
-        every { dataSource.saveAll(any()) } just runs
-        // when & then
-        assertThrows<ProjectNotFoundException> {
-            repository.deleteProject(dummyId)
-        }
-
-    }
-    @Test
-    fun `should throw empty data exception when deleting project and there are not any project yet`() {
-        every {dataSource.getAll()} returns emptyList()
-        every { dataSource.saveAll(any()) } just runs
-        // when & then
-        assertThrows<EmptyDataException> {
-            repository.deleteProject(dummyId)
-        }
-
-    }
-
 
 
 }

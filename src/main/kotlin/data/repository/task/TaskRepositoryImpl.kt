@@ -1,11 +1,11 @@
 package data.repository.task
 
-import data.datasources.taskDataSource.TaskDataSourceInterface
+import data.datasources.taskDataSource.ITaskDataSource
 import logic.entities.Task
 import logic.repository.TaskRepository
 import java.util.*
 
-class TaskRepositoryImpl(private val taskDataSource: TaskDataSourceInterface): TaskRepository {
+class TaskRepositoryImpl(private val taskDataSource: ITaskDataSource): TaskRepository {
     override fun createTask(task: Task) =
         taskDataSource.insertTask(task)
 

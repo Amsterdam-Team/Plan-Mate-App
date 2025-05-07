@@ -15,73 +15,67 @@ import logic.exception.PlanMateException.NotFoundException.*
 import logic.exception.PlanMateException.ValidationException.InvalidProjectNameException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskNameException
+import logic.usecases.ValidateInputUseCase
 import logic.usecases.testFactory.CreateTaskTestFactory
 import java.util.*
 
 class EditTaskUseCaseTest {
     lateinit var repository: TaskRepositoryImpl
     lateinit var usecase: EditTaskUseCase
+    lateinit var validation: ValidateInputUseCase
     lateinit var taskId: String
+    lateinit var task: Task
 
     @BeforeEach
     fun setUp() {
         repository = mockk(relaxed = true)
-        usecase = EditTaskUseCase(repository)
+        validation = ValidateInputUseCase()
+        usecase = EditTaskUseCase(repository, validation)
         taskId = UUID.randomUUID().toString()
+        task = Task(
+            id = UUID.randomUUID(),
+            name = "add test",
+            state = "todo",
+            projectId = UUID.randomUUID()
+        )
+
     }
 
     @Test
     fun `should return true when editing task function complete successfully`() {
-
-        // when
-        val result = usecase.editTaskName(taskId, "new name")
-
+        every { repository.updateTaskNameByID(task.id, "new name") } returns true
+        every { repository.updateStateNameByID(task.id, "new state") } returns true
+        val result = usecase.editTask(task.id.toString(), "new name", "new state")
         assertThat(result).isTrue()
     }
 
     @Test
     fun `should throw not found task exception when trying to update not existed task`() {
-        val task = CreateTaskTestFactory.validTask
-        every { repository.getTaskById(task.id)} throws TaskNotFoundException
 
-
-        assertThrows<TaskNotFoundException> {
-            usecase.editTaskName(task.id.toString(), "new name")
-        }
     }
 
     @Test
     fun `should throw not valid uuid when user enter not valid id `() {
-
-        val task = CreateTaskTestFactory.validTask
-        every { repository.getTaskById(any())} returns task
-
-
+        every { repository.updateTaskNameByID(task.id, "new name") } returns true
+        every { repository.updateStateNameByID(task.id, "new state") } returns true
         assertThrows<InvalidTaskIDException> {
-            usecase.editTaskName("invalidId", "new name")
+            usecase.editTask("not valid id", "new name", "new state")
+
         }
+
     }
 
     @Test
     fun `should throw invalid task name when trying to add name contain not alphabet characters`() {
-        val task = CreateTaskTestFactory.validTask
-        every { repository.getTaskById(any())} returns task
-
-
+        every { repository.updateTaskNameByID(task.id, "new#$") } returns true
+        every { repository.updateStateNameByID(task.id, "new state") } returns true
         assertThrows<InvalidTaskNameException> {
-            usecase.editTaskName(taskId, "new name $%")
+            usecase.editTask(task.id.toString(), "new#$", "new state")
+
         }
     }
-    @Test
-    fun `should throw invalid task name when trying to add name contain numbers`() {
-//        val task = CreateTaskTestFactory.validTask
-//        every { repository.getTaskById(any())} returns task
 
 
-        assertThrows<InvalidTaskNameException> {
-            usecase.editTaskName(taskId, "new name3")
-        }
-    }
 
 
 }

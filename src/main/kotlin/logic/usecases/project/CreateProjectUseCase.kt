@@ -3,35 +3,26 @@ package logic.usecases.project
 import logic.entities.Project
 import logic.entities.User
 import logic.exception.PlanMateException.AuthorizationException.AdminPrivilegesRequiredException
-import logic.exception.PlanMateException.ValidationException.*
+import logic.exception.PlanMateException.ValidationException.InvalidProjectNameException
+import logic.exception.PlanMateException.ValidationException.InvalidStateNameException
 import logic.repository.ProjectRepository
+import logic.usecases.ValidateInputUseCase
+import java.util.*
 
-class CreateProjectUseCase(private val repository: ProjectRepository, private val user: User) {
-    fun createProject(project: Project) {
+class CreateProjectUseCase(
+    private val projectRepository: ProjectRepository,
+    private val user: User,
+    private val validateInputUseCase: ValidateInputUseCase
+) {
+    fun createProject(name: String, states: List<String>): Boolean {
+
         if (!user.isAdmin) throw AdminPrivilegesRequiredException
-        isValidProjectName(project.name)
-        isValidProjectStates(project.states)
-        repository.createProject(project)
-    }
+        if (!validateInputUseCase.isValidName(name)) throw InvalidProjectNameException
+        if (!validateInputUseCase.isValidProjectStates(states)) throw InvalidStateNameException
 
-    fun isValidProjectName(name: String): String {
-        val validNameRegex = Regex("^(?=.*[a-zA-Z]).*$")
-        when {
-            name.isEmpty() -> throw EmptyProjectNameException
-            !validNameRegex.matches(name) -> throw InvalidProjectNameException
-            else -> return name
-        }
-    }
+        val createdProject = Project(id = UUID.randomUUID(), name = name, states = states, tasks = emptyList())
+        projectRepository.createProject(createdProject)
 
-    fun isValidProjectStates(states: List<String>): List<String> {
-        val validStateRegex = Regex("^[a-zA-Z]+( [a-zA-Z]+)*$")
-
-        if (states.isEmpty()) throw EmptyProjectStatesException
-        states.forEach { state ->
-            if (!validStateRegex.matches(state)) {
-                throw InvalidStateNameException
-            }
-        }
-        return states
+        return true
     }
 }
