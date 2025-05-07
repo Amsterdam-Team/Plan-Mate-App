@@ -1,26 +1,24 @@
 package logic.usecases.task
 
 import logic.entities.Task
-import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
+import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.repository.TaskRepository
+import logic.usecases.ValidateInputUseCase
 import java.util.*
 
 class GetTaskByIdUseCase(
-    private val repository: TaskRepository
-) {
-    operator fun invoke(taskId: UUID): Task {
-        val task = try {
-            repository.getTaskById(taskId)
-        } catch (e: TaskNotFoundException) {
-            throw e
-        }
-        if (task.id != taskId) {
-            throw TaskNotFoundException
-        }
+    private val repository: TaskRepository,
+    private val validateInputUseCase: ValidateInputUseCase
 
-        return task
+) {
+    operator fun invoke(taskId: String): Task {
+
+        if (!validateInputUseCase.isValidUUID(uuid = taskId)) {
+            throw InvalidTaskIDException
+        }
+        return repository.getTaskById(UUID.fromString(taskId))
+
     }
 }
-
 
 
