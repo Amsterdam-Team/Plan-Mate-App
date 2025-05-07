@@ -4,8 +4,8 @@ import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import logic.exception.PlanMateException
-import logic.exception.PlanMateException.NotFoundException
+import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
+import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
 import logic.repository.TaskRepository
 import logic.usecases.testFactory.CreateTaskTestFactory
 import org.junit.jupiter.api.BeforeEach
@@ -26,25 +26,31 @@ class GetAllTasksByProjectIdUseCaseTest {
 
     @Test
     fun `getAllTasksByProjectId should  get all tasks by projectId  from repository when called`() {
-        //When
-        val anotherProjectID = UUID.fromString("123e4567-e89b-12d3-a456-426614174000")
-
-        useCase(anotherProjectID)
-        // Then
-        verify(exactly = 1) { repository.getAllTasksByProjectId(anotherProjectID) }
-    }
-
-    @Test
-    fun `should get tasks by project id when project is exists`() {
         // given
         val projectId = UUID.randomUUID()
         val taskOne = CreateTaskTestFactory.validTask.copy(projectId = projectId)
         val taskTwo = CreateTaskTestFactory.validTask.copy(projectId = projectId)
         every { repository.getAllTasksByProjectId(projectId) } returns listOf(taskOne, taskTwo)
         // when
+        useCase(projectId)
+        // Then
+        verify(exactly = 1) { repository.getAllTasksByProjectId(projectId) }
+    }
+
+    @Test
+    fun `should get tasks by project id when project is exists`() {
+        // given
+        val anotherProjectID = UUID.fromString("123e4567-e89b-12d3-a456-000000000000")
+
+        val projectId = UUID.randomUUID()
+        val taskOne = CreateTaskTestFactory.validTask.copy(projectId = projectId)
+        val taskTwo = CreateTaskTestFactory.validTask.copy(projectId = projectId)
+        val taskAnother = CreateTaskTestFactory.validTask.copy(projectId = anotherProjectID)
+        every { repository.getAllTasksByProjectId(projectId) } returns listOf(taskOne, taskTwo, taskAnother)
+        // when
         val result = useCase(projectId)
         // then
-        assertThat(result).containsExactly(taskOne, taskTwo)
+        assertThat(result).containsExactly(taskTwo, taskTwo)
     }
 
 
@@ -71,11 +77,23 @@ class GetAllTasksByProjectIdUseCaseTest {
         val projectId = UUID.randomUUID()
         val anotherProjectID = UUID.fromString("123e4567-e89b-12d3-a456-426614174000")
 
-        every { repository.getAllTasksByProjectId(projectId) } throws NotFoundException.TaskNotFoundException
+        every { repository.getAllTasksByProjectId(projectId) } throws TaskNotFoundException
 
         // when && then
-        assertThrows<PlanMateException.NotFoundException.ProjectNotFoundException> {
-            useCase(anotherProjectID)
+        assertThrows<TaskNotFoundException> {
+            useCase(projectId)
+        }
+    }
+
+    @Test
+    fun `should throw TaskNotFoundException when no tasks exist for given project id`() {
+        // given
+        val projectId = UUID.randomUUID()
+        every { repository.getAllTasksByProjectId(projectId) } returns emptyList()
+
+        // when & then
+        assertThrows<TaskNotFoundException> {
+            useCase(projectId)
         }
     }
 
@@ -84,9 +102,9 @@ class GetAllTasksByProjectIdUseCaseTest {
         val anotherProjectID = UUID.fromString("123e4567-e89b-12d3-a456-426614174000")
 
         // Given
-        every { repository.getAllTasksByProjectId(anotherProjectID) } throws NotFoundException.ProjectNotFoundException
+        every { repository.getAllTasksByProjectId(anotherProjectID) } throws ProjectNotFoundException
 
         //When & Then
-        assertThrows<NotFoundException.ProjectNotFoundException> { useCase(anotherProjectID) }
+        assertThrows<ProjectNotFoundException> { useCase(anotherProjectID) }
     }
 }
