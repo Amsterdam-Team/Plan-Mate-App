@@ -4,7 +4,7 @@ import logic.entities.User
 import logic.exception.PlanMateException
 import logic.exception.PlanMateException.AuthorizationException.UnAuthenticatedException
 
-class StateManager {
+object StateManager {
     private var currentUser : User? = null
 
     fun login(user: User){
