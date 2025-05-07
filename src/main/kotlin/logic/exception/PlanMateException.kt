@@ -6,6 +6,7 @@ sealed class PlanMateException : Exception() {
         data object UserNotFoundException : AuthorizationException()
         data object WrongUsernameException : AuthorizationException()
         data object WrongPasswordException : AuthorizationException()
+        data object UnAuthenticatedException : AuthorizationException()
 
 
     }
@@ -27,7 +28,6 @@ sealed class PlanMateException : Exception() {
         data object EmptyProjectNameException : ValidationException()
         data object SameStateNameException: ValidationException()
         data object ProjectNameAlreadyExistException: ValidationException()
-
 
     }
 
