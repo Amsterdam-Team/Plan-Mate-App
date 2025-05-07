@@ -22,6 +22,7 @@ object CreateProjectTestFactory {
     val emptyProjectStateTest = createProject(
         id = UUID.randomUUID(),
         name = "initial Test Project",
+        states = listOf("","to do","done")
     )
 
 
