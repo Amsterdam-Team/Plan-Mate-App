@@ -6,11 +6,11 @@ import ui.utils.printAsASuccessState
 
 open class MainMenuHandler {
 
-    protected open fun start() {
+    protected open suspend fun start() {
         println("👋 Welcome to PlanMate!\nLet's get things organized.")
     }
 
-    protected fun baseMenuStart(showMenu: () -> Unit, featureControllers: Map<Int, BaseUIController>){
+    protected suspend fun baseMenuStart(showMenu: () -> Unit, featureControllers: Map<Int, BaseUIController>){
         while (true) {
             showMenu()
 
