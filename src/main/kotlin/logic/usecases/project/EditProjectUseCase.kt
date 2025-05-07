@@ -11,15 +11,18 @@ import logic.usecases.ValidateInputUseCase
 import logic.entities.Project
 import logic.entities.LogItem
 import kotlinx.datetime.TimeZone
+import logic.usecases.StateManager
 
 
 class EditProjectUseCase(
     private val projectRepository: ProjectRepository,
     private val validateInputUseCase: ValidateInputUseCase,
+    private val stateManager: StateManager,
     private val logRepository: LogRepository
 )  {
 
-    suspend fun editProjectName(user: User, projectId: UUID, newName: String) : Boolean {
+    suspend fun editProjectName( projectId: UUID, newName: String) : Boolean {
+        val user = stateManager.getLoggedInUser()
         validateAdmin(user)
         validateName(newName)
         val project = ensureProjectExists(projectId)

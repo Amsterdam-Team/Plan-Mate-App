@@ -8,15 +8,17 @@ import logic.exception.PlanMateException.ValidationException.InvalidProjectIDExc
 import logic.exception.PlanMateException.AuthorizationException.AdminPrivilegesRequiredException
 import logic.exception.PlanMateException.ValidationException.SameStateNameException
 import logic.exception.PlanMateException.ValidationException.InvalidStateNameException
+import logic.usecases.StateManager
 import logic.usecases.ValidateInputUseCase
 
 class UpdateStateUseCase(
     private val projectRepository: ProjectRepository,
-    private val user: User,
+    private val stateManager: StateManager,
     private val validateInputUseCase: ValidateInputUseCase
 ) {
     suspend fun updateState(projectID: String, oldState: String, newState: String): Boolean {
         val validateInputs = validateInputs(projectID, oldState, newState)
+        val user = stateManager.getLoggedInUser()
         if (validateInputs && user.isAdmin) {
             return projectRepository.updateProjectStateById(UUID.fromString(projectID), oldState, newState)
         } else {

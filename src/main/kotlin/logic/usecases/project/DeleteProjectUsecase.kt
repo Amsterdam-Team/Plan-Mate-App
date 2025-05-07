@@ -6,18 +6,19 @@ import logic.exception.PlanMateException.AuthorizationException.AdminPrivilegesR
 import logic.exception.PlanMateException.DataSourceException.EmptyDataException
 import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
 import logic.repository.ProjectRepository
+import logic.usecases.StateManager
 import logic.usecases.ValidateInputUseCase
 import java.util.UUID
 
 class DeleteProjectUseCase(
     private val projectRepository: ProjectRepository,
-    private val user: User,
+    private val stateManager: StateManager,
     private val validateInputUseCase: ValidateInputUseCase
 ) {
 
     suspend fun deleteProject(projectId: String): Boolean {
+        if (!stateManager.getLoggedInUser().isAdmin) throw AdminPrivilegesRequiredException
         if (!validateInputUseCase.isValidUUID(projectId)) throw InvalidProjectIDException
-        if (!user.isAdmin) throw AdminPrivilegesRequiredException
         return projectRepository.deleteProject(UUID.fromString(projectId))
     }
 
