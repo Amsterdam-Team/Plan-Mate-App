@@ -7,7 +7,7 @@ import java.util.UUID
 class DeleteTaskUseCase(
     private val taskRepository: TaskRepository,
 ) {
-    fun execute(taskId: String?) : Boolean{
+    suspend fun execute(taskId: String?) : Boolean{
         if(taskId.isNullOrEmpty()) throw InvalidTaskIDException
         val taskUUID = try {
             UUID.fromString(taskId)

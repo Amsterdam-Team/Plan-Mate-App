@@ -17,7 +17,7 @@ class CreateTaskUseCase(
     private val validateInputUseCase: ValidateInputUseCase
 ) {
 
-    fun createTask(name: String, projectId: String, state: String): Boolean {
+    suspend fun createTask(name: String, projectId: String, state: String): Boolean {
         requireOrThrow(
             condition = validateInputUseCase.isValidName(name),
             exception = InvalidTaskNameException

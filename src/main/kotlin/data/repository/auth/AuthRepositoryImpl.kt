@@ -7,10 +7,11 @@ import logic.repository.AuthRepository
 class AuthRepositoryImpl(
     private val userDataSource : IUserDataSource
 ): AuthRepository {
-    override fun createUser(user: User) {
+    override suspend fun createUser(user: User): Boolean {
+        return userDataSource.insertUser(user)
     }
 
-    override fun login(username: String, password: String): User {
+    override suspend fun login(username: String, password: String): User {
         val user = userDataSource.findUserByCredentials(username,password)
         return user
     }

@@ -6,7 +6,7 @@ import java.util.UUID
 
 class GetTaskStateUseCase(private val repository: TaskRepository) {
 
-    fun execute(taskID: String): String {
+    suspend fun execute(taskID: String): String {
         return if (isValidUUID(taskID)) repository.getTaskById(UUID.fromString(taskID)).state
         else throw InvalidTaskIDException
     }

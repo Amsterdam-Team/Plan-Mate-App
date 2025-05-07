@@ -19,7 +19,7 @@ class EditProjectUseCase(
     private val logRepository: LogRepository
 )  {
 
-    fun editProjectName(user: User, projectId: UUID, newName: String) : Boolean {
+    suspend fun editProjectName(user: User, projectId: UUID, newName: String) : Boolean {
         validateAdmin(user)
         validateName(newName)
         val project = ensureProjectExists(projectId)
@@ -43,15 +43,15 @@ class EditProjectUseCase(
         }
     }
 
-    private fun ensureProjectExists(projectId: UUID): Project {
+    private suspend fun ensureProjectExists(projectId: UUID): Project {
         return projectRepository.getProject(projectId)
     }
 
-    private fun updateProjectName(projectId: UUID, newName: String) : Boolean {
+    private suspend fun updateProjectName(projectId: UUID, newName: String) : Boolean {
       return projectRepository.updateProjectNameById(projectId, newName)
     }
 
-    private fun validateProjectNameNotTaken(projectId: UUID, newName: String) {
+    private suspend  fun validateProjectNameNotTaken(projectId: UUID, newName: String) {
         val allProjects = projectRepository.getProjects()
         val nameExists = allProjects.any {
             it.id != projectId && it.name.equals(newName, ignoreCase = true)
@@ -61,7 +61,7 @@ class EditProjectUseCase(
         }
     }
 
-    private fun logProjectNameChange(project: Project, newName: String, user: User) {
+    private suspend  fun logProjectNameChange(project: Project, newName: String, user: User) {
         val log = LogItem(
             id = UUID.randomUUID(),
             entityId = project.id,

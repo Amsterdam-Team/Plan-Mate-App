@@ -7,7 +7,7 @@ import java.util.*
 class GetTaskByIdUseCase(
     private val repository: TaskRepository
 ) {
-    operator fun invoke(taskId: UUID): Task {
+    suspend operator fun invoke(taskId: UUID): Task {
         return repository.getTaskById(taskId)
 
     }

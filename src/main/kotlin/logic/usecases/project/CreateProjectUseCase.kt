@@ -14,7 +14,7 @@ class CreateProjectUseCase(
     private val user: User,
     private val validateInputUseCase: ValidateInputUseCase
 ) {
-    fun createProject(name: String, states: List<String>): Boolean {
+    suspend fun createProject(name: String, states: List<String>): Boolean {
 
         if (!user.isAdmin) throw AdminPrivilegesRequiredException
         if (!validateInputUseCase.isValidName(name)) throw InvalidProjectNameException

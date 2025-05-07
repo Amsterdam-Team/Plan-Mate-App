@@ -11,7 +11,7 @@ import java.util.UUID
 
 class CreateUserUseCase(private val repository: AuthRepository, private val validateInputUseCase: ValidateInputUseCase) {
 
-    fun execute(username: String, password: String): Boolean {
+    suspend fun execute(username: String, password: String): Boolean {
         if (! validateInputUseCase.isValidName(username)) throw InvalidUsernameException
         validatePassword(password)
         val user = User(
