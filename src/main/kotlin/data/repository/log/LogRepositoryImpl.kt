@@ -1,11 +1,11 @@
 package data.repository.log
 
-import data.datasources.logDataSource.LogDataSourceInterface
+import data.datasources.logDataSource.ILogDataSource
 import logic.entities.LogItem
 import logic.repository.LogRepository
 import java.util.*
 
-class LogRepositoryImpl(private val logDataSource: LogDataSourceInterface): LogRepository {
+class LogRepositoryImpl(private val logDataSource: ILogDataSource): LogRepository {
     override fun viewLogsById(entityId: UUID) =
         logDataSource.getLogsByEntityId(entityId)
 

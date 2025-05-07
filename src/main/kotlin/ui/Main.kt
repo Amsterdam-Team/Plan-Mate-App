@@ -1,11 +1,17 @@
 package ui
 
-import di.appModule
+import io.ktor.serialization.kotlinx.json.*
+import io.ktor.server.application.*
+import io.ktor.server.engine.*
+import io.ktor.server.netty.*
+import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.request.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import logic.usecases.LoginUseCase
 import org.koin.core.context.startKoin
 import org.koin.java.KoinJavaComponent.getKoin
 import ui.console.ConsoleIO
-
 import ui.controller.CreateTaskUIController
 import ui.controllers.CreateProjectUIController
 import ui.controllers.UpdateStateUiController
@@ -13,6 +19,7 @@ import ui.menuHandler.AdminMenuHandler
 import ui.menuHandler.MateMenuHandler
 import ui.project.GetProjectUIController
 import ui.project.ViewProjectHistoryUIController
+import java.util.*
 
 
 fun main() {
@@ -54,4 +61,9 @@ fun main() {
     val loginUIController = LoginUIController(loginUseCase, adminHandler, mateHandler, consoleIO)
 
     loginUIController.execute()
+
+
+    embeddedServer(Netty, port = 8080, host = "0.0.0.0") {
+    }.start(wait = true)
 }
+

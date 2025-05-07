@@ -1,6 +1,7 @@
 package data.repository.project
 
-import data.datasources.projectDataSource.ProjectDataSourceInterface
+
+import data.datasources.projectDataSource.IProjectDataSource
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -13,8 +14,11 @@ import logic.repository.LogRepository
 import logic.repository.ProjectRepository
 import java.util.*
 
+
+
+
 class ProjectRepositoryImpl(
-    private val projectDataSource: ProjectDataSourceInterface,
+    private val projectDataSource: IProjectDataSource,
     private val logRepository: LogRepository,
 ) : ProjectRepository {
   
