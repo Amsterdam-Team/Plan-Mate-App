@@ -6,7 +6,7 @@ import ui.controller.BaseUIController
 import ui.utils.tryToExecute
 
 class EditTaskUiController(val editTaskUseCase: EditTaskUseCase, val consoleIO: ConsoleIO) : BaseUIController {
-    override fun execute() {
+    override suspend fun execute() {
 
 
         val taskId = getTaskId()

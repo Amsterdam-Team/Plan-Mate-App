@@ -1,6 +1,6 @@
 package ui.utils
 
-fun <T> tryToExecute(action: () -> T, onSuccess: (result: T) -> Unit) {
+suspend fun <T> tryToExecute(action: suspend () -> T, onSuccess: (result: T) -> Unit) {
     try {
         action().also { onSuccess(it) }
     } catch (exception: Exception) {
@@ -8,10 +8,10 @@ fun <T> tryToExecute(action: () -> T, onSuccess: (result: T) -> Unit) {
     }
 }
 
-fun <T> tryToExecute(
-    action: () -> T,
+suspend fun <T> tryToExecute(
+    action: suspend () -> T,
     onSuccess: (result: T) -> Unit,
-    onError: (exception: Exception) -> Unit
+    onError: suspend (exception: Exception) -> Unit
 ) {
     try {
         action().also { onSuccess(it) }

@@ -20,7 +20,7 @@ class EditProjectUIController(
         password = "123456"
     )
 
-    override fun execute() {
+    override suspend  fun execute() {
         consoleIO.println(EDIT_PROJECT_NAME_PROMPT_MESSAGE)
 
         consoleIO.println(PROJECT_ID_PROMPT_MESSAGE)
@@ -49,7 +49,7 @@ class EditProjectUIController(
         }
     }
 
-    private fun onEditProjectFail(exception: Exception) {
+    private suspend  fun onEditProjectFail(exception: Exception) {
         consoleIO.println(FAIL_TO_UPDATE_PROJECT_NAME_MESSAGE)
         val input = consoleIO.readFromUser().trim().uppercase()
 

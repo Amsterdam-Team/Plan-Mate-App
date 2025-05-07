@@ -9,7 +9,7 @@ class DeleteTaskUIController(
     private val deleteTaskUseCase: DeleteTaskUseCase,
     private val consoleIO: ConsoleIO
 ): BaseUIController {
-    override fun execute() {
+    override suspend  fun execute() {
         tryToExecute(
             action = {
                 consoleIO.println("Please Enter Task ID:")

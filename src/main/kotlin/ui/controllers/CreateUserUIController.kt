@@ -12,7 +12,7 @@ class CreateUserUIController(
     private val io: ConsoleIO
 ) : BaseUIController {
 
-    override fun execute() {
+    override suspend  fun execute() {
         io.println("Create New Mate User")
 
         io.println("Enter Username: ")

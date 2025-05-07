@@ -9,7 +9,7 @@ class CreateProjectUIController(
     private val createProjectUseCase: CreateProjectUseCase, private val consoleIO: ConsoleIO
 ) : BaseUIController {
 
-    override fun execute() {
+    override suspend  fun execute() {
 
         consoleIO.println(PROJECT_NAME_PROMPT_MESSAGE)
         val projectName = consoleIO.readFromUser()
@@ -31,7 +31,7 @@ class CreateProjectUIController(
         }
     }
 
-    private fun onCreateProjectFail(exception: Exception) {
+    private suspend fun onCreateProjectFail(exception: Exception) {
         consoleIO.println(FAIL_TO_CREATE_PROJECT_MESSAGE)
 
         val input = consoleIO.readFromUser().trim().uppercase()

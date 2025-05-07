@@ -16,7 +16,7 @@ class LoginUIController(
 ): BaseUIController {
     lateinit var user : User
 
-    override fun execute() {
+    override suspend  fun execute() {
         consoleIO.println("Hello My Friend..\nI hope You Remember Your username and password to login quickly...\nEnter Your user name : ")
         val username = consoleIO.readFromUser()
         consoleIO.println("Enter Your Password : ")

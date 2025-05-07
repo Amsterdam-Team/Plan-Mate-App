@@ -12,7 +12,7 @@ class AddStateUIController(
     private val io: ConsoleIO
 ) : BaseUIController {
 
-    override fun execute() {
+    override suspend fun execute() {
         io.println("➕ Add New State to the Project")
 
         io.println("Enter Project ID: ")
