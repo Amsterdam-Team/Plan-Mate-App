@@ -1,7 +1,6 @@
 package ui.task
 
 import logic.entities.Task
-import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.usecases.task.DeleteTaskUseCase
 import logic.usecases.task.EditTaskUseCase
 import logic.usecases.task.GetTaskByIdUseCase
@@ -9,7 +8,6 @@ import ui.console.ConsoleIO
 import ui.controller.BaseUIController
 import ui.utils.DisplayUtils
 import ui.utils.tryToExecute
-import java.util.*
 
 class ViewTaskDetailsUIController(
     private val getTaskByIdUseCase: GetTaskByIdUseCase,
@@ -24,7 +22,7 @@ class ViewTaskDetailsUIController(
 
         tryToExecute(
             action = {
-                val taskId = validateUUIDFormat(consoleIO.readFromUser())
+                val taskId = consoleIO.readFromUser()
                 getTaskByIdUseCase(taskId)
             },
             onSuccess = { task ->
@@ -45,13 +43,6 @@ class ViewTaskDetailsUIController(
         )
     }
 
-    private fun validateUUIDFormat(uuidString: String): UUID {
-        return try {
-            UUID.fromString(uuidString.trim())
-        } catch (e: IllegalArgumentException) {
-            throw InvalidTaskIDException
-        }
-    }
 
     private fun showTaskDetails(task: Task) {
         consoleIO.println("\n📝 Task Details:")
