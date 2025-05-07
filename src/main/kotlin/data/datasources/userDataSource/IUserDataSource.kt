@@ -3,7 +3,7 @@ package data.datasources.userDataSource
 import logic.entities.User
 import java.util.UUID
 
-interface UserDataSourceInterface {
+interface IUserDataSource {
     suspend fun getAllUsers(): List<User>
 
     suspend fun getUserById(userId: UUID): User

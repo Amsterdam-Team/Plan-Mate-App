@@ -4,9 +4,9 @@ import com.mongodb.kotlin.client.coroutine.MongoCollection
 import logic.entities.Project
 import java.util.*
 
-class ProjectRemoteDataSource(
+class ProjectDataSource(
     projectCollection: MongoCollection<Project>
-): ProjectDataSourceInterface {
+): IProjectDataSource {
     override suspend fun getAllProjects(): List<Project> {
         TODO("Not yet implemented")
     }

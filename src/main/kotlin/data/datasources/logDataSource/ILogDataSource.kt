@@ -3,7 +3,7 @@ package data.datasources.logDataSource
 import logic.entities.LogItem
 import java.util.UUID
 
-interface LogDataSourceInterface {
+interface ILogDataSource {
     suspend fun getAllLogs(): List<LogItem>
 
     suspend fun getLogsByEntityId(entityId: UUID): List<LogItem>

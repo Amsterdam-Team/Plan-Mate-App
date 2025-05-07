@@ -11,9 +11,9 @@ import logic.exception.PlanMateException.DataSourceException.ObjectDoesNotExistE
 import org.bson.Document
 import java.util.*
 
-class UserRemoteDataSource(
+class UserDataSource(
     private val usersCollection: MongoCollection<User>
-): UserDataSourceInterface {
+): IUserDataSource {
 
     override suspend fun getAllUsers(): List<User> {
         TODO("Not yet implemented")

@@ -1,11 +1,11 @@
 package data.repository.auth
 
-import data.datasources.userDataSource.UserDataSourceInterface
+import data.datasources.userDataSource.IUserDataSource
 import logic.entities.User
 import logic.repository.AuthRepository
 
 class AuthRepositoryImpl(
-    private val userDataSource : UserDataSourceInterface
+    private val userDataSource : IUserDataSource
 ): AuthRepository {
     override fun createUser(user: User) {
     }

@@ -4,9 +4,9 @@ import com.mongodb.kotlin.client.coroutine.MongoCollection
 import logic.entities.LogItem
 import java.util.*
 
-class LogRemoteDataSource(
+class LogDataSource(
     private val logsCollection: MongoCollection<LogItem>
-): LogDataSourceInterface {
+): ILogDataSource {
     override suspend fun getAllLogs(): List<LogItem> {
         TODO("Not yet implemented")
     }

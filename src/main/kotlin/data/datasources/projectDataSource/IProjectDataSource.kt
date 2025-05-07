@@ -3,7 +3,7 @@ package data.datasources.projectDataSource
 import logic.entities.Project
 import java.util.UUID
 
-interface ProjectDataSourceInterface {
+interface IProjectDataSource {
     suspend fun getAllProjects(): List<Project>
 
     suspend fun getProjectById(projectId: UUID): Project

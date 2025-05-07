@@ -1,6 +1,6 @@
 package data.repository.project
 
-import data.datasources.projectDataSource.ProjectDataSourceInterface
+import data.datasources.projectDataSource.IProjectDataSource
 import logic.entities.Project
 import logic.exception.PlanMateException
 import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
@@ -8,7 +8,7 @@ import logic.repository.ProjectRepository
 import java.util.*
 
 
-class ProjectRepositoryImpl(private val projectDataSource: ProjectDataSourceInterface) : ProjectRepository {
+class ProjectRepositoryImpl(private val projectDataSource: IProjectDataSource) : ProjectRepository {
 
     override fun createProject(project: Project) =
         projectDataSource.insertProject(project)

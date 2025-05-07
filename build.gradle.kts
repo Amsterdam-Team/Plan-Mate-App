@@ -39,6 +39,9 @@ dependencies {
     implementation("org.mongodb:mongodb-driver-kotlin-coroutine")
     implementation("org.mongodb:bson-kotlinx:5.4.0")
     implementation("ch.qos.logback:logback-classic:1.4.11")
+
+    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+
 }
 
 tasks.test {

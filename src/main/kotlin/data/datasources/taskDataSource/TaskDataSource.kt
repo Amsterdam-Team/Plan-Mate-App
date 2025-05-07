@@ -4,9 +4,9 @@ import com.mongodb.kotlin.client.coroutine.MongoCollection
 import logic.entities.Task
 import java.util.*
 
-class TaskRemoteDataSource(
+class TaskDataSource(
     tasksCollection: MongoCollection<Task>
-): TaskDataSourceInterface {
+): ITaskDataSource {
     override suspend fun getAllTasks(): List<Task> {
         TODO("Not yet implemented")
     }

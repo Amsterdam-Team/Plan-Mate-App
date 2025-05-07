@@ -3,7 +3,7 @@ package data.datasources.taskDataSource
 import logic.entities.Task
 import java.util.UUID
 
-interface TaskDataSourceInterface {
+interface ITaskDataSource {
 
     suspend fun getAllTasks(): List<Task>
 
