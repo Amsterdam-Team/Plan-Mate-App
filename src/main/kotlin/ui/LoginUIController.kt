@@ -30,7 +30,7 @@ class LoginUIController(
         )
 
     }
-    private fun onLoginSuccess(user: User) {
+    private suspend fun onLoginSuccess(user: User) {
         if (user.isAdmin) adminMenuHandler.start() else mateMenuHandler.start()
     }
 
