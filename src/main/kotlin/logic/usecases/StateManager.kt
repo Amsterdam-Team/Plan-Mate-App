@@ -1,13 +1,12 @@
 package logic.usecases
 
 import logic.entities.User
-import logic.exception.PlanMateException
 import logic.exception.PlanMateException.AuthorizationException.UnAuthenticatedException
 
 object StateManager {
     private var currentUser : User? = null
 
-    fun login(user: User){
+    fun setLoggedInUser(user: User){
         currentUser = user
     }
 
