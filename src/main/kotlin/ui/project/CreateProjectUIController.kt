@@ -1,4 +1,4 @@
-package ui.controllers
+package ui.project
 
 import console.ConsoleIO
 import logic.usecases.project.CreateProjectUseCase

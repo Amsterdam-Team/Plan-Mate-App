@@ -1,9 +1,7 @@
 package logic.usecases.project
 
 import com.google.common.truth.Truth.assertThat
-import io.mockk.Runs
 import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
 import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
 import logic.exception.PlanMateException.ValidationException.InvalidStateNameException
@@ -13,7 +11,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import utils.ResultStatus
 import utils.TestDataFactory.createProject
-import java.util.UUID
+import java.util.*
 
 class CreateStateUseCaseTest {
 
@@ -31,7 +29,7 @@ class CreateStateUseCaseTest {
         // Given
         val project = createProject()
         val newState = "In Review"
-        every { repository.addStateById(project.id, newState) } just Runs
+        every { repository.addStateById(project.id, newState) } returns true
 
         // When
         val result = useCase.execute(project.id, newState)
