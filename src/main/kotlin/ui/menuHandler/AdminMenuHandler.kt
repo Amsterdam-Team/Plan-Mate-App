@@ -20,23 +20,23 @@ class AdminMenuHandler(private val adminFeatureControllers: Map<Int, BaseUIContr
     Admin Main Menu
     ================================
     1. View All Projects
-    2. View State
-    3. Create Task
-    4. Edit Task
-    5. Delete Task
-    6. View Tasks
-    7. View Project Audit History
-    8. View Task Audit History
-    9. Create Mate User
-    10. Create Project
-    11. Edit Project
-    12. Delete Project
-    13. Create State
-    14. Edit State
-    15. Delete State
+    2. Create Task
+    3. Edit Task
+    4. Delete Task
+    5. View Tasks
+    6. View Project Audit History
+    7. Create Mate User
+    8. Create Project
+    9. Edit Project
+    10. Delete Project
+    11. Create State
+    12. Edit State
     0. Exit
     """.trimIndent()
         )
     }
+
+
+
 
 }

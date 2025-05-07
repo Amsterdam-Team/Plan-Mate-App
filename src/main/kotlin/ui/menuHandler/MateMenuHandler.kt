@@ -18,13 +18,11 @@ class MateMenuHandler(private val mateFeatureControllers: Map<Int, BaseUIControl
     Mate Main Menu
     ================================
     1. View All Projects
-    2. View State
-    3. Create Task
-    4. Edit Task
-    5. Delete Task
-    6. View Tasks
-    7. View Project Audit History
-    8. View Task Audit History
+    2. Create Task
+    3. Edit Task
+    4. Delete Task
+    5. View Tasks
+    6. View Project Audit History
     0. Exit
     """.trimIndent()
         )
