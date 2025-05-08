@@ -12,11 +12,10 @@ import java.util.UUID
 class LoggerUseCase(
     private val logRepository: LogRepository,
     private val stateManager: StateManager,
-    private val clock: Clock = Clock.System
 ) {
 
     suspend fun createLog(message:String, entityId: UUID): Boolean{
-        val currentDateTime : LocalDateTime= clock.now().toLocalDateTime(TimeZone.currentSystemDefault())
+        val currentDateTime : LocalDateTime= Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
         val formattedLogMessage = buildString {
             append(message)
             append("by ${stateManager.getLoggedInUser().username}")
