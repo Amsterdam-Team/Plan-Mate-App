@@ -13,4 +13,12 @@ object StateManager {
     fun getLoggedInUser(): User{
         return currentUser ?: throw UnAuthenticatedException
     }
+
+    fun logOut() {
+        currentUser = null
+    }
+
+    fun isUserLoggedIn(): Boolean {
+        return currentUser != null
+    }
 }
