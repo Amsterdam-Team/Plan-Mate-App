@@ -10,7 +10,7 @@ import io.mockk.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import logic.entities.User
-import logic.exception.PlanMateException
+import logic.exception.PlanMateException.DataSourceException.ObjectDoesNotExistException
 import org.bson.Document
 import org.bson.UuidRepresentation
 import org.junit.jupiter.api.*
@@ -20,13 +20,6 @@ import java.util.*
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserDataSourceTest {
-
-    private lateinit var mongoClient: MongoClient
-    private lateinit var database: MongoDatabase
-    private lateinit var collection: MongoCollection<User>
-    private lateinit var dataSource: UserDataSource
-
-
 
     @BeforeAll
     fun startMongoDB(){
@@ -69,6 +62,9 @@ class UserDataSourceTest {
 
     @Test
     fun `should return empty list when collection has no users`() = runTest {
+        // Given
+        collection.deleteMany(Document())
+
         // When
         val result = dataSource.getAllUsers()
 
@@ -92,7 +88,7 @@ class UserDataSourceTest {
     @Test
     fun `should throw exception when user ID does not exist`() = runTest {
         // When & Then
-        assertThrows<PlanMateException.DataSourceException.ObjectDoesNotExistException> {
+        assertThrows<ObjectDoesNotExistException> {
             dataSource.getUserById(notFoundId)
         }
     }
@@ -221,18 +217,19 @@ class UserDataSourceTest {
     // region findUserByCredentials
     @Test
     fun `should return user when credentials match`() = runTest {
-        // Given
-
         // When
+        val result = dataSource.findUserByCredentials(user1.username, user1.password)
 
         // Then
+        assertThat(result).isEqualTo(user1)
     }
 
     @Test
-    fun `should throw exception when credentials do not match any user`() {
-        // Given
-
+    fun `should throw exception when credentials do not match any user`() = runTest{
         // When & Then
+        assertThrows<ObjectDoesNotExistException>{
+            dataSource.findUserByCredentials(userNotInDatabase.username, userNotInDatabase.password)
+        }
     }
     // endregion
 
@@ -252,8 +249,14 @@ class UserDataSourceTest {
         private val duplicatedUserNames = listOf(user1, userWithSameName)
         private val duplicatedUserIds = listOf(user1, userWithSameId)
 
+
+        // Testing Purposes
         private const val CONNECTION_STRING = "mongodb+srv://7amasa:9LlgpCLbd99zoRrJ@amsterdam.qpathz3.mongodb.net/?retryWrites=true&w=majority&appName=Amsterdam"
         private const val TEST_DATABASE_NAME = "Amsterdam-test"
+        private lateinit var mongoClient: MongoClient
+        private lateinit var database: MongoDatabase
+        private lateinit var collection: MongoCollection<User>
+        private lateinit var dataSource: UserDataSource
         private val settings = MongoClientSettings.builder()
             .applyConnectionString(ConnectionString(CONNECTION_STRING))
             .uuidRepresentation(UuidRepresentation.STANDARD)
