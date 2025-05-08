@@ -9,7 +9,7 @@ import logic.usecases.testFactory.WRONG_USER_NAME
 import logic.usecases.testFactory.validUserData
 import logic.exception.PlanMateException.AuthorizationException.WrongPasswordException
 import logic.exception.PlanMateException.AuthorizationException.WrongUsernameException
-import logic.usecases.LoginUseCase
+import logic.usecases.login.LoginUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import ui.console.ConsoleIO

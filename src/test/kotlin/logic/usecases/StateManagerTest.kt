@@ -2,13 +2,10 @@ package logic.usecases
 
 import com.google.common.truth.Truth.assertThat
 import logic.entities.User
-import logic.exception.PlanMateException
-import logic.exception.PlanMateException.*
 import logic.exception.PlanMateException.AuthorizationException.UnAuthenticatedException
-import org.junit.jupiter.api.Assertions.*
+import logic.usecases.utils.StateManager
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
-import java.util.UUID
 import java.util.UUID.randomUUID
 import kotlin.test.Test
 

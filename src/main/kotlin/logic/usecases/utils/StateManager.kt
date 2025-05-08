@@ -1,4 +1,4 @@
-package logic.usecases
+package logic.usecases.utils
 
 import logic.entities.User
 import logic.exception.PlanMateException.AuthorizationException.UnAuthenticatedException

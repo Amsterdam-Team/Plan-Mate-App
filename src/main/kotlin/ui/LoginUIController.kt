@@ -1,7 +1,7 @@
 package ui
 
 import logic.entities.User
-import logic.usecases.LoginUseCase
+import logic.usecases.login.LoginUseCase
 import ui.console.ConsoleIO
 import ui.controller.BaseUIController
 import ui.menuHandler.AdminMenuHandler
@@ -34,5 +34,4 @@ class LoginUIController(
         if (user.isAdmin) adminMenuHandler.start() else mateMenuHandler.start()
     }
 
-    private fun getCurrentUser() : User = user
 }

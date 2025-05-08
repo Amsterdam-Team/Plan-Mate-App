@@ -8,7 +8,7 @@ import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.repository.LogRepository
-import logic.usecases.ValidateInputUseCase
+import logic.usecases.utils.ValidateInputUseCase
 import logic.usecases.logs.ViewTaskLogsUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

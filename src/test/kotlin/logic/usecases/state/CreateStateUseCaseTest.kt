@@ -7,8 +7,8 @@ import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException
 import logic.repository.ProjectRepository
-import logic.usecases.StateManager
-import logic.usecases.ValidateInputUseCase
+import logic.usecases.utils.StateManager
+import logic.usecases.utils.ValidateInputUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import utils.ResultStatus

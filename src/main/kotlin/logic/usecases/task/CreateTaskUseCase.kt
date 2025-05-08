@@ -9,7 +9,7 @@ import logic.exception.PlanMateException.NotFoundException.StateNotFoundExceptio
 import logic.repository.ProjectRepository
 import logic.repository.TaskRepository
 import logic.usecases.logs.LoggerUseCase
-import logic.usecases.ValidateInputUseCase
+import logic.usecases.utils.ValidateInputUseCase
 import java.util.UUID
 
 class CreateTaskUseCase(
