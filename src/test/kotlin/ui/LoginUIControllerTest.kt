@@ -2,6 +2,7 @@ package ui
 
 import com.google.common.truth.Truth.assertThat
 import io.mockk.*
+import kotlinx.coroutines.test.runTest
 import logic.usecases.testFactory.SUCCESS_MESSAGE_FOR_LOGIN
 import logic.usecases.testFactory.WRONG_PASSWORD
 import logic.usecases.testFactory.WRONG_USER_NAME
@@ -33,7 +34,7 @@ class LoginUIControllerTest {
 
 
     @Test
-    fun `should print success message when useCase return full user data`(){
+    fun `should print success message when useCase return full user data`() = runTest{
         val username = "Hend"
         val password = "H123456"
         val input = "${username}\n${password}"
@@ -42,7 +43,7 @@ class LoginUIControllerTest {
         every { consoleIO.println(capture(slot)) } just Runs
         every { consoleIO.readFromUser() } returns input
 
-        every { useCase.validateUserCredentials(username, password) } returns validUserData()
+        coEvery { useCase.validateUserCredentials(username, password) } returns validUserData()
 
         uiController.execute()
 
@@ -50,7 +51,7 @@ class LoginUIControllerTest {
     }
 
     @Test
-    fun `should print wrong username message when useCase throw wrong user name exception`(){
+    fun `should print wrong username message when useCase throw wrong user name exception`()= runTest{
         val username = "Hen"
         val password = "H123456"
         val input = "${username}\n${password}"
@@ -61,7 +62,7 @@ class LoginUIControllerTest {
         every { consoleIO.readFromUser() } returns input
 
 
-        every { useCase.validateUserCredentials(username, password) } throws WrongUsernameException
+        coEvery { useCase.validateUserCredentials(username, password) } throws WrongUsernameException
 
         uiController.execute()
 
@@ -69,7 +70,7 @@ class LoginUIControllerTest {
     }
 
     @Test
-    fun `should print wrong password message when useCase throw wrong password exception`(){
+    fun `should print wrong password message when useCase throw wrong password exception`()= runTest{
         val username = "Hend"
         val password = "12345"
         val input = "${username}\n${password}"
@@ -79,7 +80,7 @@ class LoginUIControllerTest {
         every { consoleIO.readFromUser() } returns input
 
 
-        every { useCase.validateUserCredentials(username, password) } throws WrongPasswordException
+        coEvery { useCase.validateUserCredentials(username, password) } throws WrongPasswordException
 
         uiController.execute()
 

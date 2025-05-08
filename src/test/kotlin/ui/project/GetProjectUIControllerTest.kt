@@ -2,6 +2,7 @@ package ui.project
 
 import com.google.common.truth.Truth.assertThat
 import io.mockk.*
+import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
 import logic.exception.PlanMateException.ValidationException.InvalidUUIDFormatException
 import logic.usecases.project.GetProjectDetailsUseCase
@@ -36,11 +37,11 @@ class GetProjectUIControllerTest {
 
 
     @Test
-    fun `should execute view project successfully when project id is valid`() {
+    fun `should execute view project successfully when project id is valid`() = runTest {
         //Given
 
         val project = createProject(UUID.fromString(projectID), "", listOf(), listOf())
-        every { usecase(any()) } returns project
+        coEvery { usecase(any()) } returns project
         every { consoleIO.readFromUser() } returns projectID
         every { printSwimlanesView(project) } just Runs
 
@@ -55,9 +56,9 @@ class GetProjectUIControllerTest {
     }
 
     @Test
-    fun `should show project not exist when getProjectUseCase throws ProjectNotFoundException`() {
+    fun `should show project not exist when getProjectUseCase throws ProjectNotFoundException`() = runTest {
         //Given
-        every { usecase(projectID) } throws ProjectNotFoundException
+        coEvery { usecase(projectID) } throws ProjectNotFoundException
         every { consoleIO.readFromUser() } returns projectID
         every { getErrorMessageByException(ProjectNotFoundException) } returns "Project not found. It may have been deleted or doesn't exist."
 
@@ -80,9 +81,9 @@ class GetProjectUIControllerTest {
             " db373589-b656#4e68@a7c0-2ccc705ca169"
         ]
     )
-    fun `should show invalid uuid format when getProjectUseCase throws InvalidUUIDFormat`(invalidID: String) {
+    fun `should show invalid uuid format when getProjectUseCase throws InvalidUUIDFormat`(invalidID: String) = runTest{
         //Given
-        every { usecase(invalidID) } throws InvalidUUIDFormatException
+        coEvery { usecase(invalidID) } throws InvalidUUIDFormatException
         every { getErrorMessageByException(InvalidUUIDFormatException) } returns "Invalid UUID Format"
         every { consoleIO.readFromUser() } returns invalidID
 

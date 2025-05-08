@@ -2,9 +2,12 @@ package ui.task
 
 import console.ConsoleIO
 import helpers.DeleteTaskTestFactory.TASK_1
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import logic.usecases.task.DeleteTaskUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -23,10 +26,10 @@ class DeleteTaskUIControllerTest {
     }
 
     @Test
-    fun `should print success message when task deleted`() {
+    fun `should print success message when task deleted`() = runTest {
         // Given
         every { consoleIO.readFromUser() } returns TASK_1.id.toString()
-        every { useCase.execute(TASK_1.id.toString()) } returns true
+        coEvery { useCase.execute(TASK_1.id.toString()) } returns true
         // When
         controller.execute()
 
@@ -35,10 +38,10 @@ class DeleteTaskUIControllerTest {
     }
 
     @Test
-    fun `should print fail message when task is not deleted`() {
+    fun `should print fail message when task is not deleted`() = runTest {
         // Given
         every { consoleIO.readFromUser() } returns TASK_1.id.toString()
-        every { useCase.execute(TASK_1.id.toString()) } returns false
+        coEvery { useCase.execute(TASK_1.id.toString()) } returns false
         // When
         controller.execute()
 
@@ -47,7 +50,7 @@ class DeleteTaskUIControllerTest {
     }
 
     @Test
-    fun `should call deleteTaskUseCase with params when task is selected`() {
+    fun `should call deleteTaskUseCase with params when task is selected`() = runTest {
         // Given
         every { consoleIO.readFromUser() } returns TASK_1.id.toString()
 
@@ -55,7 +58,7 @@ class DeleteTaskUIControllerTest {
         controller.execute()
 
         // Then
-        verify(exactly = 1) { useCase.execute(TASK_1.id.toString()) }
+        coVerify (exactly = 1) { useCase.execute(TASK_1.id.toString()) }
     }
 
 }

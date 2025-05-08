@@ -1,8 +1,11 @@
 package ui.project
 
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import logic.usecases.project.DeleteProjectUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -22,7 +25,7 @@ class DeleteProjectUiControllerTest {
     }
 
     @Test
-    fun `should call delete project usecase when try to delete project`() {
+    fun `should call delete project usecase when try to delete project`() = runTest {
         // giver
         val projectId = UUID.randomUUID()
         every { uiController.consoleIO.readFromUser() } returns projectId.toString()
@@ -31,15 +34,15 @@ class DeleteProjectUiControllerTest {
         uiController.execute()
 
         // then
-        verify(exactly = 1) { useCase.deleteProject(projectId.toString()) }
+        coVerify(exactly = 1) { useCase.deleteProject(projectId.toString()) }
     }
 
     @Test
-    fun `should print success message to user when deleting project complete successfully`() {
+    fun `should print success message to user when deleting project complete successfully`()= runTest {
         // giver
         val projectId = UUID.randomUUID()
         every { uiController.consoleIO.readFromUser() } returns projectId.toString()
-        every { useCase.deleteProject(projectId.toString()) } returns true
+        coEvery { useCase.deleteProject(projectId.toString()) } returns true
         // when
         uiController.execute()
 
@@ -48,11 +51,11 @@ class DeleteProjectUiControllerTest {
     }
 
     @Test
-    fun `should print failure message to user when deleting project does not complete successfully`() {
+    fun `should print failure message to user when deleting project does not complete successfully`()= runTest {
         // given
         val projectId = UUID.randomUUID()
         every { uiController.consoleIO.readFromUser() } returns projectId.toString()
-        every { useCase.deleteProject(projectId.toString()) } returns false
+        coEvery { useCase.deleteProject(projectId.toString()) } returns false
         // when
         uiController.execute()
         // then

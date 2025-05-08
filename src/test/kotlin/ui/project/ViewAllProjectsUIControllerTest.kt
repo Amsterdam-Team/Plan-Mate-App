@@ -1,7 +1,9 @@
 package ui.project
 
+import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import logic.usecases.project.GetAllProjectsUseCase
 import org.junit.jupiter.api.BeforeEach
 import kotlin.test.Test
@@ -17,11 +19,11 @@ class ViewAllProjectsUIControllerTest {
     }
 
     @Test
-    fun `should call useCase when execute the controller`(){
+    fun `should call useCase when execute the controller`() = runTest{
         //When
         controller.execute()
         //Then
-        verify(exactly = 1) { useCase.execute() }
+        coVerify(exactly = 1) { useCase.execute() }
     }
 
 }
