@@ -2,6 +2,7 @@ package ui.utils
 
 import logic.exception.PlanMateException
 import logic.exception.PlanMateException.AuthorizationException.AdminPrivilegesRequiredException
+import logic.exception.PlanMateException.AuthorizationException.UnAuthenticatedException
 import logic.exception.PlanMateException.AuthorizationException.UserNotFoundException
 import logic.exception.PlanMateException.AuthorizationException.WrongPasswordException
 import logic.exception.PlanMateException.AuthorizationException.WrongUsernameException
@@ -65,7 +66,7 @@ fun getErrorMessageByException(exception: Exception): String {
         is SameStateNameException -> "Current state and new state are identical. No changes applied."
         is TaskLogsNotFound -> "This task not have any logs till now..."
         is InvalidUUIDFormatException -> "Invalid UUID Format"
-
+        is UnAuthenticatedException -> "Not logged in, please login first."
         is EmptyDataException -> "You must enter some data, this field cannot be empty"
 
         is PlanMateException -> "Something went wrong with your request. Please try again."

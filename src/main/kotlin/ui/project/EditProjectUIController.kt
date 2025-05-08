@@ -33,7 +33,6 @@ class EditProjectUIController(
         tryToExecute(
             action = {
                 editProjectUseCase.editProjectName(
-                    user = adminUser,
                     projectId = projectId,
                     newName = newName)
             },

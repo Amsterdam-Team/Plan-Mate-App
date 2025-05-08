@@ -1,18 +1,27 @@
 package logic.usecases.user
 
 import logic.entities.User
+import logic.exception.PlanMateException
+import logic.exception.PlanMateException.AuthorizationException.AdminPrivilegesRequiredException
 import logic.exception.PlanMateException.ValidationException.InvalidPasswordException
 import logic.exception.PlanMateException.ValidationException.InvalidUsernameException
 import logic.repository.AuthRepository
+import logic.usecases.StateManager
 import logic.usecases.ValidateInputUseCase
 import ui.utils.md5Hash
 import utils.ResultStatus
 import java.util.UUID
 
-class CreateUserUseCase(private val repository: AuthRepository, private val validateInputUseCase: ValidateInputUseCase) {
+class CreateUserUseCase(
+    private val repository: AuthRepository,
+    private val validateInputUseCase: ValidateInputUseCase,
+    private val stateManager: StateManager,
+
+    ) {
 
     suspend fun execute(username: String, password: String): Boolean {
-        if (! validateInputUseCase.isValidName(username)) throw InvalidUsernameException
+        if (!stateManager.getLoggedInUser().isAdmin) throw AdminPrivilegesRequiredException
+        if (!validateInputUseCase.isValidName(username)) throw InvalidUsernameException
         validatePassword(password)
         val user = User(
             id = UUID.randomUUID(),
@@ -25,8 +34,8 @@ class CreateUserUseCase(private val repository: AuthRepository, private val vali
     }
 
 
-    private fun validatePassword(password:String){
-        if (password.isBlank() || password.isEmpty() || password.length < 8){
+    private fun validatePassword(password: String) {
+        if (password.isBlank() || password.isEmpty() || password.length < 8) {
             throw InvalidPasswordException
         }
     }

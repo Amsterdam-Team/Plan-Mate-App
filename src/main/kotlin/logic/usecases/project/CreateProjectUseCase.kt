@@ -6,17 +6,18 @@ import logic.exception.PlanMateException.AuthorizationException.AdminPrivilegesR
 import logic.exception.PlanMateException.ValidationException.InvalidProjectNameException
 import logic.exception.PlanMateException.ValidationException.InvalidStateNameException
 import logic.repository.ProjectRepository
+import logic.usecases.StateManager
 import logic.usecases.ValidateInputUseCase
 import java.util.*
 
 class CreateProjectUseCase(
     private val projectRepository: ProjectRepository,
-    private val user: User,
+    private val stateManager: StateManager,
     private val validateInputUseCase: ValidateInputUseCase
 ) {
     suspend fun createProject(name: String, states: List<String>): Boolean {
 
-        if (!user.isAdmin) throw AdminPrivilegesRequiredException
+        if (!stateManager.getLoggedInUser().isAdmin) throw AdminPrivilegesRequiredException
         if (!validateInputUseCase.isValidName(name)) throw InvalidProjectNameException
         if (!validateInputUseCase.isValidProjectStates(states)) throw InvalidStateNameException
 
