@@ -3,53 +3,36 @@ package data.datasources.userDataSource
 import com.google.common.truth.Truth.assertThat
 import com.mongodb.ConnectionString
 import com.mongodb.MongoClientSettings
-import com.mongodb.client.model.DeleteOptions
-import com.mongodb.client.model.Filters
-import com.mongodb.client.model.InsertOneOptions
-import com.mongodb.client.result.DeleteResult
-import com.mongodb.client.result.InsertOneResult
-import com.mongodb.kotlin.client.coroutine.FindFlow
 import com.mongodb.kotlin.client.coroutine.MongoClient
 import com.mongodb.kotlin.client.coroutine.MongoCollection
 import com.mongodb.kotlin.client.coroutine.MongoDatabase
-import data.datasources.MongoDatabaseFactory
-import de.flapdoodle.embed.process.runtime.Network
 import io.mockk.*
-import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import logic.entities.User
 import logic.exception.PlanMateException
-import net.bytebuddy.utility.dispatcher.JavaDispatcher
 import org.bson.Document
 import org.bson.UuidRepresentation
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
-import org.testcontainers.containers.MongoDBContainer
-import org.testcontainers.utility.DockerImageName
+import org.junit.jupiter.api.*
 import utils.TestDataFactory
-import java.util.UUID
+import java.util.*
 
+
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserDataSourceTest {
 
     private lateinit var mongoClient: MongoClient
+    private lateinit var database: MongoDatabase
     private lateinit var collection: MongoCollection<User>
     private lateinit var dataSource: UserDataSource
 
+
+
     @BeforeEach
     fun setUp() {
-        val settings = MongoClientSettings.builder()
-            .applyConnectionString(ConnectionString(CONNECTION_STRING))
-            .uuidRepresentation(UuidRepresentation.STANDARD)
-            .build()
-
         mongoClient = MongoClient.create(settings)
-
-        val database = mongoClient.getDatabase(TEST_DATABASE_NAME)
+        database = mongoClient.getDatabase(TEST_DATABASE_NAME)
         collection = database.getCollection<User>("users")
-
         dataSource = UserDataSource(collection)
 
         runBlocking {
@@ -86,9 +69,9 @@ class UserDataSourceTest {
         assertThat(result).isEmpty()
     }
 
-//     endregion
+    // endregion
 
-//     region getUserById
+    // region getUserById
     @Test
     fun `should return user when given valid ID`() = runTest {
         // When
@@ -233,7 +216,13 @@ class UserDataSourceTest {
         private val notFoundId = UUID.randomUUID()
         private val users = listOf(user1, user2)
 
+
         private const val CONNECTION_STRING = "mongodb+srv://7amasa:9LlgpCLbd99zoRrJ@amsterdam.qpathz3.mongodb.net/?retryWrites=true&w=majority&appName=Amsterdam"
         private const val TEST_DATABASE_NAME = "Amsterdam-test"
+        private val settings = MongoClientSettings.builder()
+            .applyConnectionString(ConnectionString(CONNECTION_STRING))
+            .uuidRepresentation(UuidRepresentation.STANDARD)
+            .build()
+
     }
 }
