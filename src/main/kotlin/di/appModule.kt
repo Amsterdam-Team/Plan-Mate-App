@@ -23,8 +23,9 @@ import logic.repository.AuthRepository
 import logic.repository.LogRepository
 import logic.repository.ProjectRepository
 import logic.repository.TaskRepository
-import logic.usecases.GetAllTasksUseCase
+import logic.usecases.LoggerUseCase
 import logic.usecases.LoginUseCase
+import logic.usecases.StateManager
 import logic.usecases.ValidateInputUseCase
 import logic.usecases.ViewTaskLogsUseCase
 import logic.usecases.project.*
@@ -99,16 +100,20 @@ val appModule = module {
     single<TaskRepository> { TaskRepositoryImpl(get()) }
     single<LogRepository> { LogRepositoryImpl(get()) }
     single<ProjectRepository> { ProjectRepositoryImpl(get(), get()) }
+    single<StateManager>{ StateManager }
 
 
     single<User> { User(id = UUID.randomUUID(), username = "fsef", password = "fsefs", isAdmin = true) }
 
     single { ValidateInputUseCase() }
 
+    //logger use Case
+    single{ LoggerUseCase(get(),get()) }
+
     // Project UseCases
-    single { CreateProjectUseCase(get(), get(), get()) }
-    single { DeleteProjectUseCase(get(), get(), get()) }
-    single { EditProjectUseCase(get(), get(), get()) }
+    single { CreateProjectUseCase(get(), get(), get(), get()) }
+    single { DeleteProjectUseCase(get(), get(), get(), get()) }
+    single { EditProjectUseCase(get(), get(), get(),get()) }
     single { GetAllProjectsUseCase(get()) }
     single { GetProjectDetailsUseCase(get(),get(), get()) }
     single { GetProjectHistoryUseCase(get()) }
@@ -122,17 +127,16 @@ val appModule = module {
     single { GetTaskStateUseCase(get()) }
 
     // TaskUseCase
-    single { CreateTaskUseCase(get(), get(), get()) }
-    single { DeleteTaskUseCase(get()) }
-    single { EditTaskUseCase(get(), get()) }
+    single { CreateTaskUseCase(get(), get(), get(),get()) }
+    single { DeleteTaskUseCase(get(),get()) }
+    single { EditTaskUseCase(get(), get(),get()) }
     single { GetAllTasksByProjectIdUseCase(get(), get()) }
     single { GetTaskByIdUseCase(get(), get()) }
     single { ViewTaskLogsUseCase(get(),get()) }
-    single { GetAllTasksUseCase() }
 
     // UserUseCase
-    single { LoginUseCase(get()) }
-    single { CreateUserUseCase(get(), get()) }
+    single { LoginUseCase(get(),get()) }
+    single { CreateUserUseCase(get(), get(),get()) }
 
     // ConsoleIO
     single<ConsoleIO> { ConsoleIOImpl() }
