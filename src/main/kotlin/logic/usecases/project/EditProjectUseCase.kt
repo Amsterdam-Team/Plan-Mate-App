@@ -11,6 +11,7 @@ import logic.usecases.ValidateInputUseCase
 import logic.entities.Project
 import logic.entities.LogItem
 import kotlinx.datetime.TimeZone
+import logic.usecases.LoggerUseCase
 import logic.usecases.StateManager
 
 
@@ -18,8 +19,8 @@ class EditProjectUseCase(
     private val projectRepository: ProjectRepository,
     private val validateInputUseCase: ValidateInputUseCase,
     private val stateManager: StateManager,
-    private val logRepository: LogRepository
-)  {
+    private val loggerUseCase: LoggerUseCase
+    )  {
 
     suspend fun editProjectName( projectId: UUID, newName: String) : Boolean {
         val user = stateManager.getLoggedInUser()
@@ -27,11 +28,10 @@ class EditProjectUseCase(
         validateName(newName)
         val project = ensureProjectExists(projectId)
         validateProjectNameNotTaken(projectId, newName)
-        val updated = updateProjectName(projectId, newName)
-        if (updated) {
-            logProjectNameChange(project, newName, user)
+
+        return projectRepository.updateProjectNameById(projectId, newName).also { isEdited ->
+            if (isEdited) loggerUseCase.createLog("Edited project ${project.name} name to $newName", projectId)
         }
-        return updated
     }
 
     private fun validateAdmin(user: User) {
@@ -50,10 +50,6 @@ class EditProjectUseCase(
         return projectRepository.getProject(projectId)
     }
 
-    private suspend fun updateProjectName(projectId: UUID, newName: String) : Boolean {
-      return projectRepository.updateProjectNameById(projectId, newName)
-    }
-
     private suspend  fun validateProjectNameNotTaken(projectId: UUID, newName: String) {
         val allProjects = projectRepository.getProjects()
         val nameExists = allProjects.any {
@@ -62,15 +58,5 @@ class EditProjectUseCase(
         if (nameExists) {
             throw PlanMateException.ValidationException.ProjectNameAlreadyExistException
         }
-    }
-
-    private suspend  fun logProjectNameChange(project: Project, newName: String, user: User) {
-        val log = LogItem(
-            id = UUID.randomUUID(),
-            entityId = project.id,
-            message = "Project name was changed from '${project.name}' to '$newName' by user ${user.id}",
-            date = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-        )
-        logRepository.addLog(log)
     }
 }
