@@ -2,11 +2,13 @@ package logic.usecases.task
 
 import com.google.common.truth.Truth.assertThat
 import helpers.DeleteTaskTestFactory
-import io.mockk.every
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
-import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException
 import logic.repository.TaskRepository
+import logic.usecases.LoggerUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -14,28 +16,30 @@ import org.junit.jupiter.api.assertThrows
 class DeleteTaskUseCaseTest {
     private lateinit var repository: TaskRepository
     private lateinit var useCase: DeleteTaskUseCase
+    private lateinit var loggerUseCase: LoggerUseCase
 
     @BeforeEach
-    fun setup() {
+    fun setup() =runTest {
         repository = mockk(relaxed = true)
-        useCase = DeleteTaskUseCase(repository)
+        loggerUseCase = mockk(relaxed = true)
+        useCase = DeleteTaskUseCase(repository,loggerUseCase)
     }
 //region success
     @Test
-    fun `should call deleteTask when parameters is correct`() {
+    fun `should call deleteTask when parameters is correct`() =runTest {
         // Given
         val task = DeleteTaskTestFactory.TASK_1
         // When
         useCase.execute(task.id.toString())
 
         // Then
-        verify(exactly = 1) { repository.deleteTask(task.id) }
+        coVerify (exactly = 1)  { repository.deleteTask(task.id) }
     }
     @Test
-    fun `should returns true when task is deleted successfully`() {
+    fun `should returns true when task is deleted successfully`() =runTest {
         // Given
         val task = DeleteTaskTestFactory.TASK_1
-        every { repository.deleteTask(task.id) } returns true
+        coEvery { repository.deleteTask(task.id) } returns true
         // When
         val result  = useCase.execute(task.id.toString())
 
@@ -46,10 +50,10 @@ class DeleteTaskUseCaseTest {
 //region task validations
 
     @Test
-    fun `should returns false when task is not deleted`() {
+    fun `should returns false when task is not deleted`() =runTest {
         // Given
         val task = DeleteTaskTestFactory.TASK_1
-        every { repository.deleteTask(task.id) } returns false
+        coEvery { repository.deleteTask(task.id) } returns false
         // When
         val result  = useCase.execute(task.id.toString())
 
@@ -57,7 +61,7 @@ class DeleteTaskUseCaseTest {
         assertThat(result).isFalse()
     }
     @Test
-    fun `should throw InvalidTaskIDException when input is null`() {
+    fun `should throw InvalidTaskIDException when input is null`() =runTest {
         // When & Then
         assertThrows<PlanMateException.ValidationException.InvalidTaskIDException> {
             useCase.execute(null)
@@ -65,7 +69,7 @@ class DeleteTaskUseCaseTest {
     }
 
     @Test
-    fun `should throw InvalidTaskIDException when input is not a uuid`(){
+    fun `should throw InvalidTaskIDException when input is not a uuid`() =  runTest{
         // When & Then
         assertThrows<PlanMateException.ValidationException.InvalidTaskIDException> {
             useCase.execute("not-uuid")

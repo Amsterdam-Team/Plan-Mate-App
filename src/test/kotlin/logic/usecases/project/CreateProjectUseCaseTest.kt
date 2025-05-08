@@ -1,15 +1,16 @@
+package logic.usecases.project
+
 import com.google.common.truth.Truth.assertThat
-import data.datasources.projectDataSource.ProjectDataSourceInterface
-import data.repository.project.ProjectRepositoryImpl
-import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
 import logic.entities.User
 import logic.exception.PlanMateException.AuthorizationException.AdminPrivilegesRequiredException
 import logic.exception.PlanMateException.ValidationException.*
-import logic.repository.LogRepository
 import logic.repository.ProjectRepository
+import logic.usecases.LoggerUseCase
+import logic.usecases.StateManager
 import logic.usecases.ValidateInputUseCase
-import logic.usecases.project.CreateProjectUseCase
 import logic.usecases.testFactories.CreateProjectTestFactory.createProject
 import logic.usecases.testFactories.CreateProjectTestFactory.emptyProjectNameTest
 import logic.usecases.testFactories.CreateProjectTestFactory.emptyProjectStateTest
@@ -23,25 +24,23 @@ import java.util.*
 class CreateProjectUseCaseTest {
     private lateinit var repository: ProjectRepository
     private lateinit var useCase: CreateProjectUseCase
-    private lateinit var user: User
-    private lateinit var projectDataSource: ProjectDataSourceInterface
-    private lateinit var logRepository: LogRepository
-    private val validateInputUseCase = ValidateInputUseCase()
+    private lateinit var loggerUseCase: LoggerUseCase
+    private lateinit var stateManager: StateManager
+    private lateinit var validateInputUseCase : ValidateInputUseCase
 
 
     @BeforeEach
     fun start() {
-        projectDataSource = mockk(relaxed = true)
-        logRepository = mockk(relaxed = true)
-        repository = ProjectRepositoryImpl(projectDataSource, logRepository)
-        user = User(id = UUID.randomUUID(), isAdmin = true, username = "Mahmoud", password = "123456")
-        useCase = CreateProjectUseCase(repository, user, validateInputUseCase)
+        repository = mockk(relaxed = true)
+        loggerUseCase = mockk(relaxed = true)
+        stateManager = mockk(relaxed = true)
+        useCase = CreateProjectUseCase(repository, stateManager, validateInputUseCase,loggerUseCase)
     }
 
     @Test
-    fun `should create project when all inputs are valid`() {
+    fun `should create project when all inputs are valid`() = runTest{
         //given
-        every { projectDataSource.getAllProjects() } returns emptyList()
+        coEvery { repository.getProjects() } returns emptyList()
 
         //when
         val createProject = useCase.createProject(validProjectTest.name, validProjectTest.states)
@@ -51,7 +50,7 @@ class CreateProjectUseCaseTest {
     }
 
     @Test
-    fun `should throw InvalidProjectNameException when input name is empty`() {
+    fun `should throw InvalidProjectNameException when input name is empty`() = runTest{
         //when and then
         assertThrows<InvalidProjectNameException> {
             useCase.createProject(emptyProjectNameTest.name, emptyProjectNameTest.states)
@@ -59,7 +58,7 @@ class CreateProjectUseCaseTest {
     }
 
     @Test
-    fun `should throw InvalidProjectNameException when input name is invalid`() {
+    fun `should throw InvalidProjectNameException when input name is invalid`() =runTest{
         // when and then
         assertThrows<InvalidProjectNameException> {
             useCase.createProject(inValidProjectNameTest.name, inValidProjectNameTest.states)
@@ -67,13 +66,13 @@ class CreateProjectUseCaseTest {
     }
 
     @Test
-    fun `should throw ProjectNameAlreadyExistException when there is a project added before with the same name`() {
+    fun `should throw ProjectNameAlreadyExistException when there is a project added before with the same name`() =runTest{
         //given
         val existingProjects = listOf(
             createProject(name = "initial Test Project"),
             createProject(name = ""),
         )
-        every { projectDataSource.getAllProjects() } returns existingProjects
+        coEvery { repository.getProjects() } returns existingProjects
 
         // when and then
         assertThrows<ProjectNameAlreadyExistException> {
@@ -82,7 +81,7 @@ class CreateProjectUseCaseTest {
     }
 
     @Test
-    fun `should throw InvalidStateNameException when input states is empty`() {
+    fun `should throw InvalidStateNameException when input states is empty`() =runTest{
         //when and then
         assertThrows<InvalidStateNameException> {
             useCase.createProject(emptyProjectStateTest.name, emptyProjectStateTest.states)
@@ -90,10 +89,9 @@ class CreateProjectUseCaseTest {
     }
 
     @Test
-    fun `should throw AdminPrivilegesRequiredException when the user is not an admin`() {
+    fun `should throw AdminPrivilegesRequiredException when the user is not an admin`() = runTest{
         //given
-        val nonAdminUser = user.copy(isAdmin = false)
-        useCase = CreateProjectUseCase(repository, nonAdminUser, validateInputUseCase)
+        coEvery { stateManager.getLoggedInUser() } returns User(UUID.randomUUID(),false,"mahmoud","112233")
         //when and then
         assertThrows<AdminPrivilegesRequiredException> {
             useCase.createProject(validProjectTest.name, validProjectTest.states)

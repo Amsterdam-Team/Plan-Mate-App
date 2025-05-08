@@ -1,7 +1,8 @@
 package logic.usecases.project
 
+import io.mockk.coVerify
 import io.mockk.mockk
-import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import logic.repository.ProjectRepository
 import org.junit.jupiter.api.BeforeEach
 import kotlin.test.Test
@@ -16,10 +17,10 @@ class GetAllProjectsUseCaseTest {
     }
 
     @Test
-    fun `should call repository when call the use case`(){
+    fun `should call repository when call the use case`()= runTest{
         //When
         useCase.execute()
         //Then
-        verify (exactly = 1) { repository.getProjects() }
+        coVerify (exactly = 1) { repository.getProjects() }
     }
 }

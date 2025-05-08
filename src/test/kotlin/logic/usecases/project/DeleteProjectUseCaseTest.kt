@@ -1,16 +1,14 @@
 package logic.usecases.project
 
 import com.google.common.truth.Truth.assertThat
-import data.repository.project.ProjectRepositoryImpl
-import data.repository.task.TaskRepositoryImpl
 import io.mockk.*
+import kotlinx.coroutines.test.runTest
 import logic.entities.User
-import logic.exception.PlanMateException
 import logic.exception.PlanMateException.AuthorizationException.AdminPrivilegesRequiredException
-import logic.exception.PlanMateException.DataSourceException.EmptyDataException
 import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
 import logic.repository.ProjectRepository
-import logic.repository.TaskRepository
+import logic.usecases.LoggerUseCase
+import logic.usecases.StateManager
 import logic.usecases.ValidateInputUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -23,20 +21,24 @@ class DeleteProjectUseCaseTest {
     lateinit var repository: ProjectRepository
     lateinit var useCase: DeleteProjectUseCase
     lateinit var dummyProjectId: UUID
-    lateinit var currentUser: User
+    lateinit var validateInputUseCase: ValidateInputUseCase
+    lateinit var stateManager: StateManager
+    lateinit var loggerUseCase: LoggerUseCase
 
     @BeforeEach
     fun setUp() {
         repository = mockk(relaxed = true)
-        currentUser = User(id = UUID.randomUUID(), username = "omer faris", isAdmin = true, password = "7584848")
-        useCase = DeleteProjectUseCase(repository, currentUser,ValidateInputUseCase())
+        stateManager = mockk(relaxed = true)
+        validateInputUseCase = mockk(relaxed = true)
+        loggerUseCase = mockk(relaxed = true)
+        useCase = DeleteProjectUseCase(repository, stateManager,ValidateInputUseCase(),loggerUseCase)
         dummyProjectId = UUID.randomUUID()
     }
 
     @Test
-    fun `should return true when deleting project successfully `() {
+    fun `should return true when deleting project successfully `() = runTest{
         // when
-        every { repository.deleteProject(dummyProjectId) } returns true
+        coEvery { repository.deleteProject(dummyProjectId) } returns true
 
         val result = useCase.deleteProject(dummyProjectId.toString())
 
@@ -45,11 +47,10 @@ class DeleteProjectUseCaseTest {
     }
 
     @Test
-    fun `should throw admin Privileges required when non admin user try to e a project`() {
+    fun `should throw admin Privileges required when non admin user try to e a project`() = runTest{
         // given
-        val nonAdminUser = User(id = UUID.randomUUID(), username = "ahmed faris", password = "858585", isAdmin = false)
-        useCase = DeleteProjectUseCase(repository,nonAdminUser, ValidateInputUseCase())
-        currentUser = nonAdminUser
+        coEvery { stateManager.getLoggedInUser() } returns
+            User(id = UUID.randomUUID(), username = "ahmed faris", password = "858585", isAdmin = false)
         // when
 
         assertThrows<AdminPrivilegesRequiredException> {
@@ -58,9 +59,9 @@ class DeleteProjectUseCaseTest {
     }
 
     @Test
-    fun `should return false when deleting project not successfully completed `() {
+    fun `should return false when deleting project not successfully completed `() = runTest{
         // when
-        every { repository.deleteProject(dummyProjectId) } returns false
+        coEvery { repository.deleteProject(dummyProjectId) } returns false
 
         val result = useCase.deleteProject(dummyProjectId.toString())
 
@@ -71,9 +72,9 @@ class DeleteProjectUseCaseTest {
 
 
     @Test
-    fun `should call delete project repo function when try to delete project`() {
+    fun `should call delete project repo function when try to delete project`() = runTest{
         useCase.deleteProject(dummyProjectId.toString())
-        verify(exactly = 1) { repository.deleteProject(dummyProjectId) }
+        coVerify(exactly = 1) { repository.deleteProject(dummyProjectId) }
 
     }
 
@@ -83,7 +84,7 @@ class DeleteProjectUseCaseTest {
         "8585858585",
         "#@#@!@"
     )
-    fun `should throw invalid id project exception when the user entered not valid uuid`(projectId:String) {
+    fun `should throw invalid id project exception when the user entered not valid uuid`(projectId:String) = runTest{
         // when & then
         assertThrows<InvalidProjectIDException> {
             useCase.deleteProject(projectId)

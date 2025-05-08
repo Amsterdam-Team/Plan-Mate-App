@@ -1,9 +1,10 @@
 package logic.usecases.state
 
 import com.google.common.truth.Truth.assertThat
-import io.mockk.every
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
-import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException
 import logic.repository.ProjectRepository
 import org.junit.jupiter.api.BeforeEach
@@ -23,7 +24,7 @@ class DeleteStateUseCaseTest {
     }
 
     @Test
-    fun `deleteStateById should  delete state by state id and project id  from repository when called`() {
+    fun `deleteStateById should  delete state by state id and project id  from repository when called`() = runTest{
         //When
         val oldState = "oldState"
 
@@ -31,47 +32,47 @@ class DeleteStateUseCaseTest {
 
         useCase(projectId = projectId, oldState = oldState)
         // Then
-        verify(exactly = 1) { repository.deleteStateById(projectId = projectId, oldState = oldState) }
+        coVerify(exactly = 1) { repository.deleteStateById(projectId = projectId, oldState = oldState) }
     }
 //
 
     @Test
-    fun `delete use case should return true when state is successfully deleted`() {
+    fun `delete use case should return true when state is successfully deleted`() = runTest{
         // Given
         val oldState = "oldState"
         val projectId = UUID.fromString("00000000-0000-0000-0000-000000000001")
 
-        every { repository.deleteStateById(projectId = projectId, oldState = oldState) } returns true
+        coEvery { repository.deleteStateById(projectId = projectId, oldState = oldState) } returns true
         // When
         val result = useCase(projectId = projectId, oldState = oldState)
 
         assertThat(result).isTrue()
-        verify(exactly = 1) { repository.deleteStateById(projectId = projectId, oldState = oldState) }
+        coVerify (exactly = 1) { repository.deleteStateById(projectId = projectId, oldState = oldState) }
     }
 
     @Test
-    fun `delete use case should return false when state is failed deleted`() {
+    fun `delete use case should return false when state is failed deleted`() = runTest{
         // Given
         val oldState = "oldState"
         val projectId = UUID.fromString("00000000-0000-0000-0000-000000000001")
-        every { repository.deleteStateById(projectId, oldState) } returns false
+        coEvery { repository.deleteStateById(projectId, oldState) } returns false
 
         // When
         val result = useCase(projectId = projectId, oldState = oldState)
         // Then
 
         assertThat(result).isFalse()
-        verify(exactly = 1) { repository.deleteStateById(projectId = projectId, oldState = oldState) }
+        coVerify(exactly = 1) { repository.deleteStateById(projectId = projectId, oldState = oldState) }
     }
 
 
     @Test
-    fun `should throw StateNotFoundException when project does not exist`() {
+    fun `should throw StateNotFoundException when project does not exist`() = runTest{
         // Given
         val oldState = "oldState"
         val projectId = UUID.fromString("00000000-0000-0000-0000-000000000001")
 
-        every {
+        coEvery {
             repository.deleteStateById(projectId = projectId, oldState = oldState)
         } throws PlanMateException.NotFoundException.StateNotFoundException
 

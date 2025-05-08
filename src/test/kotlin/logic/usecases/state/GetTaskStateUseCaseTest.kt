@@ -1,8 +1,9 @@
 package logic.usecases.state
 
 import com.google.common.truth.Truth.assertThat
-import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.repository.TaskRepository
@@ -21,15 +22,15 @@ class GetTaskStateUseCaseTest {
     private lateinit var useCase: GetTaskStateUseCase
 
     @BeforeEach
-    fun setup() {
+    fun setup() = runTest{
         repository = mockk()
         useCase = GetTaskStateUseCase(repository)
     }
 
     @Test
-    fun `should return the correct state when the task exists`() {
+    fun `should return the correct state when the task exists`() = runTest{
         //Given
-        every { repository.getTaskById(any()) } returns existingTask
+        coEvery { repository.getTaskById(any()) } returns existingTask
 
         //When
         val state = useCase.execute(existingTaskID)
@@ -39,15 +40,15 @@ class GetTaskStateUseCaseTest {
     }
 
     @Test
-    fun `should throw InvalidTaskIDException when the task ID is invalid`() {
+    fun `should throw InvalidTaskIDException when the task ID is invalid`() = runTest{
         //Given & When & Then
         assertThrows<InvalidTaskIDException> { useCase.execute(invalidTaskID) }
     }
 
     @Test
-    fun `should throw TaskNotFoundException when the task is not exists`() {
+    fun `should throw TaskNotFoundException when the task is not exists`() = runTest{
         //Given
-        every { repository.getTaskById(any()) } throws TaskNotFoundException
+        coEvery { repository.getTaskById(any()) } throws TaskNotFoundException
 
         //When & Then
         assertThrows<TaskNotFoundException> { useCase.execute(notExistingTaskID) }

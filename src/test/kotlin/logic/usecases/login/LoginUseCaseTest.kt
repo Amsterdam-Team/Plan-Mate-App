@@ -1,12 +1,14 @@
 package logic.usecases.login
 
 import com.google.common.truth.Truth.assertThat
-import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException.AuthorizationException.WrongPasswordException
 import logic.exception.PlanMateException.AuthorizationException.WrongUsernameException
 import logic.repository.AuthRepository
 import logic.usecases.LoginUseCase
+import logic.usecases.StateManager
 import logic.usecases.testFactory.validUserData
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -14,34 +16,36 @@ import org.junit.jupiter.api.assertThrows
 
 class LoginUseCaseTest {
     private lateinit var repository : AuthRepository
+    private lateinit var stateManager: StateManager
     private lateinit var useCase : LoginUseCase
 
 
     @BeforeEach
     fun setup(){
-        repository = mockk()
-        useCase = LoginUseCase(repository)
+        repository = mockk(relaxed = true)
+        stateManager = mockk(relaxed = true)
+        useCase = LoginUseCase(repository,stateManager)
     }
 
     @Test
-    fun `should return full user data when username and password are valid format and found`(){
+    fun `should return full user data when username and password are valid format and found`() = runTest{
         //Given
         val username= "Hend"
         val password = "H123456"
         //When
-        every { repository.login(username, password) } returns validUserData()
+        coEvery { repository.login(username, password) } returns validUserData()
         //then
         val returnedUser = useCase.validateUserCredentials(username, password)
         assertThat(returnedUser).isEqualTo(validUserData())
     }
 
     @Test
-    fun `should throw wrong username exception when username is wrong`(){
+    fun `should throw wrong username exception when username is wrong`() = runTest{
         //Given
         val username= "Hen"
         val password = "H123456"
 
-        every {
+        coEvery {
             repository.login(
                 username,
                 password
@@ -55,12 +59,12 @@ class LoginUseCaseTest {
     }
 
     @Test
-    fun `should throw wrong password exception when password is wrong`(){
+    fun `should throw wrong password exception when password is wrong`()=runTest {
         //Given
         val username= "Hend"
         val password = "H123457"
 
-        every {
+        coEvery {
             repository.login(
                 username,
                 password
