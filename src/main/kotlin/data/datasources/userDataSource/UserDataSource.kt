@@ -24,7 +24,16 @@ class UserDataSource(
     }
 
     override suspend fun insertUser(user: User): Boolean {
-        return false
+        val existingUser = usersCollection.find(
+            Filters.or(
+                Filters.eq("id", user.id),
+                Filters.eq("username", user.username)
+            )
+        ).firstOrNull()
+
+        if (existingUser != null) return false
+
+        return usersCollection.insertOne(user).wasAcknowledged()
     }
 
     override suspend fun deleteUser(userId: UUID): Boolean {
