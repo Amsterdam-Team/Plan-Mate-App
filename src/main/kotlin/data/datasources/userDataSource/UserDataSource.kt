@@ -69,6 +69,11 @@ class UserDataSource(
     }
 
     override suspend fun findUserByCredentials(username: String, password: String): User {
-        throw ObjectDoesNotExistException
+        return usersCollection.find(
+            Filters.and(
+                Filters.eq("username", username),
+                Filters.eq("password", password)
+            )
+        ).firstOrNull() ?: throw ObjectDoesNotExistException
     }
 }
