@@ -8,7 +8,7 @@ import logic.exception.PlanMateException.ValidationException.InvalidProjectIDExc
 import logic.exception.PlanMateException.NotFoundException.StateNotFoundException
 import logic.repository.ProjectRepository
 import logic.repository.TaskRepository
-import logic.usecases.LoggerUseCase
+import logic.usecases.logs.LoggerUseCase
 import logic.usecases.ValidateInputUseCase
 import java.util.UUID
 

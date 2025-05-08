@@ -5,7 +5,7 @@ import logic.exception.PlanMateException.AuthorizationException.AdminPrivilegesR
 import logic.exception.PlanMateException.ValidationException.InvalidProjectNameException
 import logic.exception.PlanMateException.ValidationException.InvalidStateNameException
 import logic.repository.ProjectRepository
-import logic.usecases.LoggerUseCase
+import logic.usecases.logs.LoggerUseCase
 import logic.usecases.StateManager
 import logic.usecases.ValidateInputUseCase
 import java.util.*

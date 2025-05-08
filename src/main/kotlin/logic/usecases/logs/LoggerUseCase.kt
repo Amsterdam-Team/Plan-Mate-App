@@ -1,4 +1,4 @@
-package logic.usecases
+package logic.usecases.logs
 
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
@@ -7,6 +7,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import logic.entities.LogItem
 import logic.repository.LogRepository
+import logic.usecases.StateManager
 import java.util.UUID
 
 class LoggerUseCase(

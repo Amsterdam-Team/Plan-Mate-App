@@ -22,11 +22,12 @@ import logic.repository.AuthRepository
 import logic.repository.LogRepository
 import logic.repository.ProjectRepository
 import logic.repository.TaskRepository
-import logic.usecases.LoggerUseCase
+import logic.usecases.logs.LoggerUseCase
 import logic.usecases.LoginUseCase
 import logic.usecases.StateManager
 import logic.usecases.ValidateInputUseCase
-import logic.usecases.ViewTaskLogsUseCase
+import logic.usecases.logs.GetProjectHistoryUseCase
+import logic.usecases.logs.ViewTaskLogsUseCase
 import logic.usecases.project.*
 import logic.usecases.state.*
 import logic.usecases.task.*

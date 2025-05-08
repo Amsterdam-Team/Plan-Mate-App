@@ -10,6 +10,7 @@ import logic.repository.LogRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
+import logic.usecases.logs.GetProjectHistoryUseCase
 import org.junit.jupiter.api.assertThrows
 
 class ViewProjectHistoryUseCaseTest {

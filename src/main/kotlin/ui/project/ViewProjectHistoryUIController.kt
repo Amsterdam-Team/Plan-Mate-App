@@ -1,6 +1,6 @@
 package ui.project
 
-import logic.usecases.project.GetProjectHistoryUseCase
+import logic.usecases.logs.GetProjectHistoryUseCase
 import ui.console.ConsoleIO
 import ui.controller.BaseUIController
 import ui.utils.tryToExecute

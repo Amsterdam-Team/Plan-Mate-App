@@ -1,6 +1,6 @@
 package ui
 
-import logic.usecases.ViewTaskLogsUseCase
+import logic.usecases.logs.ViewTaskLogsUseCase
 import ui.console.ConsoleIO
 import ui.controller.BaseUIController
 import ui.utils.tryToExecute

@@ -1,18 +1,18 @@
 package ui.project
 
 
-import console.ConsoleIO
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
-import logic.usecases.project.GetProjectHistoryUseCase
+import logic.usecases.logs.GetProjectHistoryUseCase
 import logic.usecases.project.helper.ViewProjectHistoryTestFactory.LOGS_FOR_PROJECT_1
 import logic.usecases.project.helper.ViewProjectHistoryTestFactory.PROJECT_1
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import ui.console.ConsoleIO
 import utils.formatLogItem
 
 class ViewProjectHistoryUIControllerTest {

@@ -7,7 +7,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException
 import logic.repository.ProjectRepository
-import logic.usecases.LoggerUseCase
+import logic.usecases.logs.LoggerUseCase
 import logic.usecases.StateManager
 import logic.usecases.ValidateInputUseCase
 import logic.usecases.testFactory.EditProjectFactory

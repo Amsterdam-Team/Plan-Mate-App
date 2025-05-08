@@ -8,7 +8,7 @@ import logic.entities.User
 import logic.exception.PlanMateException.AuthorizationException.AdminPrivilegesRequiredException
 import logic.exception.PlanMateException.ValidationException.*
 import logic.repository.ProjectRepository
-import logic.usecases.LoggerUseCase
+import logic.usecases.logs.LoggerUseCase
 import logic.usecases.StateManager
 import logic.usecases.ValidateInputUseCase
 import logic.usecases.testFactories.CreateProjectTestFactory.createProject

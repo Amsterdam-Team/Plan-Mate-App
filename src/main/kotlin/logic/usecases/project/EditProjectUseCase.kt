@@ -6,7 +6,7 @@ import logic.repository.ProjectRepository
 import java.util.*
 import logic.usecases.ValidateInputUseCase
 import logic.entities.Project
-import logic.usecases.LoggerUseCase
+import logic.usecases.logs.LoggerUseCase
 import logic.usecases.StateManager
 
 

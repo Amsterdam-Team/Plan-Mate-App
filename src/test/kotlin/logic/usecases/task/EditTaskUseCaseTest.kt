@@ -11,7 +11,7 @@ import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskNameException
-import logic.usecases.LoggerUseCase
+import logic.usecases.logs.LoggerUseCase
 import logic.usecases.ValidateInputUseCase
 import java.util.*
 
