@@ -95,20 +95,30 @@ class UserDataSourceTest {
     @Test
     fun `should return true when user is inserted successfully`() = runTest {
         // When
-        val result = dataSource.insertUser(user1)
+        val result = dataSource.insertUser(userNotInDatabase)
 
         // Then
         assertThat(result).isTrue()
     }
 
     @Test
-    fun `should return false when insert fails`() = runTest {
+    fun `should return false when inserting user with existing id fails`() = runTest {
         // When
-        val result = dataSource.insertUser(user1)
+        val result = dataSource.insertUser(userWithSameId)
 
         // Then
         assertThat(result).isFalse()
     }
+
+    @Test
+    fun `should return false when inserting user with existing username fails`() = runTest {
+        // When
+        val result = dataSource.insertUser(userWithSameName)
+
+        // Then
+        assertThat(result).isFalse()
+    }
+
     // endregion
 
     // region deleteUser
@@ -210,12 +220,17 @@ class UserDataSourceTest {
     // endregion
 
     companion object {
+        // Document Users
         private val user1 = TestDataFactory.createUser()
         private val user2Id = UUID.randomUUID()
-        private val user2 = user1.copy(id = user2Id)
-        private val notFoundId = UUID.randomUUID()
+        private val user2 = user1.copy(id = user2Id, username = "me")
         private val users = listOf(user1, user2)
 
+        // Testing Users
+        private val userNotInDatabase = user1.copy(id = UUID.randomUUID(), username = "7amasa")
+        private val notFoundId = UUID.randomUUID()
+        private val userWithSameName = user1.copy(id = UUID.randomUUID())
+        private val userWithSameId = user1.copy(username = "luigi")
 
         private const val CONNECTION_STRING = "mongodb+srv://7amasa:9LlgpCLbd99zoRrJ@amsterdam.qpathz3.mongodb.net/?retryWrites=true&w=majority&appName=Amsterdam"
         private const val TEST_DATABASE_NAME = "Amsterdam-test"
