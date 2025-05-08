@@ -28,13 +28,21 @@ class UserDataSourceTest {
 
 
 
-    @BeforeEach
-    fun setUp() {
+    @BeforeAll
+    fun startMongoDB(){
         mongoClient = MongoClient.create(settings)
         database = mongoClient.getDatabase(TEST_DATABASE_NAME)
         collection = database.getCollection<User>("users")
-        dataSource = UserDataSource(collection)
+    }
 
+    @AfterAll
+    fun stopMongoDB(){
+        mongoClient.close()
+    }
+
+    @BeforeEach
+    fun setUp() {
+        dataSource = UserDataSource(collection)
         runBlocking {
             collection.deleteMany(Document())
             collection.insertMany(users)
@@ -46,7 +54,6 @@ class UserDataSourceTest {
         runBlocking {
             collection.deleteMany(Document())
         }
-        mongoClient.close()
     }
 
     // region getAllUsers
