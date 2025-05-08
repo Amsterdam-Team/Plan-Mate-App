@@ -1,7 +1,6 @@
 package logic.usecases.user
 
 import logic.entities.User
-import logic.exception.PlanMateException
 import logic.exception.PlanMateException.AuthorizationException.AdminPrivilegesRequiredException
 import logic.exception.PlanMateException.ValidationException.InvalidPasswordException
 import logic.exception.PlanMateException.ValidationException.InvalidUsernameException
@@ -9,7 +8,6 @@ import logic.repository.AuthRepository
 import logic.usecases.StateManager
 import logic.usecases.ValidateInputUseCase
 import ui.utils.md5Hash
-import utils.ResultStatus
 import java.util.UUID
 
 class CreateUserUseCase(
