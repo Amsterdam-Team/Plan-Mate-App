@@ -99,7 +99,7 @@ val appModule = module {
     single<AuthRepository> { AuthRepositoryImpl(get()) }
     single<TaskRepository> { TaskRepositoryImpl(get()) }
     single<LogRepository> { LogRepositoryImpl(get()) }
-    single<ProjectRepository> { ProjectRepositoryImpl(get(), get()) }
+    single<ProjectRepository> { ProjectRepositoryImpl(get()) }
     single<StateManager>{ StateManager }
 
 

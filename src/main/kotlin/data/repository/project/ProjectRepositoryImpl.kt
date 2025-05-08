@@ -19,7 +19,6 @@ import java.util.*
 
 class ProjectRepositoryImpl(
     private val projectDataSource: IProjectDataSource,
-    private val logRepository: LogRepository,
 ) : ProjectRepository {
   
     override suspend fun createProject(project: Project): Boolean {
@@ -28,14 +27,6 @@ class ProjectRepositoryImpl(
             throw ProjectNameAlreadyExistException
         }
         projectDataSource.insertProject(project)
-        logRepository.addLog(
-            log = LogItem(
-                id = UUID.randomUUID(),
-                message = "This project is created at that time",
-                date = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
-                entityId = project.id
-            )
-        )
         return true
     }
 
