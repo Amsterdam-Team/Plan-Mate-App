@@ -171,20 +171,20 @@ class UserDataSourceTest {
     // region updatePassword
     @Test
     fun `should return true when password is updated successfully`() = runTest{
-        // Given
-
         // When
+        val result = dataSource.updatePassword(user2Id, "passwordVerySecure")
 
         // Then
+        assertThat(result).isTrue()
     }
 
     @Test
     fun `should return false when user is not found for password update`() = runTest{
-        // Given
-
         // When
+        val result = dataSource.updatePassword(notFoundId, "passwordVerySecure")
 
         // Then
+        assertThat(result).isFalse()
     }
     // endregion
 
