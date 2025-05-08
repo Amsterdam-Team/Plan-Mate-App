@@ -58,7 +58,14 @@ class UserDataSource(
     }
 
     override suspend fun replaceAllUsers(users: List<User>): Boolean {
-        return false
+        val hasDuplicateId = users.map { it.id }.toSet().size != users.size
+        val hasDuplicateUsernames = users.map { it.username }.toSet().size != users.size
+
+        if (hasDuplicateId || hasDuplicateUsernames) return false
+
+        usersCollection.deleteMany(Document())
+        val result = usersCollection.insertMany(users)
+        return result.wasAcknowledged() && result.insertedIds.size == users.size
     }
 
     override suspend fun findUserByCredentials(username: String, password: String): User {
