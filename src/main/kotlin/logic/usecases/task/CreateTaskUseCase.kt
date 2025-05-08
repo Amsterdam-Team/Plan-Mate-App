@@ -8,13 +8,15 @@ import logic.exception.PlanMateException.ValidationException.InvalidProjectIDExc
 import logic.exception.PlanMateException.NotFoundException.StateNotFoundException
 import logic.repository.ProjectRepository
 import logic.repository.TaskRepository
+import logic.usecases.LoggerUseCase
 import logic.usecases.ValidateInputUseCase
 import java.util.UUID
 
 class CreateTaskUseCase(
     private val taskRepository: TaskRepository,
     private val projectRepository: ProjectRepository,
-    private val validateInputUseCase: ValidateInputUseCase
+    private val validateInputUseCase: ValidateInputUseCase,
+    private val loggerUseCase: LoggerUseCase
 ) {
 
     suspend fun createTask(name: String, projectId: String, state: String): Boolean {
@@ -36,15 +38,17 @@ class CreateTaskUseCase(
             condition = isStateInProject(state = state, projectStates = targetProject.states),
             exception = StateNotFoundException
         )
-
+        val taskUUID = UUID.randomUUID()
         return taskRepository.createTask(
             Task(
-                id = UUID.randomUUID(),
+                id = taskUUID,
                 name = name,
                 projectId = targetProject.id,
                 state = state
             )
-        )
+        ).also { isCreated ->
+            if(isCreated) loggerUseCase.createLog("Created $name task",taskUUID)
+        }
     }
 
     private fun requireOrThrow(condition: Boolean, exception: PlanMateException) {
