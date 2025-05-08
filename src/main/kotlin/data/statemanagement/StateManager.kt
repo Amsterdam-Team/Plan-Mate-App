@@ -3,6 +3,7 @@ package data.statemanagement
 import logic.entities.Project
 import logic.entities.Task
 import logic.entities.User
+import logic.exception.PlanMateException
 
 object StateManager: StateManagerInterface {
     private var currentUser: User? = null
@@ -10,7 +11,7 @@ object StateManager: StateManagerInterface {
     private var currentTask: Task? = null
 
     override fun getCurrentUser(): User {
-        return currentUser ?: throw Exception("No current user")
+        return currentUser ?: throw PlanMateException.AuthorizationException.UserNotFoundException
     }
 
     override fun setCurrentUser(user: User) {
@@ -18,7 +19,7 @@ object StateManager: StateManagerInterface {
     }
 
     override fun getCurrentProject(): Project {
-        return currentProject ?: throw Exception("No current user")
+        return currentProject ?: throw PlanMateException.NotFoundException.ProjectNotFoundException
     }
 
     override fun setCurrentProject(project: Project) {
@@ -26,7 +27,7 @@ object StateManager: StateManagerInterface {
     }
 
     override fun getCurrentTask(): Task {
-        return currentTask ?: throw Exception("No current user")
+        return currentTask ?: throw PlanMateException.NotFoundException.TaskNotFoundException
 
     }
 
