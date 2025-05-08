@@ -1,37 +1,51 @@
 package logic.usecases.task
 
-import logic.entities.Task
-import logic.exception.PlanMateException
 import logic.exception.PlanMateException.DataSourceException.EmptyDataException
 import logic.exception.PlanMateException.ValidationException.InvalidStateNameException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskNameException
 import logic.repository.TaskRepository
+import logic.usecases.LoggerUseCase
 import logic.usecases.ValidateInputUseCase
 import java.util.UUID
 
-class EditTaskUseCase(val taskRepository: TaskRepository, val validateInputUseCase: ValidateInputUseCase) {
+class EditTaskUseCase(
+    private val taskRepository: TaskRepository,
+    private val validateInputUseCase: ValidateInputUseCase,
+    private val loggerUseCase: LoggerUseCase ) {
 
 
     suspend fun editTask(taskId: String, newName: String, newState: String): Boolean {
         validateTaskInputs(taskId, newName, newState)
 
-        val uuid = parseId(taskId)
+        val taskUUID = parseId(taskId)
+        val existingTask = taskRepository.getTaskById(taskUUID)
 
-        val existingTask = taskRepository.getTaskById(uuid)
-
-        var updated = false
+        var hasChanges = false
 
         if (existingTask.name != newName) {
-            updated = taskRepository.updateTaskNameByID(uuid, newName) || updated
+            val nameUpdated = taskRepository.updateTaskNameByID(taskUUID, newName)
+            if (!nameUpdated) return false
+
+            loggerUseCase.createLog("Updated task ${existingTask.name} name to $newName", taskUUID)
+
+            hasChanges = true
         }
 
         if (existingTask.state != newState) {
-            updated = taskRepository.updateStateNameByID(uuid, newState) || updated
+            val stateUpdated = taskRepository.updateStateNameByID(taskUUID, newState)
+            if (!stateUpdated) return false
+
+            loggerUseCase.createLog("Updated task ${existingTask.name} state from ${existingTask.state} to $newState", taskUUID)
+
+            hasChanges = true
         }
 
-        return updated
+        return hasChanges
     }
+
+
+
 
 
 
@@ -54,7 +68,7 @@ class EditTaskUseCase(val taskRepository: TaskRepository, val validateInputUseCa
 
         return try {
             UUID.fromString(id)
-        } catch (e: IllegalArgumentException) {
+        } catch (_: IllegalArgumentException) {
             throw InvalidTaskIDException
         }
     }
