@@ -1,11 +1,15 @@
 package data.repository.project
 
+
 import com.google.common.truth.Truth.assertThat
-import data.datasources.projectDataSource.ProjectDataSourceInterface
+import data.datasources.projectDataSource.IProjectDataSource
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
-import helper.DeleteProjectTestFactory.someProjects
+import logic.usecases.LoggerUseCase
+import logic.usecases.project.helper.DeleteProjectTestFactory.someProjects
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.BeforeEach
@@ -14,9 +18,10 @@ import java.util.UUID
 import java.util.UUID.randomUUID
 
 class DeleteProjectRepositoryTest {
-    lateinit var dataSource: ProjectDataSourceInterface
+    lateinit var dataSource: IProjectDataSource
     lateinit var repository: ProjectRepositoryImpl
     lateinit var dummyId: UUID
+    lateinit var logger : LoggerUseCase
 
     @BeforeEach
     fun setUp() {
@@ -27,9 +32,9 @@ class DeleteProjectRepositoryTest {
     }
 
     @Test
-    fun `should return true when deleting project complete successfully`() {
+    fun `should return true when deleting project complete successfully`() = runTest{
         // given
-        every { dataSource.deleteProject(someProjects[0].id) } returns true
+        coEvery { dataSource.deleteProject(someProjects[0].id) } returns true
         // when
         val result = repository.deleteProject(someProjects[0].id)
 
@@ -41,9 +46,9 @@ class DeleteProjectRepositoryTest {
 
 
     @Test
-    fun `should throw project not found when deleting project not exist`() {
+    fun `should throw project not found when deleting project not exist`() = runTest{
         // given
-        every { dataSource.deleteProject(someProjects[0].id) } throws ProjectNotFoundException
+        coEvery { dataSource.deleteProject(someProjects[0].id) } throws ProjectNotFoundException
 
         // when & then
         assertThrows <ProjectNotFoundException> {
