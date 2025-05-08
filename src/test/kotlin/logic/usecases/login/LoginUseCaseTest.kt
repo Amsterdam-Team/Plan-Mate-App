@@ -8,7 +8,7 @@ import logic.exception.PlanMateException.AuthorizationException.WrongPasswordExc
 import logic.exception.PlanMateException.AuthorizationException.WrongUsernameException
 import logic.repository.AuthRepository
 import logic.usecases.utils.StateManager
-import logic.usecases.testFactory.validUserData
+import helper.validUserData
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

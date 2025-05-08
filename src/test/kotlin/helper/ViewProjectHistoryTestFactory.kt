@@ -1,4 +1,4 @@
-package logic.usecases.project.helper
+package helper
 
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone

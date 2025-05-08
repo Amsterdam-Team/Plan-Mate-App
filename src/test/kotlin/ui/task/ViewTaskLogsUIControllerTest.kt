@@ -14,11 +14,11 @@ import logic.usecases.logs.ViewTaskLogsUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import ui.ViewTaskLogsUIController
-import logic.usecases.testFactory.INVALID_ID_FORMAT
-import logic.usecases.testFactory.TASK_NOT_FOUND
-import logic.usecases.testFactory.invalidId
-import logic.usecases.testFactory.taskLogs
-import logic.usecases.testFactory.validId
+import helper.INVALID_ID_FORMAT
+import helper.TASK_NOT_FOUND
+import helper.invalidId
+import helper.taskLogs
+import helper.validId
 import ui.console.ConsoleIO
 
 class ViewTaskLogsUIControllerTest {

@@ -2,8 +2,8 @@ package logic.usecases.project
 
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
-import logic.usecases.project.helper.ViewProjectHistoryTestFactory.LOGS_FOR_PROJECT_1
-import logic.usecases.project.helper.ViewProjectHistoryTestFactory.PROJECT_1
+import helper.ViewProjectHistoryTestFactory.LOGS_FOR_PROJECT_1
+import helper.ViewProjectHistoryTestFactory.PROJECT_1
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import logic.repository.LogRepository

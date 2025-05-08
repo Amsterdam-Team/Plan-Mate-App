@@ -3,10 +3,10 @@ package ui
 import com.google.common.truth.Truth.assertThat
 import io.mockk.*
 import kotlinx.coroutines.test.runTest
-import logic.usecases.testFactory.SUCCESS_MESSAGE_FOR_LOGIN
-import logic.usecases.testFactory.WRONG_PASSWORD
-import logic.usecases.testFactory.WRONG_USER_NAME
-import logic.usecases.testFactory.validUserData
+import helper.SUCCESS_MESSAGE_FOR_LOGIN
+import helper.WRONG_PASSWORD
+import helper.WRONG_USER_NAME
+import helper.validUserData
 import logic.exception.PlanMateException.AuthorizationException.WrongPasswordException
 import logic.exception.PlanMateException.AuthorizationException.WrongUsernameException
 import logic.usecases.login.LoginUseCase

@@ -6,7 +6,7 @@ import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
 import logic.exception.PlanMateException.ValidationException.InvalidUUIDFormatException
 import logic.usecases.project.GetProjectDetailsUseCase
-import logic.usecases.project.helper.createProject
+import helper.createProject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource

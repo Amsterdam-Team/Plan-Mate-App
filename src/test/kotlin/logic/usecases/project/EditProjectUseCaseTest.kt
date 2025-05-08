@@ -10,7 +10,7 @@ import logic.repository.ProjectRepository
 import logic.usecases.logs.LoggerUseCase
 import logic.usecases.utils.StateManager
 import logic.usecases.utils.ValidateInputUseCase
-import logic.usecases.testFactory.EditProjectFactory
+import helper.EditProjectFactory
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

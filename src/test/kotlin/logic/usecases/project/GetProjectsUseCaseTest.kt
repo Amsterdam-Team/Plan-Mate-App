@@ -7,7 +7,7 @@ import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundExcept
 import logic.exception.PlanMateException.ValidationException.InvalidUUIDFormatException
 import logic.repository.ProjectRepository
 import logic.usecases.utils.ValidateInputUseCase
-import logic.usecases.project.helper.createProject
+import helper.createProject
 import logic.usecases.task.GetAllTasksByProjectIdUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

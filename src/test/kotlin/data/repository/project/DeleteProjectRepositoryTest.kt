@@ -1,21 +1,14 @@
 package data.repository.project
 
-import data.datasources.CsvDataSource
 import com.google.common.truth.Truth.assertThat
 import data.datasources.projectDataSource.ProjectDataSourceInterface
 import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
-import io.mockk.runs
-import io.mockk.verify
-import logic.entities.Project
-import logic.exception.PlanMateException.DataSourceException.EmptyDataException
 import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
-import logic.usecases.project.helper.DeleteProjectTestFactory.someProjects
+import helper.DeleteProjectTestFactory.someProjects
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import java.util.UUID
 import java.util.UUID.randomUUID

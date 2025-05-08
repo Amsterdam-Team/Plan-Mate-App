@@ -1,4 +1,4 @@
-package logic.usecases.project.helper
+package helper
 
 import logic.entities.Project
 import logic.entities.Task

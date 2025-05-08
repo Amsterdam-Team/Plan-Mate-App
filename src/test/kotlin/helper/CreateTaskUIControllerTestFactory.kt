@@ -1,4 +1,4 @@
-package ui.testFactory
+package helper
 
 object CreateTaskUIControllerTestFactory {
     private const val CANCEL = "cancel"
