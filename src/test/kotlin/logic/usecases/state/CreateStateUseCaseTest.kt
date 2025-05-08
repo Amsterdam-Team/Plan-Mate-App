@@ -1,0 +1,110 @@
+package logic.usecases.state
+
+import com.google.common.truth.Truth
+import com.google.common.truth.Truth.assertThat
+import io.mockk.coEvery
+import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
+import logic.exception.PlanMateException
+import logic.repository.ProjectRepository
+import logic.usecases.StateManager
+import logic.usecases.ValidateInputUseCase
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import utils.ResultStatus
+import utils.TestDataFactory
+import java.util.UUID
+
+class CreateStateUseCaseTest {
+
+    private lateinit var repository: ProjectRepository
+    private lateinit var useCase: AddStateUseCase
+    private lateinit var validateInputUseCase: ValidateInputUseCase
+    private lateinit var stateManager: StateManager
+
+    @BeforeEach
+    fun setup() {
+        repository = mockk(relaxed = true)
+        validateInputUseCase = mockk(relaxed = true)
+        stateManager = mockk(relaxed = true)
+        useCase = AddStateUseCase(repository,validateInputUseCase,stateManager)
+    }
+
+    @Test
+    fun `should return success when state is valid and project exists`() = runTest{
+        // Given
+        val project = TestDataFactory.createProject()
+        val newState = "In Review"
+        coEvery  { repository.addStateById(project.id, newState) } returns  true
+
+        // When
+        val result = useCase.execute(project.id.toString(), newState)
+
+        // Then
+        assertThat(result).isInstanceOf(ResultStatus.Success::class.java)
+    }
+
+    @Test
+    fun `should return error when state name is blank`()  = runTest{
+        // Given
+        val project = TestDataFactory.createProject()
+        val blankState = "  "
+
+        // When
+        val result = useCase.execute(project.id.toString(), blankState)
+
+        // Then
+        Truth.assertThat((result as ResultStatus.Error).exception)
+            .isInstanceOf(PlanMateException.ValidationException.InvalidStateNameException::class.java)
+    }
+
+    @Test
+    fun `should return error when project does not exist`() =runTest{
+        // Given
+        val fakeProjectId = UUID.randomUUID()
+        val state = "Done"
+        coEvery {
+            repository.addStateById(
+                fakeProjectId,
+                state
+            )
+        } throws PlanMateException.NotFoundException.ProjectNotFoundException
+
+        // When
+        val result = useCase.execute(fakeProjectId.toString(), state)
+
+        // Then
+        Truth.assertThat((result as ResultStatus.Error).exception)
+            .isInstanceOf(PlanMateException.NotFoundException.ProjectNotFoundException::class.java)
+    }
+
+    @Test
+    fun `should return error when state name already exists in the project`() = runTest{
+        // Given
+        val project = TestDataFactory.createProject(states = listOf("TODO", "In Review"))
+        val duplicateState = "todo"
+        coEvery { repository.getProject(project.id) } returns project
+
+        // When
+        val result = useCase.execute(project.id.toString(), duplicateState)
+
+        // Then
+        Truth.assertThat((result as ResultStatus.Error).exception)
+            .isInstanceOf(PlanMateException.ValidationException.SameStateNameException::class.java)
+    }
+
+    @Test
+    fun `should return error when state name with spaces already exists in the project`() = runTest{
+        // Given
+        val project = TestDataFactory.createProject(states = listOf("In Progress", "Done"))
+        val duplicateWithSpaces = "  in progress  "
+        coEvery { repository.getProject(project.id) } returns project
+
+        // When
+        val result = useCase.execute(project.id.toString(), duplicateWithSpaces)
+
+        // Then
+        Truth.assertThat((result as ResultStatus.Error).exception)
+            .isInstanceOf(PlanMateException.ValidationException.SameStateNameException::class.java)
+    }
+}

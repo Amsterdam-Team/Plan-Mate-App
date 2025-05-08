@@ -2,19 +2,13 @@ package logic.usecases.project
 
 import com.google.common.truth.Truth.assertThat
 import io.mockk.*
-import logic.entities.Task
-import logic.exception.PlanMateException
+import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
-import logic.exception.PlanMateException.ValidationException.EmptyDataException
 import logic.exception.PlanMateException.ValidationException.InvalidUUIDFormatException
-
 import logic.repository.ProjectRepository
-import logic.repository.TaskRepository
 import logic.usecases.ValidateInputUseCase
 import logic.usecases.project.helper.createProject
 import logic.usecases.task.GetAllTasksByProjectIdUseCase
-import logic.usecases.task.GetTaskByIdUseCase
-import logic.usecases.testFactory.CreateTaskTestFactory
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -55,13 +49,12 @@ class GetProjectsUseCaseTest() {
         tasksUseCase = mockk(relaxed = true)
         validationUseCase = mockk(relaxed = true)
         useCase = GetProjectDetailsUseCase(repository,tasksUseCase,validationUseCase)
-        every { repository.getProjects() } returns projects
     }
 
     @Test
-    fun `should return correct project when project id exists in projects`() {
+    fun `should return correct project when project id exists in projects`() = runTest {
         //Given
-        every { repository.getProject(projectOneId)} returns projects[0]
+        coEvery { repository.getProject(projectOneId)} returns projects[0]
         every { validationUseCase.isValidUUID(projectOneId.toString()) } returns true
         //When
         val result = useCase(projectOneId.toString())
@@ -70,9 +63,9 @@ class GetProjectsUseCaseTest() {
     }
 
     @Test
-    fun `should throw ProjectNotFoundException when projectID does not exist in Projects`() {
+    fun `should throw ProjectNotFoundException when projectID does not exist in Projects`() = runTest{
         //Given
-        every { repository.getProject(UUID.fromString("db373589-b656-4e68-a7c0-2ccc705ca169")) } throws ProjectNotFoundException
+        coEvery { repository.getProject(UUID.fromString("db373589-b656-4e68-a7c0-2ccc705ca169")) } throws ProjectNotFoundException
         every { validationUseCase.isValidUUID("db373589-b656-4e68-a7c0-2ccc705ca169") } returns true
 
         //When&Then
@@ -91,7 +84,7 @@ class GetProjectsUseCaseTest() {
         " db373589-b656#4e68@a7c0-2ccc705ca169"
         ]
     )
-    fun `should throw InvalidUUIDFormatException error when project ID is not a valid UUID`(invalidID:String) {
+    fun `should throw InvalidUUIDFormatException error when project ID is not a valid UUID`(invalidID:String) = runTest{
         //Given
         val projectID = invalidID
 
