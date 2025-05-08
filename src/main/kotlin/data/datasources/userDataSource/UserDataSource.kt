@@ -42,7 +42,11 @@ class UserDataSource(
     }
 
     override suspend fun updateUserName(userId: UUID, newName: String): Boolean {
-        return false
+        val result = usersCollection.updateOne(
+            Filters.eq("id", userId),
+            Updates.set("username", newName)
+        )
+        return result.modifiedCount > 0
     }
 
     override suspend fun updatePassword(userId: UUID, newPassword: String): Boolean {
