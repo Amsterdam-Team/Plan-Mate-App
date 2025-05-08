@@ -11,4 +11,5 @@ interface StateManagerInterface {
     fun setCurrentProject(project: Project)
     fun getCurrentTask(): Task
     fun setCurrentTask(task: Task)
+    fun logOut()
 }
