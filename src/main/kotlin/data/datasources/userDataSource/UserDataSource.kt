@@ -16,7 +16,7 @@ class UserDataSource(
 ): IUserDataSource {
 
     override suspend fun getAllUsers(): List<User> {
-        return emptyList()
+        return usersCollection.find().toList()
     }
 
     override suspend fun getUserById(userId: UUID): User {
