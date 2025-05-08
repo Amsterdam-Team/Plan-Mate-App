@@ -22,7 +22,7 @@ class ProjectRepositoryImpl(
     private val logRepository: LogRepository,
 ) : ProjectRepository {
   
-    override fun createProject(project: Project): Boolean {
+    override suspend fun createProject(project: Project): Boolean {
         val existedProjects = getProjects()
         if (existedProjects.any { it.name.equals(project.name, ignoreCase = true) }) {
             throw ProjectNameAlreadyExistException
@@ -40,18 +40,18 @@ class ProjectRepositoryImpl(
     }
 
 
-    override fun updateProjectNameById(projectId: UUID, newName: String) =
+    override suspend fun updateProjectNameById(projectId: UUID, newName: String) =
         projectDataSource.updateProjectName(projectId, newName)
 
 
-    override fun deleteProject(projectId: UUID) = projectDataSource.deleteProject(projectId)
+    override suspend fun deleteProject(projectId: UUID) = projectDataSource.deleteProject(projectId)
 
 
-    override fun getProjects() = projectDataSource.getAllProjects()
+    override suspend fun getProjects() = projectDataSource.getAllProjects()
 
 
 
-    override fun getProject(projectId: UUID): Project {
+    override suspend fun getProject(projectId: UUID): Project {
         val project = try {
             projectDataSource.getProjectById(projectId)
         } catch (ex: PlanMateException.DataSourceException.ObjectDoesNotExistException) {
@@ -60,14 +60,14 @@ class ProjectRepositoryImpl(
         return project
     }
 
-    override fun updateProjectStateById(projectId: UUID, oldState: String, newState: String) =
+    override suspend fun updateProjectStateById(projectId: UUID, oldState: String, newState: String) =
         projectDataSource.updateProjectState(projectId, oldState, newState)
 
 
-    override fun deleteStateById(projectId: UUID, oldState: String) =
+    override suspend fun deleteStateById(projectId: UUID, oldState: String) =
         projectDataSource.deleteProjectState(projectId, oldState)
 
 
-    override fun addStateById(projectId: UUID, state: String) = projectDataSource.insertProjectState(projectId, state)
+    override suspend fun addStateById(projectId: UUID, state: String) = projectDataSource.insertProjectState(projectId, state)
 
 }

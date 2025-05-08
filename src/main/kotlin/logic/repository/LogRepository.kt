@@ -4,7 +4,7 @@ import logic.entities.LogItem
 import java.util.*
 
 interface LogRepository {
-    fun viewLogsById(id : UUID) : List<LogItem>
-    fun viewAllLogs(): List<LogItem>
-    fun addLog(log : LogItem): Boolean
+    suspend fun viewLogsById(id : UUID) : List<LogItem>
+    suspend fun viewAllLogs(): List<LogItem>
+    suspend fun addLog(log : LogItem): Boolean
 }

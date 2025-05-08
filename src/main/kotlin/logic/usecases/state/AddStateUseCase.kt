@@ -19,7 +19,7 @@ class AddStateUseCase(
     private val user: User
 ) {
 
-    fun execute(projectId: String, state: String): Boolean{
+    suspend fun execute(projectId: String, state: String): Boolean{
         if(!validateInputUseCase.isValidName(state)) throw InvalidStateNameException
         if(!validateInputUseCase.isValidUUID(projectId)) throw InvalidProjectIDException
         if(!user.isAdmin) throw AdminPrivilegesRequiredException

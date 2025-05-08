@@ -7,7 +7,6 @@ import logic.exception.PlanMateException.NotFoundException.StateNotFoundExceptio
 import logic.repository.ProjectRepository
 import logic.usecases.ValidateInputUseCase
 import logic.usecases.task.GetAllTasksByProjectIdUseCase
-import ui.utils.Validator
 import java.util.*
 
 class GetProjectDetailsUseCase(
@@ -17,11 +16,11 @@ class GetProjectDetailsUseCase(
 
 ) {
 
-    operator fun invoke(projectID: String): Project {
+    suspend operator fun invoke(projectID: String): Project {
 
         if (validateInputUseCase.isValidUUID(projectID)) {
             val project = projectRepository.getProject(UUID.fromString(projectID))
-            val tasks = getTasksUseCase.invoke(UUID.fromString(projectID))
+            val tasks = getTasksUseCase.invoke(projectID)
             return project.copy(
                 tasks = tasks
             )

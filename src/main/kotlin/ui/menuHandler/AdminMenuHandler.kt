@@ -5,7 +5,7 @@ import ui.controller.BaseUIController
 
 class AdminMenuHandler(private val adminFeatureControllers: Map<Int, BaseUIController>): MainMenuHandler() {
 
-    public override fun start() {
+    public override suspend fun start() {
         super.start()
         baseMenuStart(
             showMenu = ::showAdminMenu,

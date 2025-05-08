@@ -37,9 +37,9 @@ fun printTasksSwimlanesView(
 
 }
 
-fun mainMenuTasks(
-    onCreateTask: () -> Unit,
-    onViewTaskDetails: () -> Unit,
+suspend fun mainMenuTasks(
+    onCreateTask: suspend () -> Unit,
+    onViewTaskDetails: suspend () -> Unit,
 
     ) {
     DisplayUtils.printBoxedMessage("Tip: Select an option.")

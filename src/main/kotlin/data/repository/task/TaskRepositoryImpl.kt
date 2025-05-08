@@ -6,32 +6,32 @@ import logic.repository.TaskRepository
 import java.util.*
 
 class TaskRepositoryImpl(private val taskDataSource: ITaskDataSource): TaskRepository {
-    override fun createTask(task: Task) =
+    override suspend fun createTask(task: Task) =
         taskDataSource.insertTask(task)
 
 
-    override fun updateTask(task: Task) =
+    override suspend fun updateTask(task: Task) =
         taskDataSource.updateTaskName(task.id,task.name)&&
         taskDataSource.updateTaskState(task.id,task.state)
 
 
-    override fun updateTaskNameByID(taskId: UUID, newName: String) =
+    override suspend fun updateTaskNameByID(taskId: UUID, newName: String) =
         taskDataSource.updateTaskName(taskId,newName)
 
 
-    override fun updateStateNameByID(taskId: UUID, newState: String) =
+    override suspend fun updateStateNameByID(taskId: UUID, newState: String) =
         taskDataSource.updateTaskState(taskId,newState)
 
 
-    override fun deleteTask(taskId: UUID) =
+    override suspend fun deleteTask(taskId: UUID) =
         taskDataSource.deleteTask(taskId)
 
-    override fun getTaskById(taskId: UUID): Task =
+    override suspend fun getTaskById(taskId: UUID): Task =
         taskDataSource.getTaskById(taskId)
 
 
 
-    override fun getAllTasksByProjectId(projectId: UUID) =
+    override suspend fun getAllTasksByProjectId(projectId: UUID) =
         taskDataSource.getAllTasks()
 
 

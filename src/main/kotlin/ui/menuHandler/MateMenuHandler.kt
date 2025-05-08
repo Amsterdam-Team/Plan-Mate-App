@@ -4,7 +4,7 @@ import ui.controller.BaseUIController
 
 class MateMenuHandler(private val mateFeatureControllers: Map<Int, BaseUIController>): MainMenuHandler(){
 
-    public override fun start() {
+    public override suspend fun start() {
         baseMenuStart(
             showMenu = ::showMateMenu,
             featureControllers = mateFeatureControllers

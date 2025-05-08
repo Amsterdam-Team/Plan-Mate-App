@@ -11,7 +11,7 @@ class GetTaskByIdUseCase(
     private val validateInputUseCase: ValidateInputUseCase
 
 ) {
-    operator fun invoke(taskId: String): Task {
+    suspend operator fun invoke(taskId: String): Task {
 
         if (!validateInputUseCase.isValidUUID(uuid = taskId)) {
             throw InvalidTaskIDException

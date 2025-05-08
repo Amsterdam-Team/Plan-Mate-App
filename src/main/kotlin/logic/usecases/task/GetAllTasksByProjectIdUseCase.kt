@@ -10,7 +10,7 @@ class GetAllTasksByProjectIdUseCase(
     private val repository: TaskRepository,
     private val validateInputUseCase: ValidateInputUseCase
 ) {
-    operator fun invoke(projectId: String): List<Task> {
+    suspend operator fun invoke(projectId: String): List<Task> {
         if (!validateInputUseCase.isValidUUID(uuid = projectId)) {
             throw InvalidProjectIDException
         }

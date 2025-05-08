@@ -8,7 +8,7 @@ import java.util.UUID
 class GetProjectHistoryUseCase(
     private val logRepository: LogRepository
 ) {
-    fun execute(projectId: String?): List<LogItem> {
+    suspend fun execute(projectId: String?): List<LogItem> {
         if (projectId.isNullOrBlank()) throw InvalidProjectIDException
 
         val projectUUID = try {

@@ -19,7 +19,7 @@ class ValidateInputUseCase {
         return states.all { state ->
             state.isNotBlank() && state.matches(Regex("^[a-zA-Z]+( [a-zA-Z]+)*$"))
         }
-        
+    }
     fun areIdentical(oldName: String , newName: String):Boolean{
         return oldName.trim() == newName.trim()
     }

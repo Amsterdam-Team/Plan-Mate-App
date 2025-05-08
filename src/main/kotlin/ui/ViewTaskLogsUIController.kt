@@ -10,7 +10,7 @@ class ViewTaskLogsUIController(
     private val consoleIO : ConsoleIO
 ): BaseUIController {
 
-    override fun execute() {
+    override suspend fun execute() {
         consoleIO.println("Enter Task ID :")
         val taskId = consoleIO.readFromUser()
         tryToExecute (

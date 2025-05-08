@@ -13,7 +13,7 @@ import java.util.UUID
 class EditTaskUseCase(val taskRepository: TaskRepository, val validateInputUseCase: ValidateInputUseCase) {
 
 
-    fun editTask(taskId: String, newName: String, newState: String): Boolean {
+    suspend fun editTask(taskId: String, newName: String, newState: String): Boolean {
         validateTaskInputs(taskId, newName, newState)
 
         val uuid = parseId(taskId)

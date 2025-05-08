@@ -9,7 +9,7 @@ class CreateTaskUIController(
     private val consoleIO: ConsoleIO
 ) : BaseUIController {
 
-    override fun execute() {
+    override suspend fun execute() {
         consoleIO.println(TASK_NAME_PROMPT_MESSAGE)
         val taskName = consoleIO.readFromUser()
 
@@ -39,7 +39,7 @@ class CreateTaskUIController(
         }
     }
 
-    private fun onCreateTaskFail(exception: Exception) {
+    private suspend fun onCreateTaskFail(exception: Exception) {
         consoleIO.println(FAIL_TO_CREATE_TASK_MESSAGE)
         val input = consoleIO.readFromUser().trim().uppercase()
 

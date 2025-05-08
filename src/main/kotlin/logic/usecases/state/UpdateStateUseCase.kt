@@ -15,7 +15,7 @@ class UpdateStateUseCase(
     private val user: User,
     private val validateInputUseCase: ValidateInputUseCase
 ) {
-    fun updateState(projectID: String, oldState: String, newState: String): Boolean {
+    suspend fun updateState(projectID: String, oldState: String, newState: String): Boolean {
         val validateInputs = validateInputs(projectID, oldState, newState)
         if (validateInputs && user.isAdmin) {
             return projectRepository.updateProjectStateById(UUID.fromString(projectID), oldState, newState)

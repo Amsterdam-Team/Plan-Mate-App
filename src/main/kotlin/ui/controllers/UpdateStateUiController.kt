@@ -12,7 +12,7 @@ class UpdateStateUiController(
 
 
 
-    override fun execute(){
+    override suspend  fun execute(){
         consoleIO.println("Enter project ID :)")
         val id = consoleIO.readFromUser()
         consoleIO.println("Enter Current State :)")

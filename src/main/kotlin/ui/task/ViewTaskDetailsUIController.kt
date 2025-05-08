@@ -17,7 +17,7 @@ class ViewTaskDetailsUIController(
 ) : BaseUIController {
 
 
-    override fun execute() {
+    override suspend fun execute() {
         consoleIO.println("🔍 Please enter Task ID to view details:")
 
         tryToExecute(
@@ -53,9 +53,9 @@ class ViewTaskDetailsUIController(
     }
 
     //
-    private fun showTaskOptionsMenu(
-        onEditTaskDetails: () -> Unit,
-        onDeleteTaskDetails: () -> Unit,
+    private suspend fun showTaskOptionsMenu(
+        onEditTaskDetails:  () -> Unit,
+        onDeleteTaskDetails: suspend () -> Unit,
         onBackTask: () -> Unit,
 
         ) {

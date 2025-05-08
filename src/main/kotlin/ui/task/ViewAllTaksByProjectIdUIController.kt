@@ -1,9 +1,10 @@
 package ui.task
 
+import console.ConsoleIO
 import logic.usecases.task.CreateTaskUseCase
 import logic.usecases.task.GetAllTasksByProjectIdUseCase
 import org.koin.java.KoinJavaComponent.getKoin
-import ui.console.ConsoleIO
+
 import ui.controller.BaseUIController
 import ui.controller.CreateTaskUIController
 import ui.swimlane.mainMenuTasks
@@ -19,7 +20,7 @@ class ViewAllTaksByProjectIdUIController(
 ) : BaseUIController {
 
 
-    override fun execute() {
+    override suspend fun execute() {
 
         DisplayUtils.printTitle("Task screen ")
 

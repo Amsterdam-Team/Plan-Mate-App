@@ -15,7 +15,7 @@ class DeleteProjectUseCase(
     private val validateInputUseCase: ValidateInputUseCase
 ) {
 
-    fun deleteProject(projectId: String): Boolean {
+    suspend fun deleteProject(projectId: String): Boolean {
         if (!validateInputUseCase.isValidUUID(projectId)) throw InvalidProjectIDException
         if (!user.isAdmin) throw AdminPrivilegesRequiredException
         return projectRepository.deleteProject(UUID.fromString(projectId))

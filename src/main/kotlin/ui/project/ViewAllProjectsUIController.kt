@@ -8,7 +8,7 @@ import utils.printSwimlanesView
 class ViewAllProjectsUIController(
     private val getAllProjectsUseCase: GetAllProjectsUseCase
 ): BaseUIController {
-    override fun execute() {
+    override suspend fun execute() {
         tryToExecute (
             action = {getAllProjectsUseCase.execute()},
             onSuccess = { projects ->
