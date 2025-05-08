@@ -191,20 +191,30 @@ class UserDataSourceTest {
     // region replaceAllUsers
     @Test
     fun `should return true when all users are replaced successfully`() = runTest{
-        // Given
-
         // When
+        val result = dataSource.replaceAllUsers(usersReplace)
 
         // Then
+        assertThat(result).isTrue()
+
     }
 
     @Test
-    fun `should return false when replace operation fails`() = runTest{
-        // Given
-
+    fun `should return false when users have duplicated Ids`() = runTest{
         // When
+        val result = dataSource.replaceAllUsers(duplicatedUserIds)
 
         // Then
+        assertThat(result).isFalse()
+    }
+
+    @Test
+    fun `should return false when users have duplicated usernames`() = runTest{
+        // When
+        val result = dataSource.replaceAllUsers(duplicatedUserNames)
+
+        // Then
+        assertThat(result).isFalse()
     }
     // endregion
 
@@ -238,6 +248,9 @@ class UserDataSourceTest {
         private val notFoundId = UUID.randomUUID()
         private val userWithSameName = user1.copy(id = UUID.randomUUID())
         private val userWithSameId = user1.copy(username = "luigi")
+        private val usersReplace = listOf(userWithSameId, userWithSameName)
+        private val duplicatedUserNames = listOf(user1, userWithSameName)
+        private val duplicatedUserIds = listOf(user1, userWithSameId)
 
         private const val CONNECTION_STRING = "mongodb+srv://7amasa:9LlgpCLbd99zoRrJ@amsterdam.qpathz3.mongodb.net/?retryWrites=true&w=majority&appName=Amsterdam"
         private const val TEST_DATABASE_NAME = "Amsterdam-test"
