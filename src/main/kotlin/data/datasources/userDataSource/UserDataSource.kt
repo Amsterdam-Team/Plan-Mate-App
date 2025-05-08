@@ -16,34 +16,64 @@ class UserDataSource(
 ): IUserDataSource {
 
     override suspend fun getAllUsers(): List<User> {
-        TODO("Not yet implemented")
+        return usersCollection.find().toList()
     }
 
     override suspend fun getUserById(userId: UUID): User {
-        TODO("Not yet implemented")
+        return usersCollection.find(Filters.eq("id", userId)).firstOrNull() ?: throw ObjectDoesNotExistException
     }
 
     override suspend fun insertUser(user: User): Boolean {
-        TODO("Not yet implemented")
+        val existingUser = usersCollection.find(
+            Filters.or(
+                Filters.eq("id", user.id),
+                Filters.eq("username", user.username)
+            )
+        ).firstOrNull()
+
+        if (existingUser != null) return false
+
+        return usersCollection.insertOne(user).wasAcknowledged()
     }
 
     override suspend fun deleteUser(userId: UUID): Boolean {
-        TODO("Not yet implemented")
+        val result = usersCollection.deleteOne(Filters.eq("id", userId))
+        return result.deletedCount > 0
     }
 
     override suspend fun updateUserName(userId: UUID, newName: String): Boolean {
-        TODO("Not yet implemented")
+        val result = usersCollection.updateOne(
+            Filters.eq("id", userId),
+            Updates.set("username", newName)
+        )
+        return result.modifiedCount > 0
     }
 
     override suspend fun updatePassword(userId: UUID, newPassword: String): Boolean {
-        TODO("Not yet implemented")
+        val result = usersCollection.updateOne(
+            Filters.eq("id", userId),
+            Updates.set("password", newPassword)
+        )
+        return result.modifiedCount > 0
     }
 
     override suspend fun replaceAllUsers(users: List<User>): Boolean {
-        TODO("Not yet implemented")
+        val hasDuplicateId = users.map { it.id }.toSet().size != users.size
+        val hasDuplicateUsernames = users.map { it.username }.toSet().size != users.size
+
+        if (hasDuplicateId || hasDuplicateUsernames) return false
+
+        usersCollection.deleteMany(Document())
+        val result = usersCollection.insertMany(users)
+        return result.wasAcknowledged() && result.insertedIds.size == users.size
     }
 
     override suspend fun findUserByCredentials(username: String, password: String): User {
-        TODO("Not yet implemented")
+        return usersCollection.find(
+            Filters.and(
+                Filters.eq("username", username),
+                Filters.eq("password", password)
+            )
+        ).firstOrNull() ?: throw ObjectDoesNotExistException
     }
 }
