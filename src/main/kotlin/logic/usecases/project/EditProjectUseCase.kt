@@ -1,16 +1,11 @@
 package logic.usecases.project
 
-import kotlinx.datetime.Clock
-import kotlinx.datetime.toLocalDateTime
 import logic.entities.User
 import logic.exception.PlanMateException
-import logic.repository.LogRepository
 import logic.repository.ProjectRepository
 import java.util.*
 import logic.usecases.ValidateInputUseCase
 import logic.entities.Project
-import logic.entities.LogItem
-import kotlinx.datetime.TimeZone
 import logic.usecases.LoggerUseCase
 import logic.usecases.StateManager
 

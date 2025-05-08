@@ -1,7 +1,6 @@
 package logic.usecases.project
 
 import logic.entities.Project
-import logic.entities.User
 import logic.exception.PlanMateException.AuthorizationException.AdminPrivilegesRequiredException
 import logic.exception.PlanMateException.ValidationException.InvalidProjectNameException
 import logic.exception.PlanMateException.ValidationException.InvalidStateNameException
