@@ -3,9 +3,11 @@ package ui.task
 import com.google.common.truth.Truth.assertThat
 import io.mockk.CapturingSlot
 import io.mockk.Runs
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.usecases.ViewTaskLogsUseCase
@@ -33,12 +35,12 @@ class ViewTaskLogsUIControllerTest {
     }
 
     @Test
-    fun `should print logs of task when logs are found`(){
+    fun `should print logs of task when logs are found`() = runTest{
         val slot = CapturingSlot<String>()
 
         every { consoleIO.println(capture(slot)) } just Runs
         every { consoleIO.readFromUser() } returns validId.toString()
-        every { useCase.viewTaskLogs(validId.toString()) } returns taskLogs()
+        coEvery { useCase.viewTaskLogs(validId.toString()) } returns taskLogs()
 
         uiController.execute()
 
@@ -46,12 +48,12 @@ class ViewTaskLogsUIControllerTest {
     }
 
     @Test
-    fun `should print Invalid ID Format message when use case throw InvalidTaskIDException`(){
+    fun `should print Invalid ID Format message when use case throw InvalidTaskIDException`() = runTest{
         val slot = CapturingSlot<String>()
 
         every { consoleIO.println(capture(slot)) } just Runs
         every { consoleIO.readFromUser() } returns invalidId.toString()
-        every { useCase.viewTaskLogs(invalidId) } throws InvalidTaskIDException
+        coEvery { useCase.viewTaskLogs(invalidId) } throws InvalidTaskIDException
 
         uiController.execute()
 
@@ -59,12 +61,12 @@ class ViewTaskLogsUIControllerTest {
     }
 
     @Test
-    fun `should print Task Not Found message when use case throw TaskNotFoundException`(){
+    fun `should print Task Not Found message when use case throw TaskNotFoundException`() = runTest{
         val slot = CapturingSlot<String>()
 
         every { consoleIO.println(capture(slot)) } just Runs
         every { consoleIO.readFromUser() } returns invalidId.toString()
-        every { useCase.viewTaskLogs(invalidId.toString()) } throws TaskNotFoundException
+        coEvery { useCase.viewTaskLogs(invalidId.toString()) } throws TaskNotFoundException
 
         uiController.execute()
 

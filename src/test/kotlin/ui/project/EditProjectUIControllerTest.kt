@@ -3,6 +3,7 @@ package ui.project
 
   import console.ConsoleIO
   import io.mockk.*
+  import kotlinx.coroutines.test.runTest
   import logic.usecases.project.EditProjectUseCase
   import org.junit.jupiter.api.BeforeEach
   import org.junit.jupiter.api.Test
@@ -33,20 +34,20 @@ package ui.project
    }
 
    @Test
-   fun `should call use case once when input is valid`() {
-    every { useCase.editProjectName(any(), any(), any()) } returns true
-    every { consoleIo.readFromUser() } returnsMany listOf(validProjectId.toString(), newProjectName)
+   fun `should call use case once when input is valid`() = runTest {
+    coEvery { useCase.editProjectName(any(), any()) } returns true
+    coEvery { consoleIo.readFromUser() } returnsMany listOf(validProjectId.toString(), newProjectName)
 
     controller.execute()
 
-    verify(exactly = 1) {
-     useCase.editProjectName(any(), validProjectId, newProjectName)
+    coVerify(exactly = 1) {
+     useCase.editProjectName(validProjectId, newProjectName)
     }
    }
 
    @Test
-   fun `should show success message when project name is updated`() {
-    every { useCase.editProjectName(any(), any(), any()) } returns true
+   fun `should show success message when project name is updated`()= runTest {
+    coEvery { useCase.editProjectName(any(), any()) } returns true
     every { consoleIo.readFromUser() } returnsMany listOf(validProjectId.toString(), newProjectName)
 
     controller.execute()
@@ -55,8 +56,8 @@ package ui.project
    }
 
    @Test
-   fun `should show error message when invalid UUID is entered`() {
-    every { consoleIo.readFromUser() } returnsMany listOf("invalid-uuid", newProjectName)
+   fun `should show error message when invalid UUID is entered`() = runTest {
+    coEvery { consoleIo.readFromUser() } returnsMany listOf("invalid-uuid", newProjectName)
 
     controller.execute()
 
@@ -64,9 +65,9 @@ package ui.project
    }
 
    @Test
-   fun `should show error message when use case throws exception`() {
+   fun `should show error message when use case throws exception`()= runTest {
     every { consoleIo.readFromUser() } returnsMany listOf(validProjectId.toString(), newProjectName)
-    every { useCase.editProjectName(any(), any(), any()) } throws RuntimeException("Something went wrong")
+    coEvery { useCase.editProjectName(any(), any()) } throws RuntimeException("Something went wrong")
     every { consoleIo.readFromUser() } returns "cancel"
 
     controller.execute()

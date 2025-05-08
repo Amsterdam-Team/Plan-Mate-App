@@ -1,8 +1,10 @@
 package ui.task
 
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import logic.usecases.task.EditTaskUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -22,16 +24,16 @@ class EditTaskUiControllerTest {
 
 
     @Test
-    fun `should print success to user when complete executing editing task`() {
+    fun `should print success to user when complete executing editing task`() = runTest{
         every { consoleIO.readFromUser() } returnsMany listOf("1","task-id", "new-name")
-        every { useCase.editTask("1","task-id", "new-name")} returns true
+        coEvery { useCase.editTask("1","task-id", "new-name")} returns true
         uiController.execute()
         verify { consoleIO.println("Task updated successfully") }
     }
     @Test
-    fun `should print failure message to user when failed with  executing editing task`() {
+    fun `should print failure message to user when failed with  executing editing task`() = runTest {
         every { consoleIO.readFromUser() } returnsMany listOf("1","task-id", "new-name")
-        every { useCase.editTask("1","task-id", "new-name")} returns false
+        coEvery { useCase.editTask("1","task-id", "new-name")} returns false
 
         uiController.execute()
         verify { consoleIO.println("Failed updating task") }

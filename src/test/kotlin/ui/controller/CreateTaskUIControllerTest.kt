@@ -3,10 +3,13 @@ package ui.controller
 import com.google.common.truth.Truth.assertThat
 import console.ConsoleIO
 import io.mockk.Runs
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException.ValidationException.InvalidTaskNameException
 import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
 import logic.exception.PlanMateException.ValidationException.InvalidStateNameException
@@ -49,27 +52,27 @@ class CreateTaskUIControllerTest {
     }
 
     @Test
-    fun `should call use case function exactly once when execute takes the input`() {
+    fun `should call use case function exactly once when execute takes the input`() = runTest {
         //Given
-        every { useCase.createTask(any(), any(), any()) } returns true
+        coEvery { useCase.createTask(any(), any(), any()) } returns true
         every { consoleIo.readFromUser() } returnsMany listOf(VALID_TASK_NAME, VALID_PROJECT_ID, VALID_STATE)
 
         //When
         controller.execute()
 
         //Then
-        verify(exactly = 1) {
+        coVerify(exactly = 1) {
             useCase.createTask(name = VALID_TASK_NAME, projectId = VALID_PROJECT_ID, state = VALID_STATE)
         }
     }
 
     @Test
-    fun `should show success message when task is created`() {
+    fun `should show success message when task is created`()= runTest {
         // Given
         every { consoleIo.readFromUser() } returnsMany listOf(
             VALID_TASK_NAME, VALID_PROJECT_ID, VALID_STATE
         )
-        every { useCase.createTask(any(), any(), any()) } returns true
+        coEvery { useCase.createTask(any(), any(), any()) } returns true
 
         // When
         controller.execute()
@@ -79,10 +82,10 @@ class CreateTaskUIControllerTest {
     }
 
     @Test
-    fun `should show correct error message when input invalid task name`() {
+    fun `should show correct error message when input invalid task name`()= runTest {
         every { consoleIo.readFromUser() } returnsMany getDummyInputs(projectId = IN_VALID_TASK_NAME)
 
-        every { useCase.createTask(name = any(), projectId = any(), state = any()) } throws
+        coEvery { useCase.createTask(name = any(), projectId = any(), state = any()) } throws
                 InvalidTaskNameException
 
         controller.execute()
@@ -91,10 +94,10 @@ class CreateTaskUIControllerTest {
     }
 
     @Test
-    fun `should show correct error message when input invalid project id`() {
+    fun `should show correct error message when input invalid project id`()= runTest {
         every { consoleIo.readFromUser() } returnsMany getDummyInputs(projectId = IN_VALID_PROJECT_ID)
 
-        every { useCase.createTask(name = any(), projectId = any(), state = any()) } throws
+        coEvery { useCase.createTask(name = any(), projectId = any(), state = any()) } throws
                 InvalidProjectIDException
 
         controller.execute()
@@ -103,10 +106,10 @@ class CreateTaskUIControllerTest {
     }
 
     @Test
-    fun `should show correct error message when input invalid task state`() {
+    fun `should show correct error message when input invalid task state`() = runTest{
         every { consoleIo.readFromUser() } returnsMany getDummyInputs(taskState = IN_VALID_STATE)
 
-        every { useCase.createTask(name = any(), projectId = any(), state = any()) } throws
+        coEvery { useCase.createTask(name = any(), projectId = any(), state = any()) } throws
                 InvalidStateNameException
 
         controller.execute()
@@ -115,10 +118,10 @@ class CreateTaskUIControllerTest {
     }
 
     @Test
-    fun `should show correct error message when input state name does not exist in the target project`() {
+    fun `should show correct error message when input state name does not exist in the target project`() = runTest {
         every { consoleIo.readFromUser() } returnsMany getDummyInputs(taskState = VALID_STATE)
 
-        every { useCase.createTask(name = any(), projectId = any(), state = any()) } throws
+        coEvery { useCase.createTask(name = any(), projectId = any(), state = any()) } throws
                 StateNotFoundException
 
         controller.execute()

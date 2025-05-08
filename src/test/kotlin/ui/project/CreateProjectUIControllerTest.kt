@@ -3,6 +3,7 @@ package ui.project
 import com.google.common.truth.Truth.assertThat
 import console.ConsoleIO
 import io.mockk.*
+import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException
 import logic.exception.PlanMateException.ValidationException.InvalidProjectNameException
 import logic.usecases.project.CreateProjectUseCase
@@ -31,26 +32,26 @@ class CreateProjectUIControllerTest {
     }
 
     @Test
-    fun `should call create project use case only once when user enter all inputs`() {
-        every { useCase.createProject(any(), any()) } returns true
+    fun `should call create project use case only once when user enter all inputs`() = runTest{
+        coEvery { useCase.createProject(any(), any()) } returns true
         every { consoleIo.readFromUser() } returnsMany listOf(
             validProjectTest.name, validProjectTest.states.joinToString(", ")
         )
 
         controller.execute()
 
-        verify(exactly = 1) {
+        coVerify(exactly = 1) {
             useCase.createProject(validProjectTest.name, validProjectTest.states)
         }
     }
 
     @Test
-    fun `should show success message when project is created successfully`() {
+    fun `should show success message when project is created successfully`() = runTest {
         // Given
         every { consoleIo.readFromUser() } returnsMany listOf(
             validProjectTest.name, validProjectTest.states.toString()
         )
-        every { useCase.createProject(any(), any()) } returns true
+        coEvery { useCase.createProject(any(), any()) } returns true
 
         // When
         controller.execute()
@@ -60,11 +61,11 @@ class CreateProjectUIControllerTest {
     }
 
     @Test
-    fun `should show error message when input project name is invalid`() {
+    fun `should show error message when input project name is invalid`() = runTest  {
         every { consoleIo.readFromUser() } returnsMany listOf(
             inValidProjectNameTest.name, inValidProjectNameTest.states.toString(), "CANCEL"
         )
-        every { useCase.createProject(any(), any()) } throws InvalidProjectNameException
+        coEvery { useCase.createProject(any(), any()) } throws InvalidProjectNameException
 
 
         controller.execute()
@@ -73,11 +74,11 @@ class CreateProjectUIControllerTest {
     }
 
     @Test
-    fun `should show error message when input project states is invalid`() {
+    fun `should show error message when input project states is invalid`() = runTest  {
         every { consoleIo.readFromUser() } returnsMany listOf(
             inValidProjectNameTest.name, inValidProjectNameTest.states.toString(), "CANCEL"
         )
-        every {
+        coEvery {
             useCase.createProject(
                 any(), any()
             )
