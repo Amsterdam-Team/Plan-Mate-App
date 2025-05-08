@@ -1,7 +1,6 @@
 package di
 
 import com.mongodb.kotlin.client.coroutine.MongoCollection
-import console.ConsoleIoImpl
 import data.datasources.MongoDatabaseFactory
 import data.datasources.logDataSource.ILogDataSource
 import data.datasources.logDataSource.LogDataSource
@@ -52,7 +51,7 @@ import ui.project.ViewAllProjectsUIController
 import ui.project.ViewProjectHistoryUIController
 import ui.task.DeleteTaskUIController
 import ui.task.EditTaskUiController
-import ui.task.ViewAllTaksByProjectIdUIController
+import ui.task.ViewAllTasksByProjectIdUIController
 import ui.task.ViewTaskDetailsUIController
 import java.util.*
 
@@ -140,7 +139,6 @@ val appModule = module {
 
     // ConsoleIO
     single<ConsoleIO> { ConsoleIOImpl() }
-    single<console.ConsoleIO> { ConsoleIoImpl() }
 
     // AdminUIController
     single<BaseUIController>(updateStateUiController) { UpdateStateUiController(get(), get()) }
@@ -160,7 +158,7 @@ val appModule = module {
     single<BaseUIController>(viewTaskLogsUiController) { ViewTaskLogsUIController(get(), get()) }
     single<BaseUIController>(editTaskUiController) { EditTaskUiController(get(), get()) }
     single<BaseUIController>(viewTaskDetailsUiController) { ViewTaskDetailsUIController(get(), get(), get(), get()) }
-    single<BaseUIController>(viewAllTasksByProjectIdUiController) { ViewAllTaksByProjectIdUIController(get(), get(), get()) }
+    single<BaseUIController>(viewAllTasksByProjectIdUiController) { ViewAllTasksByProjectIdUIController(get(), get(), get()) }
 
 
     single<Map<Int, BaseUIController>>(userMap) {

@@ -1,13 +1,13 @@
 package ui.controllers
 
-import console.ConsoleIO
 import logic.usecases.state.UpdateStateUseCase
+import ui.console.ConsoleIO
 import ui.controller.BaseUIController
 import ui.utils.tryToExecute
 
 class UpdateStateUiController(
     private val editStateUseCase: UpdateStateUseCase,
-    private val consoleIO: ui.console.ConsoleIO
+    private val consoleIO: ConsoleIO
 ) :BaseUIController{
 
 

@@ -1,7 +1,7 @@
 package ui.project
 
-import console.ConsoleIO
 import logic.usecases.project.GetProjectHistoryUseCase
+import ui.console.ConsoleIO
 import ui.controller.BaseUIController
 import ui.utils.tryToExecute
 import utils.formatLogItem

@@ -1,7 +1,7 @@
 package ui.controllers
 
-import console.ConsoleIO
 import logic.usecases.project.CreateProjectUseCase
+import ui.console.ConsoleIO
 import ui.controller.BaseUIController
 import ui.utils.tryToExecute
 

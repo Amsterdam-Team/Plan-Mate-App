@@ -1,9 +1,9 @@
 package ui.task
 
-import console.ConsoleIO
 import logic.usecases.task.CreateTaskUseCase
 import logic.usecases.task.GetAllTasksByProjectIdUseCase
 import org.koin.java.KoinJavaComponent.getKoin
+import ui.console.ConsoleIO
 
 import ui.controller.BaseUIController
 import ui.controller.CreateTaskUIController
@@ -12,7 +12,7 @@ import ui.swimlane.printTasksSwimlanesView
 import ui.utils.DisplayUtils
 import ui.utils.tryToExecute
 
-class ViewAllTaksByProjectIdUIController(
+class ViewAllTasksByProjectIdUIController(
     private val getAllTasksByProjectIdUseCase: GetAllTasksByProjectIdUseCase,
     private val createTaskUseCase: CreateTaskUseCase,
     private val consoleIO: ConsoleIO
@@ -36,8 +36,8 @@ class ViewAllTaksByProjectIdUIController(
         )
         mainMenuTasks(
             onViewTaskDetails = {
-                val ViewTaskDetailsUIController: ViewTaskDetailsUIController = getKoin().get()
-                ViewTaskDetailsUIController.execute()
+                val viewTaskDetailsUIController: ViewTaskDetailsUIController = getKoin().get()
+                viewTaskDetailsUIController.execute()
             },
             onCreateTask = {
                 val controller = CreateTaskUIController(createTaskUseCase, consoleIO)
