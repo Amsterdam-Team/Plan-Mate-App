@@ -150,27 +150,27 @@ class UserDataSourceTest {
 
     // region updateUserName
     @Test
-    fun `should return true when username is updated successfully`() {
-        // Given
-
+    fun `should return true when username is updated successfully`() = runTest{
         // When
+        val result = dataSource.updateUserName(user2Id, "mohamed")
 
         // Then
+        assertThat(result).isTrue()
     }
 
     @Test
-    fun `should return false when user is not found for username update`() {
-        // Given
-
+    fun `should return false when user is not found for username update`() = runTest{
         // When
+        val result = dataSource.updateUserName(notFoundId, "mohamed")
 
         // Then
+        assertThat(result).isFalse()
     }
     // endregion
 
     // region updatePassword
     @Test
-    fun `should return true when password is updated successfully`() {
+    fun `should return true when password is updated successfully`() = runTest{
         // Given
 
         // When
@@ -179,7 +179,7 @@ class UserDataSourceTest {
     }
 
     @Test
-    fun `should return false when user is not found for password update`() {
+    fun `should return false when user is not found for password update`() = runTest{
         // Given
 
         // When
@@ -190,7 +190,7 @@ class UserDataSourceTest {
 
     // region replaceAllUsers
     @Test
-    fun `should return true when all users are replaced successfully`() {
+    fun `should return true when all users are replaced successfully`() = runTest{
         // Given
 
         // When
@@ -199,7 +199,7 @@ class UserDataSourceTest {
     }
 
     @Test
-    fun `should return false when replace operation fails`() {
+    fun `should return false when replace operation fails`() = runTest{
         // Given
 
         // When
