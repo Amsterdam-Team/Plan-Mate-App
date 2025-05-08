@@ -20,7 +20,7 @@ class UserDataSource(
     }
 
     override suspend fun getUserById(userId: UUID): User {
-        throw ObjectDoesNotExistException
+        return usersCollection.find(Filters.eq("id", userId)).firstOrNull() ?: throw ObjectDoesNotExistException
     }
 
     override suspend fun insertUser(user: User): Boolean {
