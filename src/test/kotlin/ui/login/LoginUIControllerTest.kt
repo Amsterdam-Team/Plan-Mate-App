@@ -1,19 +1,22 @@
-package ui
+package ui.login
 
-import com.google.common.truth.Truth.assertThat
-import io.mockk.*
-import kotlinx.coroutines.test.runTest
+import com.google.common.truth.Truth
 import helper.SUCCESS_MESSAGE_FOR_LOGIN
 import helper.WRONG_PASSWORD
 import helper.WRONG_USER_NAME
 import helper.validUserData
-import logic.exception.PlanMateException.AuthorizationException.WrongPasswordException
-import logic.exception.PlanMateException.AuthorizationException.WrongUsernameException
+import io.mockk.CapturingSlot
+import io.mockk.Runs
+import io.mockk.coEvery
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
+import logic.exception.PlanMateException
 import logic.usecases.login.LoginUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import ui.console.ConsoleIO
-import ui.login.LoginUIController
 import ui.menuHandler.AdminMenuHandler
 import ui.menuHandler.MateMenuHandler
 
@@ -35,7 +38,7 @@ class LoginUIControllerTest {
 
 
     @Test
-    fun `should print success message when useCase return full user data`() = runTest{
+    fun `should print success message when useCase return full user data`() = runTest {
         val username = "Hend"
         val password = "H123456"
         val input = "${username}\n${password}"
@@ -48,11 +51,11 @@ class LoginUIControllerTest {
 
         uiController.execute()
 
-        assertThat(slot.equals(SUCCESS_MESSAGE_FOR_LOGIN))
+        Truth.assertThat(slot.equals(SUCCESS_MESSAGE_FOR_LOGIN))
     }
 
     @Test
-    fun `should print wrong username message when useCase throw wrong user name exception`()= runTest{
+    fun `should print wrong username message when useCase throw wrong user name exception`()= runTest {
         val username = "Hen"
         val password = "H123456"
         val input = "${username}\n${password}"
@@ -63,15 +66,20 @@ class LoginUIControllerTest {
         every { consoleIO.readFromUser() } returns input
 
 
-        coEvery { useCase.validateUserCredentials(username, password) } throws WrongUsernameException
+        coEvery {
+            useCase.validateUserCredentials(
+                username,
+                password
+            )
+        } throws PlanMateException.AuthorizationException.WrongUsernameException
 
         uiController.execute()
 
-        assertThat(slot.equals(WRONG_USER_NAME))
+        Truth.assertThat(slot.equals(WRONG_USER_NAME))
     }
 
     @Test
-    fun `should print wrong password message when useCase throw wrong password exception`()= runTest{
+    fun `should print wrong password message when useCase throw wrong password exception`()= runTest {
         val username = "Hend"
         val password = "12345"
         val input = "${username}\n${password}"
@@ -81,10 +89,15 @@ class LoginUIControllerTest {
         every { consoleIO.readFromUser() } returns input
 
 
-        coEvery { useCase.validateUserCredentials(username, password) } throws WrongPasswordException
+        coEvery {
+            useCase.validateUserCredentials(
+                username,
+                password
+            )
+        } throws PlanMateException.AuthorizationException.WrongPasswordException
 
         uiController.execute()
 
-        assertThat(slot.equals(WRONG_PASSWORD))
+        Truth.assertThat(slot.equals(WRONG_PASSWORD))
     }
 }

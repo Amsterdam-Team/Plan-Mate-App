@@ -1,6 +1,6 @@
-package ui.project
+package ui.logs
 
-
+import helper.ViewProjectHistoryTestFactory
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -8,12 +8,9 @@ import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import logic.usecases.logs.GetProjectHistoryUseCase
-import helper.ViewProjectHistoryTestFactory.LOGS_FOR_PROJECT_1
-import helper.ViewProjectHistoryTestFactory.PROJECT_1
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import ui.console.ConsoleIO
-import ui.logs.ViewProjectHistoryUIController
 import ui.utils.formatLogItem
 
 class ViewProjectHistoryUIControllerTest {
@@ -32,37 +29,37 @@ class ViewProjectHistoryUIControllerTest {
     }
 
     @Test
-    fun `should call read from user function`() = runTest{
+    fun `should call read from user function`() = runTest {
         //When
         controller.execute()
         //Then
-        verify (exactly = 1){ consoleIO.readFromUser() }
+        verify(exactly = 1) { consoleIO.readFromUser() }
     }
 
     @Test
-    fun `should call viewProjectHistoryUseCase when user enter the input`() = runTest{
+    fun `should call viewProjectHistoryUseCase when user enter the input`() = runTest {
         // Given
-        val selectedProjectId = PROJECT_1.id.toString()
-        coEvery  { consoleIO.readFromUser() } returns selectedProjectId
+        val selectedProjectId = ViewProjectHistoryTestFactory.PROJECT_1.id.toString()
+        coEvery { consoleIO.readFromUser() } returns selectedProjectId
 
         // When
         controller.execute()
 
         // Then
-        coVerify (exactly = 1) { useCase.execute(selectedProjectId) }
+        coVerify(exactly = 1) { useCase.execute(selectedProjectId) }
     }
 
     @Test
-    fun `should print logs for selected project`() = runTest{
+    fun `should print logs for selected project`() = runTest {
         // Given
-        val selectedProjectId = PROJECT_1.id.toString()
+        val selectedProjectId = ViewProjectHistoryTestFactory.PROJECT_1.id.toString()
         every { consoleIO.readFromUser() } returns selectedProjectId
-        coEvery { useCase.execute(selectedProjectId)} returns LOGS_FOR_PROJECT_1
+        coEvery { useCase.execute(selectedProjectId) } returns ViewProjectHistoryTestFactory.LOGS_FOR_PROJECT_1
         // When
         controller.execute()
 
         // Then
-        LOGS_FOR_PROJECT_1.forEach {
+        ViewProjectHistoryTestFactory.LOGS_FOR_PROJECT_1.forEach {
             verify(exactly = 1) { consoleIO.println(formatLogItem(it)) }
         }
     }

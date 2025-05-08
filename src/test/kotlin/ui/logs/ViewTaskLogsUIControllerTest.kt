@@ -1,6 +1,11 @@
-package ui.task
+package ui.logs
 
-import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth
+import helper.INVALID_ID_FORMAT
+import helper.TASK_NOT_FOUND
+import helper.invalidId
+import helper.taskLogs
+import helper.validId
 import io.mockk.CapturingSlot
 import io.mockk.Runs
 import io.mockk.coEvery
@@ -8,17 +13,10 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
-import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
+import logic.exception.PlanMateException
 import logic.usecases.logs.ViewTaskLogsUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import ui.logs.ViewTaskLogsUIController
-import helper.INVALID_ID_FORMAT
-import helper.TASK_NOT_FOUND
-import helper.invalidId
-import helper.taskLogs
-import helper.validId
 import ui.console.ConsoleIO
 
 class ViewTaskLogsUIControllerTest {
@@ -35,7 +33,7 @@ class ViewTaskLogsUIControllerTest {
     }
 
     @Test
-    fun `should print logs of task when logs are found`() = runTest{
+    fun `should print logs of task when logs are found`() = runTest {
         val slot = CapturingSlot<String>()
 
         every { consoleIO.println(capture(slot)) } just Runs
@@ -44,32 +42,32 @@ class ViewTaskLogsUIControllerTest {
 
         uiController.execute()
 
-        assertThat(slot.equals((taskLogs()[0].message) + (taskLogs()[1].message )))
+        Truth.assertThat(slot.equals((taskLogs()[0].message) + (taskLogs()[1].message)))
     }
 
     @Test
-    fun `should print Invalid ID Format message when use case throw InvalidTaskIDException`() = runTest{
+    fun `should print Invalid ID Format message when use case throw InvalidTaskIDException`() = runTest {
         val slot = CapturingSlot<String>()
 
         every { consoleIO.println(capture(slot)) } just Runs
         every { consoleIO.readFromUser() } returns invalidId.toString()
-        coEvery { useCase.viewTaskLogs(invalidId) } throws InvalidTaskIDException
+        coEvery { useCase.viewTaskLogs(invalidId) } throws PlanMateException.ValidationException.InvalidTaskIDException
 
         uiController.execute()
 
-        assertThat(slot.equals(INVALID_ID_FORMAT))
+        Truth.assertThat(slot.equals(INVALID_ID_FORMAT))
     }
 
     @Test
-    fun `should print Task Not Found message when use case throw TaskNotFoundException`() = runTest{
+    fun `should print Task Not Found message when use case throw TaskNotFoundException`() = runTest {
         val slot = CapturingSlot<String>()
 
         every { consoleIO.println(capture(slot)) } just Runs
         every { consoleIO.readFromUser() } returns invalidId.toString()
-        coEvery { useCase.viewTaskLogs(invalidId.toString()) } throws TaskNotFoundException
+        coEvery { useCase.viewTaskLogs(invalidId.toString()) } throws PlanMateException.NotFoundException.TaskNotFoundException
 
         uiController.execute()
 
-        assertThat(slot.equals(TASK_NOT_FOUND))
+        Truth.assertThat(slot.equals(TASK_NOT_FOUND))
     }
 }
