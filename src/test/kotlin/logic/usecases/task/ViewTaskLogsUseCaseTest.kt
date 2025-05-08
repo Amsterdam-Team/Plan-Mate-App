@@ -1,8 +1,10 @@
 package logic.usecases.task
 
 import com.google.common.truth.Truth.assertThat
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.repository.LogRepository
@@ -30,10 +32,10 @@ class ViewTaskLogsUseCaseTest {
     }
 
     @Test
-    fun `should return logs of task when id is valid format of UUID and found`(){
+    fun `should return logs of task when id is valid format of UUID and found`() = runTest {
 
         every { validationInputUseCase.isValidUUID(validId.toString()) }returns true
-        every { repository.viewLogsById(validId) } returns taskLogs()
+        coEvery { repository.viewLogsById(validId) } returns taskLogs()
 
         val returnedLogs = useCase.viewTaskLogs(validId.toString())
 
@@ -49,7 +51,7 @@ class ViewTaskLogsUseCaseTest {
             "kahdjshuffl123"
         ]
     )
-    fun `should throw InvalidTaskIDException when task id is invalid UUID format`(id:String){
+    fun `should throw InvalidTaskIDException when task id is invalid UUID format`(id:String)= runTest{
 
         every { validationInputUseCase.isValidUUID(id)} returns false
 
@@ -59,10 +61,10 @@ class ViewTaskLogsUseCaseTest {
     }
 
     @Test
-    fun `should throw TaskNotFoundException when id of task is valid format of UUID but not found`(){
+    fun `should throw TaskNotFoundException when id of task is valid format of UUID but not found`()= runTest{
 
         every { validationInputUseCase.isValidUUID(validId.toString()) } returns true
-        every { repository.viewLogsById(validId) } throws TaskNotFoundException
+        coEvery { repository.viewLogsById(validId) } throws TaskNotFoundException
 
         assertThrows<TaskNotFoundException> {
             useCase.viewTaskLogs(validId.toString())

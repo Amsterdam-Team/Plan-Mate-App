@@ -1,8 +1,9 @@
 package logic.usecases.state
 
 import com.google.common.truth.Truth.assertThat
-import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
 import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
 import logic.repository.ProjectRepository
@@ -25,9 +26,9 @@ class GetProjectStatesUseCaseTest{
     }
 
     @Test
-    fun `should return the correct states when the project exists`() {
+    fun `should return the correct states when the project exists`() = runTest {
         //Given
-        every { repository.getProject(any()) } returns dummyProject
+        coEvery { repository.getProject(any()) } returns dummyProject
 
         //When
         val states = useCase.execute(EXISTING_PROJECT_ID)
@@ -37,15 +38,15 @@ class GetProjectStatesUseCaseTest{
     }
 
     @Test
-    fun `should throw InvalidProjectIDException when the project ID is invalid`() {
+    fun `should throw InvalidProjectIDException when the project ID is invalid`() = runTest{
         //Given & When & Then
         assertThrows<InvalidProjectIDException> { useCase.execute(INVALID_PROJECT_ID) }
     }
 
     @Test
-    fun `should throw ProjectNotFoundException when the project is not exists`() {
+    fun `should throw ProjectNotFoundException when the project is not exists`() = runTest{
         //Given
-        every { repository.getProject(any()) } throws  ProjectNotFoundException
+        coEvery { repository.getProject(any()) } throws  ProjectNotFoundException
 
         //When & Then
         assertThrows<InvalidProjectIDException> { useCase.execute(INVALID_PROJECT_ID) }
