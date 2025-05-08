@@ -46,8 +46,8 @@ class CreateTaskUseCase(
                 projectId = targetProject.id,
                 state = state
             )
-        ).also {
-            loggerUseCase.createLog("Created $name task",taskUUID)
+        ).also { isCreated ->
+            if(isCreated) loggerUseCase.createLog("Created $name task",taskUUID)
         }
     }
 
