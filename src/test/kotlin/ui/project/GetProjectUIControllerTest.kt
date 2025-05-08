@@ -12,7 +12,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import ui.console.ConsoleIO
 import ui.utils.getErrorMessageByException
-import utils.printSwimlanesView
+import ui.utils.printSwimlanesView
 import java.util.*
 import kotlin.test.Test
 

@@ -1,11 +1,9 @@
-package ui.controllers
+package ui.state
 
 import logic.usecases.state.AddStateUseCase
 import ui.console.ConsoleIO
 import ui.controller.BaseUIController
-import ui.utils.printAsASuccessState
 import ui.utils.tryToExecute
-import java.util.UUID
 
 class AddStateUIController(
     private val useCase: AddStateUseCase,

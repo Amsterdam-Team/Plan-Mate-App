@@ -13,6 +13,7 @@ import logic.usecases.login.LoginUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import ui.console.ConsoleIO
+import ui.login.LoginUIController
 import ui.menuHandler.AdminMenuHandler
 import ui.menuHandler.MateMenuHandler
 
@@ -29,7 +30,7 @@ class LoginUIControllerTest {
         adminMenuHandler = mockk()
         mateMenuHandler = mockk()
         consoleIO = mockk()
-        uiController = LoginUIController(useCase,adminMenuHandler,mateMenuHandler,consoleIO)
+        uiController = LoginUIController(useCase, adminMenuHandler, mateMenuHandler, consoleIO)
     }
 
 

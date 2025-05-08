@@ -1,8 +1,7 @@
-package ui.swimlane
+package ui.utils
 
 import logic.entities.Task
 import ui.console.ConsoleIOImpl
-import ui.utils.DisplayUtils
 import ui.utils.DisplayUtils.printLine
 
 fun printTasksSwimlanesView(

@@ -1,13 +1,12 @@
-package logic.usecases
+package logic.usecases.utils
 
-import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth
 import logic.entities.User
-import logic.exception.PlanMateException.AuthorizationException.UnAuthenticatedException
-import logic.usecases.utils.StateManager
+import logic.exception.PlanMateException
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.util.UUID.randomUUID
-import kotlin.test.Test
+import java.util.UUID
 
 class StateManagerTest {
     @BeforeEach
@@ -18,20 +17,20 @@ class StateManagerTest {
     @Test
     fun `should set and get the logged-in user successfully`() {
         // Given
-        val user = User(id = randomUUID(), username = "admin", password = "hashed_password", isAdmin = true)
+        val user = User(id = UUID.randomUUID(), username = "admin", password = "hashed_password", isAdmin = true)
 
         // When
         StateManager.setLoggedInUser(user)
         val loggedInUser = StateManager.getLoggedInUser()
 
         // Then
-        assertThat(loggedInUser).isEqualTo(user)
+        Truth.assertThat(loggedInUser).isEqualTo(user)
     }
 
     @Test
     fun `should throw UnAuthenticatedException when trying to get user without login`() {
         // Expect
-        assertThrows<UnAuthenticatedException> {
+        assertThrows<PlanMateException.AuthorizationException.UnAuthenticatedException> {
             StateManager.getLoggedInUser()
         }
     }
@@ -39,14 +38,14 @@ class StateManagerTest {
     @Test
     fun `should log out the user successfully when user exist`() {
         // Given
-        val user = User(id = randomUUID(), username = "admin", password = "hashed_password", isAdmin = true)
+        val user = User(id = UUID.randomUUID(), username = "admin", password = "hashed_password", isAdmin = true)
         StateManager.setLoggedInUser(user)
 
         // When
         StateManager.logOut()
 
         // Then
-        assertThrows<UnAuthenticatedException> {
+        assertThrows<PlanMateException.AuthorizationException.UnAuthenticatedException> {
             StateManager.getLoggedInUser()
         }
     }
@@ -54,16 +53,16 @@ class StateManagerTest {
     @Test
     fun `should return true when user is logged in`() {
         // Given
-        val user = User(id = randomUUID(), username = "admin", password = "hashed_password", isAdmin = true)
+        val user = User(id = UUID.randomUUID(), username = "admin", password = "hashed_password", isAdmin = true)
         StateManager.setLoggedInUser(user)
 
         // Then
-        assertThat(StateManager.isUserLoggedIn()).isTrue()
+        Truth.assertThat(StateManager.isUserLoggedIn()).isTrue()
     }
 
     @Test
     fun `should return false when no user is logged in`() {
         // Then
-        assertThat(StateManager.isUserLoggedIn()).isFalse()
+        Truth.assertThat(StateManager.isUserLoggedIn()).isFalse()
     }
 }

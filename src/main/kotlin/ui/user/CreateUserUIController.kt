@@ -1,11 +1,9 @@
-package ui.controllers
+package ui.user
 
 import logic.usecases.user.CreateUserUseCase
 import ui.console.ConsoleIO
 import ui.controller.BaseUIController
-import ui.utils.printAsASuccessState
 import ui.utils.tryToExecute
-import utils.ResultStatus
 
 class CreateUserUIController(
     private val createUserUseCase: CreateUserUseCase,
@@ -24,9 +22,9 @@ class CreateUserUIController(
         tryToExecute(
             action = { createUserUseCase.execute(username, password) },
             onSuccess = { result ->
-                if(result){
+                if (result) {
                     "Mate user created successfully"
-                }else{
+                } else {
                     "Failed creating user"
                 }
             }

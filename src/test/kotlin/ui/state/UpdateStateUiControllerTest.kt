@@ -3,7 +3,6 @@ package ui.state
 import com.google.common.truth.Truth.assertThat
 import io.mockk.*
 import kotlinx.coroutines.test.runTest
-import logic.exception.PlanMateException
 import logic.exception.PlanMateException.ValidationException.InvalidStateNameException
 import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
 import logic.exception.PlanMateException.ValidationException.SameStateNameException
@@ -13,7 +12,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import ui.console.ConsoleIO
-import ui.controllers.UpdateStateUiController
 import ui.utils.getErrorMessageByException
 
 class UpdateStateUiControllerTest {

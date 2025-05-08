@@ -13,7 +13,8 @@ import helper.ViewProjectHistoryTestFactory.PROJECT_1
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import ui.console.ConsoleIO
-import utils.formatLogItem
+import ui.logs.ViewProjectHistoryUIController
+import ui.utils.formatLogItem
 
 class ViewProjectHistoryUIControllerTest {
 
@@ -26,7 +27,8 @@ class ViewProjectHistoryUIControllerTest {
         consoleIO = mockk(relaxed = true)
         controller = ViewProjectHistoryUIController(
             getProjectHistoryUseCase = useCase,
-            consoleIO = consoleIO)
+            consoleIO = consoleIO
+        )
     }
 
     @Test

@@ -1,4 +1,4 @@
-package ui
+package ui.login
 
 import logic.entities.User
 import logic.usecases.login.LoginUseCase
@@ -21,9 +21,9 @@ class LoginUIController(
         val username = consoleIO.readFromUser()
         consoleIO.println("Enter Your Password : ")
         val password = consoleIO.readFromUser()
-        tryToExecute (
+        tryToExecute(
             action = {
-                user = loginUseCase.validateUserCredentials(username,password)
+                user = loginUseCase.validateUserCredentials(username, password)
                 onLoginSuccess(user)
             },
             onSuccess = { consoleIO.println("Success Login......") }

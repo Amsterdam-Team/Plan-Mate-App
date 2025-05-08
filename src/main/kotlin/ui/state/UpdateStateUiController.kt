@@ -1,4 +1,4 @@
-package ui.controllers
+package ui.state
 
 import logic.usecases.state.UpdateStateUseCase
 import ui.console.ConsoleIO

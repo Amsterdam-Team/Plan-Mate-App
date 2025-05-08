@@ -1,7 +1,8 @@
-package ui.controller
+package ui.task
 
 import logic.usecases.task.CreateTaskUseCase
 import ui.console.ConsoleIO
+import ui.controller.BaseUIController
 import ui.utils.tryToExecute
 
 class CreateTaskUIController(

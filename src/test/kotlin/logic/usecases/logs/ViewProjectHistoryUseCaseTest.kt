@@ -1,16 +1,14 @@
-package logic.usecases.project
+package logic.usecases.logs
 
-import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth
+import helper.ViewProjectHistoryTestFactory
 import io.mockk.coEvery
-import helper.ViewProjectHistoryTestFactory.LOGS_FOR_PROJECT_1
-import helper.ViewProjectHistoryTestFactory.PROJECT_1
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
+import logic.exception.PlanMateException
 import logic.repository.LogRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
-import logic.usecases.logs.GetProjectHistoryUseCase
 import org.junit.jupiter.api.assertThrows
 
 class ViewProjectHistoryUseCaseTest {
@@ -27,29 +25,29 @@ class ViewProjectHistoryUseCaseTest {
     @Test
     fun `should return the correct logs list when projectId is valid`() = runTest {
         // Given
-        val projectId = PROJECT_1.id
-        val logs = LOGS_FOR_PROJECT_1
+        val projectId = ViewProjectHistoryTestFactory.PROJECT_1.id
+        val logs = ViewProjectHistoryTestFactory.LOGS_FOR_PROJECT_1
         coEvery { logRepository.viewLogsById(projectId) } returns logs
 
         // When
         val result = getProjectHistoryUseCase.execute(projectId.toString())
 
         // Then
-        assertThat(result).isEqualTo(logs)
+        Truth.assertThat(result).isEqualTo(logs)
     }
 
     @Test
-    fun `should throw InvalidProjectIDException when input is not UUID`()=runTest{
+    fun `should throw InvalidProjectIDException when input is not UUID`()= runTest {
         // When & Then
-        assertThrows<InvalidProjectIDException> {
+        assertThrows<PlanMateException.ValidationException.InvalidProjectIDException> {
             getProjectHistoryUseCase.execute("not-uuid")
         }
     }
 
     @Test
-    fun `should throw InvalidProjectIDException when input is null`()=runTest{
+    fun `should throw InvalidProjectIDException when input is null`()= runTest {
         // When & Then
-        assertThrows<InvalidProjectIDException> {
+        assertThrows<PlanMateException.ValidationException.InvalidProjectIDException> {
             getProjectHistoryUseCase.execute(null)
         }
     }

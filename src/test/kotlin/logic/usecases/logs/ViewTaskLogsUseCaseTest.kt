@@ -1,22 +1,20 @@
-package logic.usecases.task
+package logic.usecases.logs
 
-import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth
+import helper.taskLogs
+import helper.validId
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
-import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
+import logic.exception.PlanMateException
 import logic.repository.LogRepository
 import logic.usecases.utils.ValidateInputUseCase
-import logic.usecases.logs.ViewTaskLogsUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import helper.taskLogs
-import helper.validId
 
 class ViewTaskLogsUseCaseTest {
     private lateinit var repository : LogRepository
@@ -34,12 +32,12 @@ class ViewTaskLogsUseCaseTest {
     @Test
     fun `should return logs of task when id is valid format of UUID and found`() = runTest {
 
-        every { validationInputUseCase.isValidUUID(validId.toString()) }returns true
+        every { validationInputUseCase.isValidUUID(validId.toString()) } returns true
         coEvery { repository.viewLogsById(validId) } returns taskLogs()
 
         val returnedLogs = useCase.viewTaskLogs(validId.toString())
 
-        assertThat(taskLogs()).isEqualTo(returnedLogs)
+        Truth.assertThat(taskLogs()).isEqualTo(returnedLogs)
     }
 
     @ParameterizedTest
@@ -51,22 +49,22 @@ class ViewTaskLogsUseCaseTest {
             "kahdjshuffl123"
         ]
     )
-    fun `should throw InvalidTaskIDException when task id is invalid UUID format`(id:String)= runTest{
+    fun `should throw InvalidTaskIDException when task id is invalid UUID format`(id:String)= runTest {
 
-        every { validationInputUseCase.isValidUUID(id)} returns false
+        every { validationInputUseCase.isValidUUID(id) } returns false
 
-        assertThrows<InvalidTaskIDException> {
+        assertThrows<PlanMateException.ValidationException.InvalidTaskIDException> {
             useCase.viewTaskLogs(id)
         }
     }
 
     @Test
-    fun `should throw TaskNotFoundException when id of task is valid format of UUID but not found`()= runTest{
+    fun `should throw TaskNotFoundException when id of task is valid format of UUID but not found`()= runTest {
 
         every { validationInputUseCase.isValidUUID(validId.toString()) } returns true
-        coEvery { repository.viewLogsById(validId) } throws TaskNotFoundException
+        coEvery { repository.viewLogsById(validId) } throws PlanMateException.NotFoundException.TaskNotFoundException
 
-        assertThrows<TaskNotFoundException> {
+        assertThrows<PlanMateException.NotFoundException.TaskNotFoundException> {
             useCase.viewTaskLogs(validId.toString())
 
         }

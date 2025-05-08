@@ -6,9 +6,8 @@ import org.koin.java.KoinJavaComponent.getKoin
 import ui.console.ConsoleIO
 
 import ui.controller.BaseUIController
-import ui.controller.CreateTaskUIController
-import ui.swimlane.mainMenuTasks
-import ui.swimlane.printTasksSwimlanesView
+import ui.utils.mainMenuTasks
+import ui.utils.printTasksSwimlanesView
 import ui.utils.DisplayUtils
 import ui.utils.tryToExecute
 

@@ -1,4 +1,4 @@
-package ui
+package ui.logs
 
 import logic.usecases.logs.ViewTaskLogsUseCase
 import ui.console.ConsoleIO
@@ -13,7 +13,7 @@ class ViewTaskLogsUIController(
     override suspend fun execute() {
         consoleIO.println("Enter Task ID :")
         val taskId = consoleIO.readFromUser()
-        tryToExecute (
+        tryToExecute(
             action = { viewTaskLogsUseCase.viewTaskLogs(taskId) },
             onSuccess = { logs ->
                 consoleIO.println("Task Logs :")

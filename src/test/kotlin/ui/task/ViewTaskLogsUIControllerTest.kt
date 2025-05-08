@@ -13,7 +13,7 @@ import logic.exception.PlanMateException.ValidationException.InvalidTaskIDExcept
 import logic.usecases.logs.ViewTaskLogsUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import ui.ViewTaskLogsUIController
+import ui.logs.ViewTaskLogsUIController
 import helper.INVALID_ID_FORMAT
 import helper.TASK_NOT_FOUND
 import helper.invalidId

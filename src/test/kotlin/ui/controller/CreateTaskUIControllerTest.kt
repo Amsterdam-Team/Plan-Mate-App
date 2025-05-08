@@ -29,6 +29,7 @@ import helper.CreateTaskUIControllerTestFactory.VALID_PROJECT_ID
 import helper.CreateTaskUIControllerTestFactory.VALID_STATE
 import helper.CreateTaskUIControllerTestFactory.VALID_TASK_NAME
 import helper.CreateTaskUIControllerTestFactory.getDummyInputs
+import ui.task.CreateTaskUIController
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
 
