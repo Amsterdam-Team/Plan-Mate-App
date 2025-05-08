@@ -5,7 +5,7 @@ import helper.ViewProjectHistoryTestFactory
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import logic.exception.PlanMateException
+import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
 import logic.repository.LogRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -39,7 +39,7 @@ class ViewProjectHistoryUseCaseTest {
     @Test
     fun `should throw InvalidProjectIDException when input is not UUID`()= runTest {
         // When & Then
-        assertThrows<PlanMateException.ValidationException.InvalidProjectIDException> {
+        assertThrows<InvalidProjectIDException> {
             getProjectHistoryUseCase.execute("not-uuid")
         }
     }
@@ -47,7 +47,7 @@ class ViewProjectHistoryUseCaseTest {
     @Test
     fun `should throw InvalidProjectIDException when input is null`()= runTest {
         // When & Then
-        assertThrows<PlanMateException.ValidationException.InvalidProjectIDException> {
+        assertThrows<InvalidProjectIDException> {
             getProjectHistoryUseCase.execute(null)
         }
     }
