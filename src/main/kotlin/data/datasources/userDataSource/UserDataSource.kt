@@ -37,7 +37,8 @@ class UserDataSource(
     }
 
     override suspend fun deleteUser(userId: UUID): Boolean {
-        return false
+        val result = usersCollection.deleteOne(Filters.eq("id", userId))
+        return result.deletedCount > 0
     }
 
     override suspend fun updateUserName(userId: UUID, newName: String): Boolean {
