@@ -1,12 +1,16 @@
 package di
 
-import data.datasources.CsvDataSource
-import data.datasources.DataSource
-import data.datasources.FileManager
-import data.datasources.parser.LogItemCsvParser
-import data.datasources.parser.ProjectCsvParser
-import data.datasources.parser.TaskCsvParser
-import data.datasources.parser.UserCsvParser
+import com.mongodb.kotlin.client.coroutine.MongoCollection
+import console.ConsoleIoImpl
+import data.datasources.MongoDatabaseFactory
+import data.datasources.logDataSource.ILogDataSource
+import data.datasources.logDataSource.LogDataSource
+import data.datasources.projectDataSource.IProjectDataSource
+import data.datasources.projectDataSource.ProjectDataSource
+import data.datasources.taskDataSource.ITaskDataSource
+import data.datasources.taskDataSource.TaskDataSource
+import data.datasources.userDataSource.IUserDataSource
+import data.datasources.userDataSource.UserDataSource
 import data.repository.auth.AuthRepositoryImpl
 import data.repository.log.LogRepositoryImpl
 import data.repository.project.ProjectRepositoryImpl
@@ -19,104 +23,158 @@ import logic.repository.AuthRepository
 import logic.repository.LogRepository
 import logic.repository.ProjectRepository
 import logic.repository.TaskRepository
-import logic.usecases.task.DeleteTaskUseCase
+import logic.usecases.GetAllTasksUseCase
 import logic.usecases.LoginUseCase
 import logic.usecases.ValidateInputUseCase
 import logic.usecases.ViewTaskLogsUseCase
-import logic.usecases.project.CreateProjectUseCase
-import logic.usecases.project.DeleteProjectUseCase
-import logic.usecases.project.GetProjectDetailsUseCase
-import logic.usecases.project.GetProjectHistoryUseCase
-import logic.usecases.state.DeleteStateUseCase
-import logic.usecases.state.GetProjectStatesUseCase
-import logic.usecases.state.GetTaskStateUseCase
-import logic.usecases.state.UpdateStateUseCase
-import logic.usecases.task.CreateTaskUseCase
-import logic.usecases.task.EditTaskUseCase
-import logic.usecases.task.GetAllTasksByProjectIdUseCase
-import logic.usecases.task.GetTaskByIdUseCase
+import logic.usecases.project.*
+import logic.usecases.state.*
+import logic.usecases.task.*
+import logic.usecases.user.CreateUserUseCase
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import ui.DeleteProjectUiController
-import ui.EditTaskUiController
+import ui.LoginUIController
 import ui.ViewTaskLogsUIController
 import ui.console.ConsoleIO
 import ui.console.ConsoleIOImpl
+import ui.controller.BaseUIController
+import ui.controller.CreateTaskUIController
+import ui.controllers.AddStateUIController
 import ui.controllers.CreateProjectUIController
-import ui.task.DeleteTaskUIController
+import ui.controllers.CreateUserUIController
 import ui.controllers.UpdateStateUiController
 import ui.menuHandler.AdminMenuHandler
 import ui.menuHandler.MateMenuHandler
+import ui.project.DeleteProjectUiController
 import ui.project.GetProjectUIController
+import ui.project.ViewAllProjectsUIController
 import ui.project.ViewProjectHistoryUIController
+import ui.task.DeleteTaskUIController
+import ui.task.EditTaskUiController
+import ui.task.ViewAllTaksByProjectIdUIController
+import ui.task.ViewTaskDetailsUIController
 import java.util.*
 
 val appModule = module {
 
-    val task = named("task")
-    val user = named("user")
-    val project = named("project")
-    val log = named("log")
+    val userMap = named("userMap")
+    val adminMap = named("adminMap")
 
 
-    single { UserCsvParser() }
-    single { TaskCsvParser() }
-    single { ProjectCsvParser() }
-    single { LogItemCsvParser() }
+    // AdminUIController names
+    val updateStateUiController = named("updateStateUiController")
+    val addStateUiController = named("addStateUiController")
+    val createUserUiController = named("createUserUiController")
 
-    single(user) { FileManager.create<User>() }
-    single(task) { FileManager.create<Task>() }
-    single(project) { FileManager.create<Project>() }
-    single(log) { FileManager.create<LogItem>() }
+    // ProjectUIController names
+    val createProjectUiController = named("createProjectUiController")
+    val deleteProjectUiController = named("deleteProjectUiController")
+    val viewProjectHistoryUiController = named("viewProjectHistoryUiController")
+    val getProjectUiController = named("getProjectUiController")
+    val viewAllProjectsUiController = named("viewAllProjectsUiController")
 
-    single<DataSource>(user) { CsvDataSource(get<FileManager<User>>(user), get<UserCsvParser>()) }
-    single<DataSource>(task) { CsvDataSource(get<FileManager<Task>>(task), get<TaskCsvParser>()) }
-    single<DataSource>(project) { CsvDataSource(get<FileManager<Project>>(project), get<ProjectCsvParser>()) }
-    single<DataSource>(log) { CsvDataSource(get<FileManager<LogItem>>(log), get<LogItemCsvParser>()) }
+    // TaskUIController names
+    val createTaskUiController = named("createTaskUiController")
+    val deleteTaskUiController = named("deleteTaskUiController")
+    val viewTaskLogsUiController = named("viewTaskLogsUiController")
+    val editTaskUiController = named("editTaskUiController")
+    val viewTaskDetailsUiController = named("viewTaskDetailsUiController")
+    val viewAllTasksByProjectIdUiController = named("viewAllTasksByProjectIdUiController")
+
+    // MongoCollections
+    single<MongoCollection<User>>{MongoDatabaseFactory.db.getCollection<User>("users")}
+    single<MongoCollection<Project>>{MongoDatabaseFactory.db.getCollection<Project>("projects")}
+    single<MongoCollection<Task>>{MongoDatabaseFactory.db.getCollection<Task>("tasks")}
+    single<MongoCollection<LogItem>>{MongoDatabaseFactory.db.getCollection<LogItem>("logs")}
+
+    // DataSources
+    single<ILogDataSource> { LogDataSource(get()) }
+    single<IProjectDataSource> { ProjectDataSource(get()) }
+    single<IUserDataSource> { UserDataSource(get()) }
+    single<ITaskDataSource> { TaskDataSource(get()) }
 
 
-    single<AuthRepository> { AuthRepositoryImpl(get(user)) }
-    single<TaskRepository> { TaskRepositoryImpl(get(task)) }
-    single<ProjectRepository> { ProjectRepositoryImpl(get(project)) }
-    single<LogRepository> { LogRepositoryImpl(get(log)) }
+    // Repositories
+    single<AuthRepository> { AuthRepositoryImpl(get()) }
+    single<TaskRepository> { TaskRepositoryImpl(get()) }
+    single<LogRepository> { LogRepositoryImpl(get()) }
+    single<ProjectRepository> { ProjectRepositoryImpl(get(), get()) }
+
+
+    single<User> { User(id = UUID.randomUUID(), username = "fsef", password = "fsefs", isAdmin = true) }
 
     single { ValidateInputUseCase() }
 
-    single { CreateProjectUseCase(get(), User(id = UUID.randomUUID(), username = "fsef", password = "fsefs", isAdmin = true)) }
-    single { DeleteProjectUseCase(get()) }
+    // Project UseCases
+    single { CreateProjectUseCase(get(), get(), get()) }
+    single { DeleteProjectUseCase(get(), get(), get()) }
+    single { EditProjectUseCase(get(), get(), get()) }
+    single { GetAllProjectsUseCase(get()) }
     single { GetProjectDetailsUseCase(get(),get(), get()) }
+    single { GetProjectHistoryUseCase(get()) }
 
+
+    // StateUseCase
+    single { AddStateUseCase(get(), get(), get()) }
     single { DeleteStateUseCase(get()) }
-    single { UpdateStateUseCase(get()) }
     single { GetProjectStatesUseCase(get()) }
+    single { UpdateStateUseCase(get(), get(), get()) }
     single { GetTaskStateUseCase(get()) }
 
+    // TaskUseCase
     single { CreateTaskUseCase(get(), get(), get()) }
-    single { EditTaskUseCase(get()) }
-    single { GetAllTasksByProjectIdUseCase(get()) }
-    single { GetTaskByIdUseCase(get()) }
     single { DeleteTaskUseCase(get()) }
-
-    single { LoginUseCase(get()) }
-    single { GetProjectHistoryUseCase(get()) }
+    single { EditTaskUseCase(get(), get()) }
+    single { GetAllTasksByProjectIdUseCase(get(), get()) }
+    single { GetTaskByIdUseCase(get(), get()) }
     single { ViewTaskLogsUseCase(get(),get()) }
+    single { GetAllTasksUseCase() }
 
+    // UserUseCase
+    single { LoginUseCase(get()) }
+    single { CreateUserUseCase(get(), get()) }
 
+    // ConsoleIO
     single<ConsoleIO> { ConsoleIOImpl() }
+    single<console.ConsoleIO> { ConsoleIoImpl() }
 
-    single { CreateProjectUIController(get()) }
-    single { DeleteTaskUIController(get(), get()) }
-    single { UpdateStateUiController(get(), get()) }
-    single { ViewProjectHistoryUIController(get(), get()) }
+    // AdminUIController
+    single<BaseUIController>(updateStateUiController) { UpdateStateUiController(get(), get()) }
+    single<BaseUIController>(addStateUiController) { AddStateUIController(get(), get()) }
+    single<BaseUIController>(createUserUiController) { CreateUserUIController(get(), get()) }
 
-    single { AdminMenuHandler(get()) }
-    single { MateMenuHandler(get()) }
-    single { GetProjectUIController(get(), get()) }
+    // ProjectUIController
+    single<BaseUIController>(createProjectUiController) { CreateProjectUIController(get(), get()) }
+    single<BaseUIController>(deleteProjectUiController) { DeleteProjectUiController(get(), get()) }
+    single<BaseUIController>(viewProjectHistoryUiController) { ViewProjectHistoryUIController(get(), get()) }
+    single<BaseUIController>(getProjectUiController) { GetProjectUIController(get(), get()) }
+    single<BaseUIController>(viewAllProjectsUiController) { ViewAllProjectsUIController(get()) }
 
-    single { DeleteProjectUiController(get(), get()) }
-    single { EditTaskUiController(get(), get()) }
+    // TaskUIController
+    single<BaseUIController>(createTaskUiController) { CreateTaskUIController(get(), get()) }
+    single<BaseUIController>(deleteTaskUiController) { DeleteTaskUIController(get(), get()) }
+    single<BaseUIController>(viewTaskLogsUiController) { ViewTaskLogsUIController(get(), get()) }
+    single<BaseUIController>(editTaskUiController) { EditTaskUiController(get(), get()) }
+    single<BaseUIController>(viewTaskDetailsUiController) { ViewTaskDetailsUIController(get(), get(), get(), get()) }
+    single<BaseUIController>(viewAllTasksByProjectIdUiController) { ViewAllTaksByProjectIdUIController(get(), get(), get()) }
 
 
-    single { ViewTaskLogsUIController(get(),get()) }
+    single<Map<Int, BaseUIController>>(userMap) {
+        mapOf(
+            1 to get(createTaskUiController)
+        )
+    }
 
+    single<Map<Int, BaseUIController>>(adminMap) {
+        mapOf(
+            1 to get(deleteProjectUiController)
+        )
+    }
+
+    // Menu Handlers
+    single { AdminMenuHandler(get(adminMap)) }
+    single { MateMenuHandler(get(userMap)) }
+
+    // LoginUiController
+    single { LoginUIController(get(), get(), get(), get()) }
 }

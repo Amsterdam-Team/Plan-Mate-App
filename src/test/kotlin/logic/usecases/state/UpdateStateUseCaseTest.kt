@@ -1,20 +1,14 @@
 package logic.usecases.state
 
 import com.google.common.truth.Truth.assertThat
-import data.datasources.DataSource
-import data.repository.project.ProjectRepositoryImpl
 import io.mockk.*
 import logic.entities.User
 import logic.exception.PlanMateException
 import logic.repository.ProjectRepository
-import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
 import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
 import logic.exception.PlanMateException.ValidationException.InvalidStateNameException
 import logic.exception.PlanMateException.ValidationException.SameStateNameException
-import logic.exception.PlanMateException.ValidationException.EmptyDataException
 import logic.usecases.ValidateInputUseCase
-import logic.usecases.project.helper.createProject
-import logic.usecases.testFactory.validId
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
