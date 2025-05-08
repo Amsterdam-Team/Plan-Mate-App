@@ -16,34 +16,34 @@ class UserDataSource(
 ): IUserDataSource {
 
     override suspend fun getAllUsers(): List<User> {
-        TODO("Not yet implemented")
+        return emptyList()
     }
 
     override suspend fun getUserById(userId: UUID): User {
-        TODO("Not yet implemented")
+        throw ObjectDoesNotExistException
     }
 
     override suspend fun insertUser(user: User): Boolean {
-        TODO("Not yet implemented")
+        return false
     }
 
     override suspend fun deleteUser(userId: UUID): Boolean {
-        TODO("Not yet implemented")
+        return false
     }
 
     override suspend fun updateUserName(userId: UUID, newName: String): Boolean {
-        TODO("Not yet implemented")
+        return false
     }
 
     override suspend fun updatePassword(userId: UUID, newPassword: String): Boolean {
-        TODO("Not yet implemented")
+        return false
     }
 
     override suspend fun replaceAllUsers(users: List<User>): Boolean {
-        TODO("Not yet implemented")
+        return false
     }
 
     override suspend fun findUserByCredentials(username: String, password: String): User {
-        TODO("Not yet implemented")
+        throw ObjectDoesNotExistException
     }
 }

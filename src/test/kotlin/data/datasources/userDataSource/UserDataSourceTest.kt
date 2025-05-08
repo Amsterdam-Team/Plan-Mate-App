@@ -1,0 +1,239 @@
+package data.datasources.userDataSource
+
+import com.google.common.truth.Truth.assertThat
+import com.mongodb.ConnectionString
+import com.mongodb.MongoClientSettings
+import com.mongodb.client.model.DeleteOptions
+import com.mongodb.client.model.Filters
+import com.mongodb.client.model.InsertOneOptions
+import com.mongodb.client.result.DeleteResult
+import com.mongodb.client.result.InsertOneResult
+import com.mongodb.kotlin.client.coroutine.FindFlow
+import com.mongodb.kotlin.client.coroutine.MongoClient
+import com.mongodb.kotlin.client.coroutine.MongoCollection
+import com.mongodb.kotlin.client.coroutine.MongoDatabase
+import data.datasources.MongoDatabaseFactory
+import de.flapdoodle.embed.process.runtime.Network
+import io.mockk.*
+import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
+import logic.entities.User
+import logic.exception.PlanMateException
+import net.bytebuddy.utility.dispatcher.JavaDispatcher
+import org.bson.Document
+import org.bson.UuidRepresentation
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import org.testcontainers.containers.MongoDBContainer
+import org.testcontainers.utility.DockerImageName
+import utils.TestDataFactory
+import java.util.UUID
+
+class UserDataSourceTest {
+
+    private lateinit var mongoClient: MongoClient
+    private lateinit var collection: MongoCollection<User>
+    private lateinit var dataSource: UserDataSource
+
+    @BeforeEach
+    fun setUp() {
+        val settings = MongoClientSettings.builder()
+            .applyConnectionString(ConnectionString(CONNECTION_STRING))
+            .uuidRepresentation(UuidRepresentation.STANDARD)
+            .build()
+
+        mongoClient = MongoClient.create(settings)
+
+        val database = mongoClient.getDatabase(TEST_DATABASE_NAME)
+        collection = database.getCollection<User>("users")
+
+        dataSource = UserDataSource(collection)
+
+        runBlocking {
+            collection.deleteMany(Document())
+            collection.insertMany(users)
+        }
+    }
+
+    @AfterEach
+    fun tearDown() {
+        runBlocking {
+            collection.deleteMany(Document())
+        }
+        mongoClient.close()
+    }
+
+    // region getAllUsers
+    @Test
+    fun `should return list of users when collection has users`() = runTest {
+        // When
+        val result = dataSource.getAllUsers()
+
+        // Then
+        assertThat(result).isEqualTo(users)
+    }
+
+
+    @Test
+    fun `should return empty list when collection has no users`() = runTest {
+        // When
+        val result = dataSource.getAllUsers()
+
+        // Then
+        assertThat(result).isEmpty()
+    }
+
+//     endregion
+
+//     region getUserById
+    @Test
+    fun `should return user when given valid ID`() = runTest {
+        // When
+        val result = dataSource.getUserById(user2Id)
+
+        // Then
+        assertThat(result).isEqualTo(user2)
+    }
+
+
+    @Test
+    fun `should throw exception when user ID does not exist`() = runTest {
+        // When & Then
+        assertThrows<PlanMateException.DataSourceException.ObjectDoesNotExistException> {
+            dataSource.getUserById(notFoundId)
+        }
+    }
+    // endregion
+
+    // region insertUser
+    @Test
+    fun `should return true when user is inserted successfully`() = runTest {
+        // When
+        val result = dataSource.insertUser(user1)
+
+        // Then
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `should return false when insert fails`() = runTest {
+        // When
+        val result = dataSource.insertUser(user1)
+
+        // Then
+        assertThat(result).isFalse()
+    }
+    // endregion
+
+    // region deleteUser
+    @Test
+    fun `should return true when user is deleted successfully`() = runTest {
+        // When
+        val result = dataSource.deleteUser(user2Id)
+
+        // Then
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `should return false when user to delete is not found`() = runTest {
+        // When
+        val result = dataSource.deleteUser(notFoundId)
+
+        // Then
+        assertThat(result).isFalse()
+    }
+    // endregion
+
+    // region updateUserName
+    @Test
+    fun `should return true when username is updated successfully`() {
+        // Given
+
+        // When
+
+        // Then
+    }
+
+    @Test
+    fun `should return false when user is not found for username update`() {
+        // Given
+
+        // When
+
+        // Then
+    }
+    // endregion
+
+    // region updatePassword
+    @Test
+    fun `should return true when password is updated successfully`() {
+        // Given
+
+        // When
+
+        // Then
+    }
+
+    @Test
+    fun `should return false when user is not found for password update`() {
+        // Given
+
+        // When
+
+        // Then
+    }
+    // endregion
+
+    // region replaceAllUsers
+    @Test
+    fun `should return true when all users are replaced successfully`() {
+        // Given
+
+        // When
+
+        // Then
+    }
+
+    @Test
+    fun `should return false when replace operation fails`() {
+        // Given
+
+        // When
+
+        // Then
+    }
+    // endregion
+
+    // region findUserByCredentials
+    @Test
+    fun `should return user when credentials match`() = runTest {
+        // Given
+
+        // When
+
+        // Then
+    }
+
+    @Test
+    fun `should throw exception when credentials do not match any user`() {
+        // Given
+
+        // When & Then
+    }
+    // endregion
+
+    companion object {
+        private val user1 = TestDataFactory.createUser()
+        private val user2Id = UUID.randomUUID()
+        private val user2 = user1.copy(id = user2Id)
+        private val notFoundId = UUID.randomUUID()
+        private val users = listOf(user1, user2)
+
+        private const val CONNECTION_STRING = "mongodb+srv://7amasa:9LlgpCLbd99zoRrJ@amsterdam.qpathz3.mongodb.net/?retryWrites=true&w=majority&appName=Amsterdam"
+        private const val TEST_DATABASE_NAME = "Amsterdam-test"
+    }
+}
