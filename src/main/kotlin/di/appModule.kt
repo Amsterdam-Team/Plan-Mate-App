@@ -47,6 +47,7 @@ import ui.state.UpdateStateUiController
 import ui.menuHandler.AdminMenuHandler
 import ui.menuHandler.MateMenuHandler
 import ui.project.DeleteProjectUiController
+import ui.project.EditProjectUIController
 import ui.project.GetProjectUIController
 import ui.project.ViewAllProjectsUIController
 import ui.logs.ViewProjectHistoryUIController
@@ -73,6 +74,7 @@ val appModule = module {
     val viewProjectHistoryUiController = named("viewProjectHistoryUiController")
     val getProjectUiController = named("getProjectUiController")
     val viewAllProjectsUiController = named("viewAllProjectsUiController")
+    val editProjectUiController = named("editProjectUiController")
 
     // TaskUIController names
     val createTaskUiController = named("createTaskUiController")
@@ -152,6 +154,7 @@ val appModule = module {
     single<BaseUIController>(viewProjectHistoryUiController) { ViewProjectHistoryUIController(get(), get()) }
     single<BaseUIController>(getProjectUiController) { GetProjectUIController(get(), get()) }
     single<BaseUIController>(viewAllProjectsUiController) { ViewAllProjectsUIController(get()) }
+    single<BaseUIController>(editProjectUiController) { EditProjectUIController(get(), get()) }
 
     // TaskUIController
     single<BaseUIController>(createTaskUiController) { CreateTaskUIController(get(), get()) }
@@ -162,17 +165,40 @@ val appModule = module {
     single<BaseUIController>(viewAllTasksByProjectIdUiController) { ViewAllTasksByProjectIdUIController(get(), get(), get()) }
 
 
+    // User Menus
     single<Map<Int, BaseUIController>>(userMap) {
         mapOf(
-            1 to get(createTaskUiController)
+            1 to get(viewAllProjectsUiController),
+            2 to get(getProjectUiController),
+            3 to get(createTaskUiController),
+            4 to get(editTaskUiController),
+            5 to get(deleteTaskUiController),
+            6 to get(viewAllTasksByProjectIdUiController),
+            7 to get(viewProjectHistoryUiController),
+            8 to get(viewTaskLogsUiController)
         )
     }
 
+    // Admin Menus
     single<Map<Int, BaseUIController>>(adminMap) {
         mapOf(
-            1 to get(deleteProjectUiController)
+            1 to get(viewAllProjectsUiController),
+            2 to get(getProjectUiController),
+            3 to get(createTaskUiController),
+            4 to get(editTaskUiController),
+            5 to get(deleteTaskUiController),
+            6 to get(viewAllTasksByProjectIdUiController),
+            7 to get(viewProjectHistoryUiController),
+            8 to get(viewTaskLogsUiController),
+            9 to get(createUserUiController),
+            10 to get(createProjectUiController),
+            11 to get(editProjectUiController),
+            12 to get(deleteProjectUiController),
+            13 to get(addStateUiController),
+            14 to get(updateStateUiController),
         )
     }
+
 
     // Menu Handlers
     single { AdminMenuHandler(get(adminMap)) }

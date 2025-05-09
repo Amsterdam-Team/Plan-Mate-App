@@ -33,7 +33,6 @@ class AdminMenuHandler(private val adminFeatureControllers: Map<Int, BaseUIContr
     12. Delete Project
     13. Create State
     14. Edit State
-    15. Delete State
     0. Exit
     """.trimIndent()
         )
