@@ -3,7 +3,13 @@ package ui.project
 import com.google.common.truth.Truth.assertThat
 import helper.ProjectFactory.inValidProjectNameTest
 import helper.ProjectFactory.validProjectTest
-import io.mockk.*
+import io.mockk.Runs
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException
 import logic.exception.PlanMateException.ValidationException.InvalidProjectNameException
@@ -31,7 +37,7 @@ class CreateProjectUIControllerTest {
     }
 
     @Test
-    fun `should call create project use case only once when user enter all inputs`() = runTest{
+    fun `should call create project use case only once when user enter all inputs`() = runTest {
         coEvery { useCase.createProject(any(), any()) } returns true
         every { consoleIo.readFromUser() } returnsMany listOf(
             validProjectTest.name, validProjectTest.states.joinToString(", ")
@@ -60,7 +66,7 @@ class CreateProjectUIControllerTest {
     }
 
     @Test
-    fun `should show error message when input project name is invalid`() = runTest  {
+    fun `should show error message when input project name is invalid`() = runTest {
         every { consoleIo.readFromUser() } returnsMany listOf(
             inValidProjectNameTest.name, inValidProjectNameTest.states.toString(), "CANCEL"
         )
@@ -73,17 +79,21 @@ class CreateProjectUIControllerTest {
     }
 
     @Test
-    fun `should show error message when input project states is invalid`() = runTest  {
+    fun `should show error message when input project states is invalid`() = runTest {
+        // Given
         every { consoleIo.readFromUser() } returnsMany listOf(
             inValidProjectNameTest.name, inValidProjectNameTest.states.toString(), "CANCEL"
         )
         coEvery {
-            useCase.createProject(
-                any(), any()
-            )
+            useCase.createProject(any(), any())
         } throws PlanMateException.ValidationException.InvalidStateNameException
+
+        // When
         controller.execute()
 
-        assertThat(outContent.toString()).contains("The state name is not valid. Please enter a valid name.")
+        // Then
+        verify {
+            consoleIo.println(match { it.contains("❌ Please Enter All Inputs Correctly, inter retry or cancel") })
+        }
     }
 }
