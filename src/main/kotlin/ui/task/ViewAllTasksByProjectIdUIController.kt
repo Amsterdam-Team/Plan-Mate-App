@@ -1,12 +1,11 @@
 package ui.task
 
-import console.ConsoleIO
 import logic.usecases.task.CreateTaskUseCase
 import logic.usecases.task.GetAllTasksByProjectIdUseCase
 import org.koin.java.KoinJavaComponent.getKoin
+import ui.console.ConsoleIO
 
 import ui.controller.BaseUIController
-import ui.controller.CreateTaskUIController
 import ui.menuHandler.mainMenuTasks
 import ui.swimlane.printTasksSwimlanesView
 import ui.utils.DisplayUtils

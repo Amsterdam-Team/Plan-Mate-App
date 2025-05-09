@@ -1,7 +1,6 @@
 package di
 
 import com.mongodb.kotlin.client.coroutine.MongoCollection
-import console.ConsoleIoImpl
 import data.datasources.MongoDatabaseFactory
 import data.datasources.logDataSource.ILogDataSource
 import data.datasources.logDataSource.LogDataSource
@@ -23,30 +22,31 @@ import logic.repository.AuthRepository
 import logic.repository.LogRepository
 import logic.repository.ProjectRepository
 import logic.repository.TaskRepository
-import logic.usecases.*
+import logic.usecases.login.LoginUseCase
+import logic.usecases.logs.GetProjectHistoryUseCase
+import logic.usecases.logs.LoggerUseCase
+import logic.usecases.logs.ViewTaskLogsUseCase
 import logic.usecases.project.*
 import logic.usecases.state.*
 import logic.usecases.task.*
 import logic.usecases.user.CreateUserUseCase
+import logic.usecases.utils.StateManager
+import logic.usecases.utils.ValidateInputUseCase
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import ui.LoginUIController
-import ui.ViewTaskLogsUIController
 import ui.console.ConsoleIO
 import ui.console.ConsoleIOImpl
 import ui.controller.BaseUIController
-import ui.controller.CreateTaskUIController
-import ui.controllers.AddStateUIController
-import ui.controllers.CreateProjectUIController
-import ui.controllers.CreateUserUIController
-import ui.controllers.UpdateStateUiController
+import ui.login.LoginUIController
+import ui.logs.ViewProjectHistoryUIController
+import ui.logs.ViewTaskLogsUIController
 import ui.menuHandler.AdminMenuHandler
 import ui.menuHandler.MateMenuHandler
 import ui.project.*
-import ui.task.DeleteTaskUIController
-import ui.task.EditTaskUiController
-import ui.task.ViewAllTaksByProjectIdUIController
-import ui.task.ViewTaskDetailsUIController
+import ui.state.AddStateUIController
+import ui.state.UpdateStateUiController
+import ui.task.*
+import ui.user.CreateUserUIController
 import java.util.*
 
 val appModule = module {
@@ -107,7 +107,7 @@ val appModule = module {
     single { CreateProjectUseCase(get(), get(), get(), get()) }
     single { DeleteProjectUseCase(get(), get(), get(), get()) }
     single { EditProjectUseCase(get(), get(), get(), get()) }
-    single { GetAllProjectsUseCase(get()) }
+    single { GetAllProjectsUseCase(get(), get()) }
     single { GetProjectDetailsUseCase(get(), get(), get()) }
     single { GetProjectHistoryUseCase(get()) }
 
@@ -133,7 +133,6 @@ val appModule = module {
 
     // ConsoleIO
     single<ConsoleIO> { ConsoleIOImpl() }
-    single<console.ConsoleIO> { ConsoleIoImpl() }
 
     // AdminUIController
     single<BaseUIController>(updateStateUiController) { UpdateStateUiController(get(), get()) }
