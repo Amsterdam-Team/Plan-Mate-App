@@ -32,8 +32,5 @@ class TaskRepositoryImpl(private val taskDataSource: ITaskDataSource): TaskRepos
 
 
     override suspend fun getAllTasksByProjectId(projectId: UUID) =
-        taskDataSource.getAllTasks()
-
-
-
+        taskDataSource.getAllProjectTasks(projectId)
 }

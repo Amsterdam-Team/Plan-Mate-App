@@ -22,14 +22,14 @@ class ProjectDataSource(
     }
 
     override suspend fun insertProject(project: Project): Boolean {
-        val existingUser = projectCollection.find(
+        val existingProject = projectCollection.find(
             Filters.or(
                 Filters.eq("id", project.id),
                 Filters.eq("name", project.name)
             )
         ).firstOrNull()
 
-        if (existingUser != null) return false
+        if (existingProject != null) return false
 
         return projectCollection.insertOne(project.copy(tasks = emptyList())).wasAcknowledged()
     }
