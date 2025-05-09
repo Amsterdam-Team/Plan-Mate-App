@@ -14,8 +14,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import helper.TestDataFactory.createUser
 import org.junit.jupiter.api.assertThrows
-import utils.ResultStatus
-import helper.TestDataFactory.createUser
+
 
 class CreateUserUseCaseTest {
 

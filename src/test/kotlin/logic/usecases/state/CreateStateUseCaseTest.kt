@@ -9,8 +9,11 @@ import logic.usecases.utils.StateManager
 import logic.usecases.utils.ValidateInputUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import utils.ResultStatus
 import helper.TestDataFactory
+import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
+import logic.exception.PlanMateException.ValidationException.InvalidStateNameException
+import logic.exception.PlanMateException.ValidationException.SameStateNameException
+import org.junit.jupiter.api.assertThrows
 import java.util.UUID
 
 class CreateStateUseCaseTest {
@@ -39,7 +42,7 @@ class CreateStateUseCaseTest {
         val result = useCase.execute(project.id.toString(), newState)
 
         // Then
-        assertThat(result).isInstanceOf(ResultStatus.Success::class.java)
+        assertThat(result).isTrue()
     }
 
     @Test
