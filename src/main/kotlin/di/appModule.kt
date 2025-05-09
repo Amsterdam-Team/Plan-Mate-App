@@ -113,7 +113,7 @@ val appModule = module {
     single { CreateProjectUseCase(get(), get(), get(), get()) }
     single { DeleteProjectUseCase(get(), get(), get(), get()) }
     single { EditProjectUseCase(get(), get(), get(),get()) }
-    single { GetAllProjectsUseCase(get()) }
+    single { GetAllProjectsUseCase(get(), get()) }
     single { GetProjectDetailsUseCase(get(),get(), get()) }
     single { GetProjectHistoryUseCase(get()) }
 
