@@ -170,7 +170,7 @@ val appModule = module {
     single<Map<Int, BaseUIController>>(userMap) {
         mapOf(
             1 to get(viewAllProjectsUiController),
-            2 to get(getProjectUiController),                 // warning: no UI Controller for "View State"
+            2 to get(getProjectUiController),
             3 to get(createTaskUiController),
             4 to get(editTaskUiController),
             5 to get(deleteTaskUiController),
@@ -184,7 +184,7 @@ val appModule = module {
     single<Map<Int, BaseUIController>>(adminMap) {
         mapOf(
             1 to get(viewAllProjectsUiController),
-            2 to get(getProjectUiController),                 // warning: no UI Controller for "View State"
+            2 to get(getProjectUiController),
             3 to get(createTaskUiController),
             4 to get(editTaskUiController),
             5 to get(deleteTaskUiController),
