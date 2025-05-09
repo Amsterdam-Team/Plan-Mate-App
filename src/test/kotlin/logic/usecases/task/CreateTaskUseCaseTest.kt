@@ -1,9 +1,9 @@
 package logic.usecases.task
 
-import helper.TaskFactory.INVALID_PROJECT_ID
-import helper.TaskFactory.INVALID_STATE
-import helper.TaskFactory.INVALID_TASK_NAME
-import helper.TaskFactory.NON_EXISTENT_STATE
+import helper.ConstantsFactory.INVALID_PROJECT_ID
+import helper.ConstantsFactory.INVALID_STATE
+import helper.ConstantsFactory.INVALID_TASK_NAME
+import helper.ConstantsFactory.NON_EXISTENT_STATE
 import helper.TaskFactory.existingStates
 import helper.TaskFactory.taskWithUnExistingProjectID
 import helper.TaskFactory.validTask

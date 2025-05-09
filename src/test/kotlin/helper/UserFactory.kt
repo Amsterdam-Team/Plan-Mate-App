@@ -1,11 +1,9 @@
 package helper
 
-
 import logic.entities.User
 import java.util.UUID
 
 object UserFactory {
-
     fun createUser(
         id: UUID = UUID.randomUUID(),
         username: String = "mohammad",
@@ -19,6 +17,7 @@ object UserFactory {
             isAdmin = isAdmin
         )
     }
+
     fun validUserData() = User(
         username = "Hend",
         password = "H123456",
@@ -26,4 +25,13 @@ object UserFactory {
         id = UUID.fromString("ebcb217c-b373-4e88-afbd-cbb5640a031a")
     )
 
+    fun adminUser(): User {
+        return createUser(
+            isAdmin = true,
+            username = "admin",
+            password = "admin123"
+        )
+    }
+
+    val mateUser = adminUser().copy(isAdmin = false)
 }

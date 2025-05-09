@@ -1,7 +1,7 @@
 package logic.usecases.project
 
-import helper.ProjectFactory.adminUser
-import helper.ProjectFactory.mateUser
+import helper.UserFactory.adminUser
+import helper.UserFactory.mateUser
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every

@@ -7,11 +7,11 @@ import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.repository.TaskRepository
-import helper.ProjectFactory.EXPECTED_TASK_STATE
-import helper.ProjectFactory.existingTask
-import helper.ProjectFactory.EXISTING_TASK_ID
-import helper.ProjectFactory.INVALID_TASK_ID
-import helper.ProjectFactory.notExistingTaskID
+import helper.ConstantsFactory.EXPECTED_TASK_STATE
+import helper.TaskFactory.existingTask
+import helper.ConstantsFactory.EXISTING_TASK_ID
+import helper.ConstantsFactory.INVALID_TASK_ID
+import helper.TaskFactory.notExistingTaskID
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
