@@ -1,8 +1,8 @@
 package logic.usecases.logs
 
 import com.google.common.truth.Truth
-import helper.taskLogs
-import helper.validId
+import helper.LogTestFactory.taskLogs
+import helper.LogTestFactory.validId
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk

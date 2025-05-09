@@ -1,8 +1,8 @@
 package logic.usecases.logs
 
 import com.google.common.truth.Truth
+import helper.LogTestFactory.LOGS_FOR_PROJECT_1
 import helper.ProjectFactory.PROJECT_1
-import helper.ViewProjectHistoryTestFactory.LOGS_FOR_PROJECT_1
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
