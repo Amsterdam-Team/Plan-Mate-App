@@ -5,8 +5,8 @@ import logic.exception.PlanMateException.AuthorizationException.AdminPrivilegesR
 import logic.exception.PlanMateException.ValidationException.InvalidPasswordException
 import logic.exception.PlanMateException.ValidationException.InvalidUsernameException
 import logic.repository.AuthRepository
-import logic.usecases.StateManager
-import logic.usecases.ValidateInputUseCase
+import logic.usecases.utils.StateManager
+import logic.usecases.utils.ValidateInputUseCase
 import ui.utils.md5Hash
 import java.util.UUID
 

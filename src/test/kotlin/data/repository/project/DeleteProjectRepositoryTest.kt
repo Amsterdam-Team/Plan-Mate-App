@@ -1,27 +1,21 @@
 package data.repository.project
 
-import data.datasources.CsvDataSource
-import com.google.common.truth.Truth.assertThat
-import data.datasources.projectDataSource.ProjectDataSourceInterface
-import io.mockk.every
-import io.mockk.just
-import io.mockk.mockk
-import io.mockk.runs
-import io.mockk.verify
-import logic.entities.Project
-import logic.exception.PlanMateException.DataSourceException.EmptyDataException
-import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
-import logic.usecases.project.helper.DeleteProjectTestFactory.someProjects
-import org.junit.jupiter.api.Test
 
+import com.google.common.truth.Truth.assertThat
+import data.datasources.projectDataSource.IProjectDataSource
+import helper.DeleteProjectTestFactory.someProjects
+import io.mockk.coEvery
+import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
+import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import java.util.UUID
 import java.util.UUID.randomUUID
 
 class DeleteProjectRepositoryTest {
-    lateinit var dataSource: ProjectDataSourceInterface
+    lateinit var dataSource: IProjectDataSource
     lateinit var repository: ProjectRepositoryImpl
     lateinit var dummyId: UUID
 
@@ -34,9 +28,9 @@ class DeleteProjectRepositoryTest {
     }
 
     @Test
-    fun `should return true when deleting project complete successfully`() {
+    fun `should return true when deleting project complete successfully`() = runTest{
         // given
-        every { dataSource.deleteProject(someProjects[0].id) } returns true
+        coEvery { dataSource.deleteProject(someProjects[0].id) } returns true
         // when
         val result = repository.deleteProject(someProjects[0].id)
 
@@ -48,9 +42,9 @@ class DeleteProjectRepositoryTest {
 
 
     @Test
-    fun `should throw project not found when deleting project not exist`() {
+    fun `should throw project not found when deleting project not exist`() = runTest{
         // given
-        every { dataSource.deleteProject(someProjects[0].id) } throws ProjectNotFoundException
+        coEvery { dataSource.deleteProject(someProjects[0].id) } throws ProjectNotFoundException
 
         // when & then
         assertThrows <ProjectNotFoundException> {

@@ -1,7 +1,6 @@
 package di
 
 import com.mongodb.kotlin.client.coroutine.MongoCollection
-import console.ConsoleIoImpl
 import data.datasources.MongoDatabaseFactory
 import data.datasources.logDataSource.ILogDataSource
 import data.datasources.logDataSource.LogDataSource
@@ -23,36 +22,38 @@ import logic.repository.AuthRepository
 import logic.repository.LogRepository
 import logic.repository.ProjectRepository
 import logic.repository.TaskRepository
-import logic.usecases.LoggerUseCase
-import logic.usecases.LoginUseCase
-import logic.usecases.StateManager
-import logic.usecases.ValidateInputUseCase
-import logic.usecases.ViewTaskLogsUseCase
+import logic.usecases.logs.LoggerUseCase
+import logic.usecases.login.LoginUseCase
+import logic.usecases.utils.StateManager
+import logic.usecases.utils.ValidateInputUseCase
+import logic.usecases.logs.GetProjectHistoryUseCase
+import logic.usecases.logs.ViewTaskLogsUseCase
 import logic.usecases.project.*
 import logic.usecases.state.*
 import logic.usecases.task.*
 import logic.usecases.user.CreateUserUseCase
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import ui.LoginUIController
-import ui.ViewTaskLogsUIController
+import ui.login.LoginUIController
+import ui.logs.ViewTaskLogsUIController
 import ui.console.ConsoleIO
 import ui.console.ConsoleIOImpl
 import ui.controller.BaseUIController
-import ui.controller.CreateTaskUIController
-import ui.controllers.AddStateUIController
-import ui.controllers.CreateProjectUIController
-import ui.controllers.CreateUserUIController
-import ui.controllers.UpdateStateUiController
+import ui.task.CreateTaskUIController
+import ui.state.AddStateUIController
+import ui.project.CreateProjectUIController
+import ui.user.CreateUserUIController
+import ui.state.UpdateStateUiController
 import ui.menuHandler.AdminMenuHandler
 import ui.menuHandler.MateMenuHandler
 import ui.project.DeleteProjectUiController
+import ui.project.EditProjectUIController
 import ui.project.GetProjectUIController
 import ui.project.ViewAllProjectsUIController
-import ui.project.ViewProjectHistoryUIController
+import ui.logs.ViewProjectHistoryUIController
 import ui.task.DeleteTaskUIController
 import ui.task.EditTaskUiController
-import ui.task.ViewAllTaksByProjectIdUIController
+import ui.task.ViewAllTasksByProjectIdUIController
 import ui.task.ViewTaskDetailsUIController
 import java.util.*
 
@@ -73,6 +74,7 @@ val appModule = module {
     val viewProjectHistoryUiController = named("viewProjectHistoryUiController")
     val getProjectUiController = named("getProjectUiController")
     val viewAllProjectsUiController = named("viewAllProjectsUiController")
+    val editProjectUiController = named("editProjectUiController")
 
     // TaskUIController names
     val createTaskUiController = named("createTaskUiController")
@@ -99,7 +101,7 @@ val appModule = module {
     single<AuthRepository> { AuthRepositoryImpl(get()) }
     single<TaskRepository> { TaskRepositoryImpl(get()) }
     single<LogRepository> { LogRepositoryImpl(get()) }
-    single<ProjectRepository> { ProjectRepositoryImpl(get(), get()) }
+    single<ProjectRepository> { ProjectRepositoryImpl(get()) }
     single<StateManager>{ StateManager }
 
 
@@ -140,7 +142,6 @@ val appModule = module {
 
     // ConsoleIO
     single<ConsoleIO> { ConsoleIOImpl() }
-    single<console.ConsoleIO> { ConsoleIoImpl() }
 
     // AdminUIController
     single<BaseUIController>(updateStateUiController) { UpdateStateUiController(get(), get()) }
@@ -153,6 +154,7 @@ val appModule = module {
     single<BaseUIController>(viewProjectHistoryUiController) { ViewProjectHistoryUIController(get(), get()) }
     single<BaseUIController>(getProjectUiController) { GetProjectUIController(get(), get()) }
     single<BaseUIController>(viewAllProjectsUiController) { ViewAllProjectsUIController(get()) }
+    single<BaseUIController>(editProjectUiController) { EditProjectUIController(get(), get()) }
 
     // TaskUIController
     single<BaseUIController>(createTaskUiController) { CreateTaskUIController(get(), get()) }
@@ -160,20 +162,43 @@ val appModule = module {
     single<BaseUIController>(viewTaskLogsUiController) { ViewTaskLogsUIController(get(), get()) }
     single<BaseUIController>(editTaskUiController) { EditTaskUiController(get(), get()) }
     single<BaseUIController>(viewTaskDetailsUiController) { ViewTaskDetailsUIController(get(), get(), get(), get()) }
-    single<BaseUIController>(viewAllTasksByProjectIdUiController) { ViewAllTaksByProjectIdUIController(get(), get(), get()) }
+    single<BaseUIController>(viewAllTasksByProjectIdUiController) { ViewAllTasksByProjectIdUIController(get(), get(), get()) }
 
 
+    // User Menus
     single<Map<Int, BaseUIController>>(userMap) {
         mapOf(
-            1 to get(createTaskUiController)
+            1 to get(viewAllProjectsUiController),
+            2 to get(getProjectUiController),
+            3 to get(createTaskUiController),
+            4 to get(editTaskUiController),
+            5 to get(deleteTaskUiController),
+            6 to get(viewAllTasksByProjectIdUiController),
+            7 to get(viewProjectHistoryUiController),
+            8 to get(viewTaskLogsUiController)
         )
     }
 
+    // Admin Menus
     single<Map<Int, BaseUIController>>(adminMap) {
         mapOf(
-            1 to get(deleteProjectUiController)
+            1 to get(viewAllProjectsUiController),
+            2 to get(getProjectUiController),
+            3 to get(createTaskUiController),
+            4 to get(editTaskUiController),
+            5 to get(deleteTaskUiController),
+            6 to get(viewAllTasksByProjectIdUiController),
+            7 to get(viewProjectHistoryUiController),
+            8 to get(viewTaskLogsUiController),
+            9 to get(createUserUiController),
+            10 to get(createProjectUiController),
+            11 to get(editProjectUiController),
+            12 to get(deleteProjectUiController),
+            13 to get(addStateUiController),
+            14 to get(updateStateUiController),
         )
     }
+
 
     // Menu Handlers
     single { AdminMenuHandler(get(adminMap)) }

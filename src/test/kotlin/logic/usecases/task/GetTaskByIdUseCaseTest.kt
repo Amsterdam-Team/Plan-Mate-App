@@ -7,8 +7,8 @@ import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
 import logic.repository.TaskRepository
-import logic.usecases.ValidateInputUseCase
-import logic.usecases.testFactory.CreateTaskTestFactory
+import logic.usecases.utils.ValidateInputUseCase
+import helper.CreateTaskTestFactory
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

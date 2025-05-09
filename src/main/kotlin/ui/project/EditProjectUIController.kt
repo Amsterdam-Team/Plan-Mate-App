@@ -1,8 +1,7 @@
 package ui.project
 
-import console.ConsoleIO
-import logic.entities.User
 import logic.usecases.project.EditProjectUseCase
+import ui.console.ConsoleIO
 import ui.controller.BaseUIController
 import ui.utils.tryToExecute
 import java.util.*
@@ -12,13 +11,6 @@ class EditProjectUIController(
     private val editProjectUseCase: EditProjectUseCase,
     private val consoleIO: ConsoleIO
 ) : BaseUIController {
-
-    private val adminUser = User(
-        id = UUID.fromString("00000000-0000-0000-0000-000000000001"),
-        isAdmin = true,
-        username ="Admin",
-        password = "123456"
-    )
 
     override suspend  fun execute() {
         consoleIO.println(EDIT_PROJECT_NAME_PROMPT_MESSAGE)

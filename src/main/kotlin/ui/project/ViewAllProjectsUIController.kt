@@ -3,7 +3,7 @@ package ui.project
 import logic.usecases.project.GetAllProjectsUseCase
 import ui.controller.BaseUIController
 import ui.utils.tryToExecute
-import utils.printSwimlanesView
+import ui.utils.printSwimlanesView
 
 class ViewAllProjectsUIController(
     private val getAllProjectsUseCase: GetAllProjectsUseCase

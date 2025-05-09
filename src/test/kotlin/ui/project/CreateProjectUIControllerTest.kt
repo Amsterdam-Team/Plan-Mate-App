@@ -1,7 +1,6 @@
 package ui.project
 
 import com.google.common.truth.Truth.assertThat
-import console.ConsoleIO
 import io.mockk.*
 import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException
@@ -11,7 +10,7 @@ import logic.usecases.testFactories.CreateProjectTestFactory.inValidProjectNameT
 import logic.usecases.testFactories.CreateProjectTestFactory.validProjectTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import ui.controllers.CreateProjectUIController
+import ui.console.ConsoleIO
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
 

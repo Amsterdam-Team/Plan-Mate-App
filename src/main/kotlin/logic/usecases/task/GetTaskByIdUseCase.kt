@@ -3,7 +3,7 @@ package logic.usecases.task
 import logic.entities.Task
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.repository.TaskRepository
-import logic.usecases.ValidateInputUseCase
+import logic.usecases.utils.ValidateInputUseCase
 import java.util.*
 
 class GetTaskByIdUseCase(

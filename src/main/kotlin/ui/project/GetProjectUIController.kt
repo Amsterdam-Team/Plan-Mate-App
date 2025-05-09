@@ -6,7 +6,7 @@ import logic.usecases.project.GetProjectDetailsUseCase
 import ui.console.ConsoleIO
 import ui.controller.BaseUIController
 import ui.utils.tryToExecute
-import utils.printSwimlanesView
+import ui.utils.printSwimlanesView
 
 class GetProjectUIController(
     private val getProjectsUseCase: GetProjectDetailsUseCase,
