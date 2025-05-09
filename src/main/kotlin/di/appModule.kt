@@ -22,39 +22,31 @@ import logic.repository.AuthRepository
 import logic.repository.LogRepository
 import logic.repository.ProjectRepository
 import logic.repository.TaskRepository
-import logic.usecases.logs.LoggerUseCase
 import logic.usecases.login.LoginUseCase
-import logic.usecases.utils.StateManager
-import logic.usecases.utils.ValidateInputUseCase
 import logic.usecases.logs.GetProjectHistoryUseCase
+import logic.usecases.logs.LoggerUseCase
 import logic.usecases.logs.ViewTaskLogsUseCase
 import logic.usecases.project.*
 import logic.usecases.state.*
 import logic.usecases.task.*
 import logic.usecases.user.CreateUserUseCase
+import logic.usecases.utils.StateManager
+import logic.usecases.utils.ValidateInputUseCase
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import ui.login.LoginUIController
-import ui.logs.ViewTaskLogsUIController
 import ui.console.ConsoleIO
 import ui.console.ConsoleIOImpl
 import ui.controller.BaseUIController
-import ui.task.CreateTaskUIController
-import ui.state.AddStateUIController
-import ui.project.CreateProjectUIController
-import ui.user.CreateUserUIController
-import ui.state.UpdateStateUiController
+import ui.login.LoginUIController
+import ui.logs.ViewProjectHistoryUIController
+import ui.logs.ViewTaskLogsUIController
 import ui.menuHandler.AdminMenuHandler
 import ui.menuHandler.MateMenuHandler
-import ui.project.DeleteProjectUiController
-import ui.project.EditProjectUIController
-import ui.project.GetProjectUIController
-import ui.project.ViewAllProjectsUIController
-import ui.logs.ViewProjectHistoryUIController
-import ui.task.DeleteTaskUIController
-import ui.task.EditTaskUiController
-import ui.task.ViewAllTasksByProjectIdUIController
-import ui.task.ViewTaskDetailsUIController
+import ui.project.*
+import ui.state.AddStateUIController
+import ui.state.UpdateStateUiController
+import ui.task.*
+import ui.user.CreateUserUIController
 import java.util.*
 
 val appModule = module {
@@ -62,6 +54,11 @@ val appModule = module {
     val userMap = named("userMap")
     val adminMap = named("adminMap")
 
+    // Collection names
+    val usersCollection = named("usersCollection")
+    val projectsCollection = named("projectsCollection")
+    val logsCollection = named("logsCollection")
+    val tasksCollection = named("tasksCollection")
 
     // AdminUIController names
     val updateStateUiController = named("updateStateUiController")
@@ -85,16 +82,16 @@ val appModule = module {
     val viewAllTasksByProjectIdUiController = named("viewAllTasksByProjectIdUiController")
 
     // MongoCollections
-    single<MongoCollection<User>>{MongoDatabaseFactory.db.getCollection<User>("users")}
-    single<MongoCollection<Project>>{MongoDatabaseFactory.db.getCollection<Project>("projects")}
-    single<MongoCollection<Task>>{MongoDatabaseFactory.db.getCollection<Task>("tasks")}
-    single<MongoCollection<LogItem>>{MongoDatabaseFactory.db.getCollection<LogItem>("logs")}
+    single<MongoCollection<User>>(usersCollection){MongoDatabaseFactory.db.getCollection<User>("users")}
+    single<MongoCollection<Project>>(projectsCollection){MongoDatabaseFactory.db.getCollection<Project>("projects")}
+    single<MongoCollection<Task>>(tasksCollection){MongoDatabaseFactory.db.getCollection<Task>("tasks")}
+    single<MongoCollection<LogItem>>(logsCollection){MongoDatabaseFactory.db.getCollection<LogItem>("logs")}
 
     // DataSources
-    single<ILogDataSource> { LogDataSource(get()) }
-    single<IProjectDataSource> { ProjectDataSource(get()) }
-    single<IUserDataSource> { UserDataSource(get()) }
-    single<ITaskDataSource> { TaskDataSource(get()) }
+    single<ILogDataSource> { LogDataSource(get(logsCollection)) }
+    single<IProjectDataSource> { ProjectDataSource(get(projectsCollection)) }
+    single<IUserDataSource> { UserDataSource(get(usersCollection)) }
+    single<ITaskDataSource> { TaskDataSource(get(tasksCollection)) }
 
 
     // Repositories
