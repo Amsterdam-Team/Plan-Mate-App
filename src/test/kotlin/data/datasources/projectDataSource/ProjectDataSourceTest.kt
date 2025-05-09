@@ -13,22 +13,28 @@ import logic.entities.Project
 import logic.exception.PlanMateException.DataSourceException.ObjectDoesNotExistException
 import org.bson.Document
 import org.bson.UuidRepresentation
-import org.junit.jupiter.api.*
-import java.util.*
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.assertThrows
+import java.util.UUID
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class ProjectDataSourceTest{
+class ProjectDataSourceTest {
 
 
     @BeforeAll
-    fun startMongoDB(){
+    fun startMongoDB() {
         mongoClient = MongoClient.create(settings)
         database = mongoClient.getDatabase(TEST_DATABASE_NAME)
         collection = database.getCollection<Project>("projects")
     }
 
     @AfterAll
-    fun stopMongoDB(){
+    fun stopMongoDB() {
         mongoClient.close()
     }
 
@@ -149,7 +155,7 @@ class ProjectDataSourceTest{
     fun `should return true when project name is updated successfully`() = runTest {
         // When
         val result = dataSource.updateProjectName(project2Id, "New Name")
-        
+
         // Then
         assertThat(result).isTrue()
     }
@@ -167,7 +173,7 @@ class ProjectDataSourceTest{
 
     // region replaceAllProjects
     @Test
-    fun `should return true when all projects are replaced successfully`() = runTest{
+    fun `should return true when all projects are replaced successfully`() = runTest {
         // When
         val result = dataSource.replaceAllProjects(projectsReplace)
 
@@ -177,7 +183,7 @@ class ProjectDataSourceTest{
     }
 
     @Test
-    fun `should return false when projects have duplicated Ids`() = runTest{
+    fun `should return false when projects have duplicated Ids`() = runTest {
         // When
         val result = dataSource.replaceAllProjects(duplicatedProjectIds)
 
@@ -186,7 +192,7 @@ class ProjectDataSourceTest{
     }
 
     @Test
-    fun `should return false when projects have duplicated names`() = runTest{
+    fun `should return false when projects have duplicated names`() = runTest {
         // When
         val result = dataSource.replaceAllProjects(duplicatedProjectNames)
 
@@ -301,17 +307,24 @@ class ProjectDataSourceTest{
     @Test
     fun `should return false when new state already exists`() = runTest {
         // When
-        val result = dataSource.updateProjectState(project2Id, project2.states.first(), project2.states.last())
+        val result = dataSource.updateProjectState(
+            project2Id, project2.states.first(),
+            project2.states.last()
+        )
 
         assertThat(result).isFalse()
     }
     // endregion
-    
+
     companion object {
         // Document Projects
         private val project1 = createProject()
         private val project2Id = UUID.randomUUID()
-        private val project2 = project1.copy(id = project2Id, name = "amsterdam")
+        private val project2 = project1.copy(
+            id = project2Id,
+            name = "amsterdam",
+            states = listOf("To Do", "In Progress", "Done")
+        )
         private val projects = listOf(project1, project2)
 
         // Testing Projects
@@ -322,11 +335,11 @@ class ProjectDataSourceTest{
         private val projectsReplace = listOf(projectWithSameId, projectWithSameName)
         private val duplicatedProjectNames = listOf(project1, projectWithSameName)
         private val duplicatedProjectIds = listOf(project1, projectWithSameId)
-        
 
 
         // Testing Purposes
-        private const val CONNECTION_STRING = "mongodb+srv://7amasa:9LlgpCLbd99zoRrJ@amsterdam.qpathz3.mongodb.net/?retryWrites=true&w=majority&appName=Amsterdam"
+        private const val CONNECTION_STRING =
+            "mongodb+srv://7amasa:9LlgpCLbd99zoRrJ@amsterdam.qpathz3.mongodb.net/?retryWrites=true&w=majority&appName=Amsterdam"
         private const val TEST_DATABASE_NAME = "Amsterdam-test"
         private lateinit var mongoClient: MongoClient
         private lateinit var database: MongoDatabase
