@@ -1,6 +1,7 @@
 package logic.usecases.state
 
 
+import logic.exception.PlanMateException
 import logic.exception.PlanMateException.AuthorizationException.AdminPrivilegesRequiredException
 import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
 import logic.exception.PlanMateException.ValidationException.InvalidStateNameException
@@ -13,13 +14,21 @@ class AddStateUseCase(
     private val repository: ProjectRepository,
     private val validateInputUseCase: ValidateInputUseCase,
     private val stateManager: StateManager,
-    ) {
+) {
 
-    suspend fun execute(projectId: String, state: String): Boolean{
+    suspend fun execute(projectId: String, state: String): Boolean {
         val user = stateManager.getLoggedInUser()
-        if(!user.isAdmin) throw AdminPrivilegesRequiredException
-        if(!validateInputUseCase.isValidName(state)) throw InvalidStateNameException
-        if(!validateInputUseCase.isValidUUID(projectId)) throw InvalidProjectIDException
-        return repository.addStateById(UUID.fromString(projectId), state)
+        if (!user.isAdmin) throw AdminPrivilegesRequiredException
+        if (!validateInputUseCase.isValidName(state)) throw InvalidStateNameException
+        if (!validateInputUseCase.isValidUUID(projectId)) throw InvalidProjectIDException
+
+        val uuid = UUID.fromString(projectId)
+        val project = repository.getProject(uuid)
+
+        if (project.states.any { it.trim().equals(state.trim(), ignoreCase = true) }) {
+            throw PlanMateException.ValidationException.SameStateNameException
+        }
+
+        return repository.addStateById(uuid, state)
     }
 }

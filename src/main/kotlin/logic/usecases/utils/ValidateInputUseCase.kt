@@ -1,6 +1,6 @@
 package logic.usecases.utils
 
-import java.util.*
+import java.util.UUID
 
 class ValidateInputUseCase {
     fun isValidName(name: String): Boolean {
@@ -20,7 +20,8 @@ class ValidateInputUseCase {
             state.isNotBlank() && state.matches(Regex("^[a-zA-Z]+( [a-zA-Z]+)*$"))
         }
     }
-    fun areIdentical(oldName: String , newName: String):Boolean{
+
+    fun areIdentical(oldName: String, newName: String): Boolean {
         return oldName.trim() == newName.trim()
     }
 }

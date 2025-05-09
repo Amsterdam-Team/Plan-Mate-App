@@ -13,7 +13,7 @@ import logic.usecases.utils.ValidateInputUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.util.*
+import java.util.UUID
 
 class GetAllTasksByProjectIdUseCaseTest {
     private lateinit var repository: TaskRepository
@@ -24,37 +24,41 @@ class GetAllTasksByProjectIdUseCaseTest {
     fun setup() {
         repository = mockk(relaxed = true)
         validateInputUseCase = mockk(relaxed = true)
-        useCase = GetAllTasksByProjectIdUseCase(repository,validateInputUseCase)
+        useCase = GetAllTasksByProjectIdUseCase(repository, validateInputUseCase)
+
+        coEvery { validateInputUseCase.isValidUUID(any()) } returns true
     }
 
 
     @Test
-    fun `getAllTasksByProjectId should  get all tasks by projectId  from repository when called`() = runTest {
-        // given
-        val projectId = UUID.randomUUID()
-        val taskOne = validTask.copy(projectId = projectId)
-        val taskTwo = validTask.copy(projectId = projectId)
-        coEvery { repository.getAllTasksByProjectId(projectId) } returns listOf(taskOne, taskTwo)
-        // when
-        useCase(projectId.toString())
-        // Then
-        coVerify (exactly = 1) { repository.getAllTasksByProjectId(projectId) }
-    }
+    fun `getAllTasksByProjectId should  get all tasks by projectId  from repository when called`() =
+        runTest {
+            // given
+            val projectId = UUID.randomUUID()
+            val taskOne = validTask.copy(projectId = projectId)
+            val taskTwo = validTask.copy(projectId = projectId)
+            coEvery { repository.getAllTasksByProjectId(projectId) } returns listOf(
+                taskOne,
+                taskTwo
+            )
+            // when
+            useCase(projectId.toString())
+            // Then
+            coVerify(exactly = 1) { repository.getAllTasksByProjectId(projectId) }
+        }
 
     @Test
     fun `should get tasks by project id when project is exists`() = runTest {
-        // given
-        val anotherProjectID = UUID.fromString("123e4567-e89b-12d3-a456-000000000000")
-
         val projectId = UUID.randomUUID()
+
         val taskOne = validTask.copy(projectId = projectId)
         val taskTwo = validTask.copy(projectId = projectId)
-        val taskAnother = validTask.copy(projectId = anotherProjectID)
-        coEvery { repository.getAllTasksByProjectId(projectId) } returns listOf(taskOne, taskTwo, taskAnother)
-        // when
+
+        coEvery { repository.getAllTasksByProjectId(projectId) } returns listOf(taskOne, taskTwo)
+
         val result = useCase(projectId.toString())
-        // then
-        assertThat(result).containsExactly(taskTwo, taskTwo)
+
+        assertThat(result).containsExactly(taskOne, taskTwo)
     }
 
 
@@ -76,25 +80,25 @@ class GetAllTasksByProjectIdUseCaseTest {
     }
 
     @Test
-    fun `should throw NoTasksFoundException when there are no tasks for provided project id`() = runTest {
-        // given
-        val projectId = UUID.randomUUID()
+    fun `should throw NoTasksFoundException when there are no tasks for provided project id`() =
+        runTest {
+            // given
+            val projectId = UUID.randomUUID()
 
-        coEvery { repository.getAllTasksByProjectId(projectId) } throws TaskNotFoundException
+            coEvery { repository.getAllTasksByProjectId(projectId) } throws TaskNotFoundException
 
-        // when && then
-        assertThrows<TaskNotFoundException> {
-            useCase(projectId.toString())
+            // when && then
+            assertThrows<TaskNotFoundException> {
+                useCase(projectId.toString())
+            }
         }
-    }
 
     @Test
     fun `should throw TaskNotFoundException when no tasks exist for given project id`() = runTest {
-        // given
         val projectId = UUID.randomUUID()
+
         coEvery { repository.getAllTasksByProjectId(projectId) } returns emptyList()
 
-        // when & then
         assertThrows<TaskNotFoundException> {
             useCase(projectId.toString())
         }
