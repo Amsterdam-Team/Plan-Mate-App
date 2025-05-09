@@ -8,7 +8,7 @@ import kotlinx.datetime.toLocalDateTime
 import logic.entities.LogItem
 import java.util.*
 
-object LogTestFactory {
+object LogFactory {
 
     fun createLogItem(
         id: UUID = UUID.randomUUID(),
