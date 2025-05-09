@@ -23,11 +23,7 @@ import logic.repository.AuthRepository
 import logic.repository.LogRepository
 import logic.repository.ProjectRepository
 import logic.repository.TaskRepository
-import logic.usecases.LoggerUseCase
-import logic.usecases.LoginUseCase
-import logic.usecases.StateManager
-import logic.usecases.ValidateInputUseCase
-import logic.usecases.ViewTaskLogsUseCase
+import logic.usecases.*
 import logic.usecases.project.*
 import logic.usecases.state.*
 import logic.usecases.task.*
@@ -46,10 +42,7 @@ import ui.controllers.CreateUserUIController
 import ui.controllers.UpdateStateUiController
 import ui.menuHandler.AdminMenuHandler
 import ui.menuHandler.MateMenuHandler
-import ui.project.DeleteProjectUiController
-import ui.project.GetProjectUIController
-import ui.project.ViewAllProjectsUIController
-import ui.project.ViewProjectHistoryUIController
+import ui.project.*
 import ui.task.DeleteTaskUIController
 import ui.task.EditTaskUiController
 import ui.task.ViewAllTaksByProjectIdUIController
@@ -83,10 +76,10 @@ val appModule = module {
     val viewAllTasksByProjectIdUiController = named("viewAllTasksByProjectIdUiController")
 
     // MongoCollections
-    single<MongoCollection<User>>{MongoDatabaseFactory.db.getCollection<User>("users")}
-    single<MongoCollection<Project>>{MongoDatabaseFactory.db.getCollection<Project>("projects")}
-    single<MongoCollection<Task>>{MongoDatabaseFactory.db.getCollection<Task>("tasks")}
-    single<MongoCollection<LogItem>>{MongoDatabaseFactory.db.getCollection<LogItem>("logs")}
+    single<MongoCollection<User>> { MongoDatabaseFactory.db.getCollection<User>("users") }
+    single<MongoCollection<Project>> { MongoDatabaseFactory.db.getCollection<Project>("projects") }
+    single<MongoCollection<Task>> { MongoDatabaseFactory.db.getCollection<Task>("tasks") }
+    single<MongoCollection<LogItem>> { MongoDatabaseFactory.db.getCollection<LogItem>("logs") }
 
     // DataSources
     single<ILogDataSource> { LogDataSource(get()) }
@@ -100,7 +93,7 @@ val appModule = module {
     single<TaskRepository> { TaskRepositoryImpl(get()) }
     single<LogRepository> { LogRepositoryImpl(get()) }
     single<ProjectRepository> { ProjectRepositoryImpl(get()) }
-    single<StateManager>{ StateManager }
+    single<StateManager> { StateManager }
 
 
     single<User> { User(id = UUID.randomUUID(), username = "fsef", password = "fsefs", isAdmin = true) }
@@ -108,14 +101,14 @@ val appModule = module {
     single { ValidateInputUseCase() }
 
     //logger use Case
-    single{ LoggerUseCase(get(),get()) }
+    single { LoggerUseCase(get(), get()) }
 
     // Project UseCases
     single { CreateProjectUseCase(get(), get(), get(), get()) }
     single { DeleteProjectUseCase(get(), get(), get(), get()) }
-    single { EditProjectUseCase(get(), get(), get(),get()) }
+    single { EditProjectUseCase(get(), get(), get(), get()) }
     single { GetAllProjectsUseCase(get()) }
-    single { GetProjectDetailsUseCase(get(),get(), get()) }
+    single { GetProjectDetailsUseCase(get(), get(), get()) }
     single { GetProjectHistoryUseCase(get()) }
 
 
@@ -127,16 +120,16 @@ val appModule = module {
     single { GetTaskStateUseCase(get()) }
 
     // TaskUseCase
-    single { CreateTaskUseCase(get(), get(), get(),get()) }
-    single { DeleteTaskUseCase(get(),get()) }
-    single { EditTaskUseCase(get(), get(),get()) }
+    single { CreateTaskUseCase(get(), get(), get(), get()) }
+    single { DeleteTaskUseCase(get(), get()) }
+    single { EditTaskUseCase(get(), get(), get()) }
     single { GetAllTasksByProjectIdUseCase(get(), get()) }
     single { GetTaskByIdUseCase(get(), get()) }
-    single { ViewTaskLogsUseCase(get(),get()) }
+    single { ViewTaskLogsUseCase(get(), get()) }
 
     // UserUseCase
-    single { LoginUseCase(get(),get()) }
-    single { CreateUserUseCase(get(), get(),get()) }
+    single { LoginUseCase(get(), get()) }
+    single { CreateUserUseCase(get(), get(), get()) }
 
     // ConsoleIO
     single<ConsoleIO> { ConsoleIOImpl() }
@@ -160,18 +153,27 @@ val appModule = module {
     single<BaseUIController>(viewTaskLogsUiController) { ViewTaskLogsUIController(get(), get()) }
     single<BaseUIController>(editTaskUiController) { EditTaskUiController(get(), get()) }
     single<BaseUIController>(viewTaskDetailsUiController) { ViewTaskDetailsUIController(get(), get(), get(), get()) }
-    single<BaseUIController>(viewAllTasksByProjectIdUiController) { ViewAllTaksByProjectIdUIController(get(), get(), get()) }
+    single<BaseUIController>(viewAllTasksByProjectIdUiController) {
+        ViewAllTaksByProjectIdUIController(
+            get(),
+            get(),
+            get()
+        )
+    }
 
 
     single<Map<Int, BaseUIController>>(userMap) {
         mapOf(
-            1 to get(createTaskUiController)
+            1 to get(createTaskUiController),
         )
     }
 
     single<Map<Int, BaseUIController>>(adminMap) {
         mapOf(
-            1 to get(deleteProjectUiController)
+            1 to get(viewAllProjectsUiController),
+            2 to get(viewProjectHistoryUiController),
+            3 to get(viewTaskLogsUiController),
+            4 to get(createUserUiController),
         )
     }
 
@@ -181,4 +183,8 @@ val appModule = module {
 
     // LoginUiController
     single { LoginUIController(get(), get(), get(), get()) }
+    single { ViewTaskDetailsUIController(get(), get(), get(), get()) }
+    single { ViewAllTaksByProjectIdUIController(get(), get(), get()) }
+    single { EditProjectUIController(get(), get()) }
+    single { DeleteProjectUiController(get(), get()) }
 }
