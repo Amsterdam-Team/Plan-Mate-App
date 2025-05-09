@@ -5,8 +5,8 @@ import logic.exception.PlanMateException.ValidationException.InvalidStateNameExc
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskNameException
 import logic.repository.TaskRepository
-import logic.usecases.LoggerUseCase
-import logic.usecases.ValidateInputUseCase
+import logic.usecases.logs.LoggerUseCase
+import logic.usecases.utils.ValidateInputUseCase
 import java.util.UUID
 
 class EditTaskUseCase(

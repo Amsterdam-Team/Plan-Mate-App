@@ -1,0 +1,26 @@
+package ui.logs
+
+import logic.usecases.logs.GetProjectHistoryUseCase
+import ui.console.ConsoleIO
+import ui.controller.BaseUIController
+import ui.utils.tryToExecute
+import ui.utils.formatLogItem
+
+class ViewProjectHistoryUIController(
+    private val getProjectHistoryUseCase: GetProjectHistoryUseCase,
+    private val consoleIO: ConsoleIO
+) : BaseUIController {
+
+    override suspend fun execute() {
+        tryToExecute(
+            action = {
+                consoleIO.println("Please Enter Project ID:")
+                getProjectHistoryUseCase.execute(consoleIO.readFromUser())
+            },
+            onSuccess = {
+                it.forEach { consoleIO.println(formatLogItem(it)) }
+            }
+        )
+    }
+
+}

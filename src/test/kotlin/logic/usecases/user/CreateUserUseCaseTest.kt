@@ -8,12 +8,12 @@ import logic.exception.PlanMateException.ValidationException.InvalidPasswordExce
 import logic.exception.PlanMateException.ValidationException.InvalidUsernameException
 import logic.exception.PlanMateException.ValidationException.UserAlreadyExistsException
 import logic.repository.AuthRepository
-import logic.usecases.StateManager
-import logic.usecases.ValidateInputUseCase
+import logic.usecases.utils.StateManager
+import logic.usecases.utils.ValidateInputUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import utils.ResultStatus
-import utils.TestDataFactory.createUser
+import helper.TestDataFactory.createUser
 
 class CreateUserUseCaseTest {
 
