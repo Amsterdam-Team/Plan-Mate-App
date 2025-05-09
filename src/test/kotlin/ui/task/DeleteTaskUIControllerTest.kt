@@ -1,6 +1,6 @@
 package ui.task
 
-import helpers.DeleteTaskTestFactory.TASK_1
+import helper.TaskFactory.TASK_1
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every

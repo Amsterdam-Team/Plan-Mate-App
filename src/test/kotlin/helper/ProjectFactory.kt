@@ -1,7 +1,8 @@
 package helper
 
-import helpers.DeleteTaskTestFactory.TASK_1
-import helpers.DeleteTaskTestFactory.TASK_2
+
+import helper.TaskFactory.TASK_1
+import helper.TaskFactory.TASK_2
 import logic.entities.Project
 import logic.entities.Task
 import logic.entities.User

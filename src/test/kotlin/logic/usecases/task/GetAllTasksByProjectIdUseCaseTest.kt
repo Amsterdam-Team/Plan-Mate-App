@@ -1,6 +1,7 @@
 package logic.usecases.task
 
 import com.google.common.truth.Truth.assertThat
+import helper.TaskFactory.validTask
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -9,7 +10,6 @@ import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundExcept
 import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
 import logic.repository.TaskRepository
 import logic.usecases.utils.ValidateInputUseCase
-import helper.CreateTaskTestFactory
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -32,8 +32,8 @@ class GetAllTasksByProjectIdUseCaseTest {
     fun `getAllTasksByProjectId should  get all tasks by projectId  from repository when called`() = runTest {
         // given
         val projectId = UUID.randomUUID()
-        val taskOne = CreateTaskTestFactory.validTask.copy(projectId = projectId)
-        val taskTwo = CreateTaskTestFactory.validTask.copy(projectId = projectId)
+        val taskOne = validTask.copy(projectId = projectId)
+        val taskTwo = validTask.copy(projectId = projectId)
         coEvery { repository.getAllTasksByProjectId(projectId) } returns listOf(taskOne, taskTwo)
         // when
         useCase(projectId.toString())
@@ -47,9 +47,9 @@ class GetAllTasksByProjectIdUseCaseTest {
         val anotherProjectID = UUID.fromString("123e4567-e89b-12d3-a456-000000000000")
 
         val projectId = UUID.randomUUID()
-        val taskOne = CreateTaskTestFactory.validTask.copy(projectId = projectId)
-        val taskTwo = CreateTaskTestFactory.validTask.copy(projectId = projectId)
-        val taskAnother = CreateTaskTestFactory.validTask.copy(projectId = anotherProjectID)
+        val taskOne = validTask.copy(projectId = projectId)
+        val taskTwo = validTask.copy(projectId = projectId)
+        val taskAnother = validTask.copy(projectId = anotherProjectID)
         coEvery { repository.getAllTasksByProjectId(projectId) } returns listOf(taskOne, taskTwo, taskAnother)
         // when
         val result = useCase(projectId.toString())
@@ -62,8 +62,8 @@ class GetAllTasksByProjectIdUseCaseTest {
     fun `should return tasks filtered by project ID`() = runTest {
         // given
         val projectId = UUID.randomUUID()
-        val taskOne = CreateTaskTestFactory.validTask.copy(projectId = projectId)
-        val taskTwo = CreateTaskTestFactory.validTask.copy(projectId = projectId)
+        val taskOne = validTask.copy(projectId = projectId)
+        val taskTwo = validTask.copy(projectId = projectId)
 
 
         coEvery { repository.getAllTasksByProjectId(projectId) } returns listOf(taskOne, taskTwo)

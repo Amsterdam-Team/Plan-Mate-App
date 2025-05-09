@@ -1,7 +1,18 @@
 package ui.task
 
 import com.google.common.truth.Truth
-import helper.CreateTaskUIControllerTestFactory
+import helper.TaskFactory.INVALID_PROJECT_ID_ERROR_MESSAGE
+import helper.TaskFactory.INVALID_STATE_NAME_ERROR_MESSAGE
+import helper.TaskFactory.INVALID_TASK_NAME_ERROR_MESSAGE
+import helper.TaskFactory.IN_VALID_PROJECT_ID
+import helper.TaskFactory.IN_VALID_STATE
+import helper.TaskFactory.IN_VALID_TASK_NAME
+import helper.TaskFactory.STATE_NOT_FOUND_ERROR_MESSAGE
+import helper.TaskFactory.TASK_CREATED_SUCCESSFULLY_MESSAGE
+import helper.TaskFactory.VALID_PROJECT_ID
+import helper.TaskFactory.VALID_STATE
+import helper.TaskFactory.VALID_TASK_NAME
+import helper.TaskFactory.getDummyInputs
 import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -42,9 +53,9 @@ class CreateTaskUIControllerTest {
         //Given
         coEvery { useCase.createTask(any(), any(), any()) } returns true
         every { consoleIo.readFromUser() } returnsMany listOf(
-            CreateTaskUIControllerTestFactory.VALID_TASK_NAME,
-            CreateTaskUIControllerTestFactory.VALID_PROJECT_ID,
-            CreateTaskUIControllerTestFactory.VALID_STATE
+            VALID_TASK_NAME,
+            VALID_PROJECT_ID,
+            VALID_STATE
         )
 
         //When
@@ -53,9 +64,9 @@ class CreateTaskUIControllerTest {
         //Then
         coVerify(exactly = 1) {
             useCase.createTask(
-                name = CreateTaskUIControllerTestFactory.VALID_TASK_NAME,
-                projectId = CreateTaskUIControllerTestFactory.VALID_PROJECT_ID,
-                state = CreateTaskUIControllerTestFactory.VALID_STATE
+                name = VALID_TASK_NAME,
+                projectId = VALID_PROJECT_ID,
+                state = VALID_STATE
             )
         }
     }
@@ -64,9 +75,9 @@ class CreateTaskUIControllerTest {
     fun `should show success message when task is created`()= runTest {
         // Given
         every { consoleIo.readFromUser() } returnsMany listOf(
-            CreateTaskUIControllerTestFactory.VALID_TASK_NAME,
-            CreateTaskUIControllerTestFactory.VALID_PROJECT_ID,
-            CreateTaskUIControllerTestFactory.VALID_STATE
+            VALID_TASK_NAME,
+            VALID_PROJECT_ID,
+            VALID_STATE
         )
         coEvery { useCase.createTask(any(), any(), any()) } returns true
 
@@ -74,12 +85,12 @@ class CreateTaskUIControllerTest {
         controller.execute()
 
         // Then
-        verify { consoleIo.println(CreateTaskUIControllerTestFactory.TASK_CREATED_SUCCESSFULLY_MESSAGE) }
+        verify { consoleIo.println(TASK_CREATED_SUCCESSFULLY_MESSAGE) }
     }
 
     @Test
     fun `should show correct error message when input invalid task name`()= runTest {
-        every { consoleIo.readFromUser() } returnsMany CreateTaskUIControllerTestFactory.getDummyInputs(projectId = CreateTaskUIControllerTestFactory.IN_VALID_TASK_NAME)
+        every { consoleIo.readFromUser() } returnsMany getDummyInputs(projectId = IN_VALID_TASK_NAME)
 
         coEvery { useCase.createTask(name = any(), projectId = any(), state = any()) } throws
                 PlanMateException.ValidationException.InvalidTaskNameException
@@ -87,12 +98,12 @@ class CreateTaskUIControllerTest {
         controller.execute()
 
         Truth.assertThat(outContent.toString())
-            .contains(CreateTaskUIControllerTestFactory.INVALID_TASK_NAME_ERROR_MESSAGE)
+            .contains(INVALID_TASK_NAME_ERROR_MESSAGE)
     }
 
     @Test
     fun `should show correct error message when input invalid project id`()= runTest {
-        every { consoleIo.readFromUser() } returnsMany CreateTaskUIControllerTestFactory.getDummyInputs(projectId = CreateTaskUIControllerTestFactory.IN_VALID_PROJECT_ID)
+        every { consoleIo.readFromUser() } returnsMany getDummyInputs(projectId = IN_VALID_PROJECT_ID)
 
         coEvery { useCase.createTask(name = any(), projectId = any(), state = any()) } throws
                 PlanMateException.ValidationException.InvalidProjectIDException
@@ -100,12 +111,12 @@ class CreateTaskUIControllerTest {
         controller.execute()
 
         Truth.assertThat(outContent.toString())
-            .contains(CreateTaskUIControllerTestFactory.INVALID_PROJECT_ID_ERROR_MESSAGE)
+            .contains(INVALID_PROJECT_ID_ERROR_MESSAGE)
     }
 
     @Test
     fun `should show correct error message when input invalid task state`() = runTest {
-        every { consoleIo.readFromUser() } returnsMany CreateTaskUIControllerTestFactory.getDummyInputs(taskState = CreateTaskUIControllerTestFactory.IN_VALID_STATE)
+        every { consoleIo.readFromUser() } returnsMany getDummyInputs(taskState = IN_VALID_STATE)
 
         coEvery { useCase.createTask(name = any(), projectId = any(), state = any()) } throws
                 PlanMateException.ValidationException.InvalidStateNameException
@@ -113,12 +124,12 @@ class CreateTaskUIControllerTest {
         controller.execute()
 
         Truth.assertThat(outContent.toString())
-            .contains(CreateTaskUIControllerTestFactory.INVALID_STATE_NAME_ERROR_MESSAGE)
+            .contains(INVALID_STATE_NAME_ERROR_MESSAGE)
     }
 
     @Test
     fun `should show correct error message when input state name does not exist in the target project`() = runTest {
-        every { consoleIo.readFromUser() } returnsMany CreateTaskUIControllerTestFactory.getDummyInputs(taskState = CreateTaskUIControllerTestFactory.VALID_STATE)
+        every { consoleIo.readFromUser() } returnsMany getDummyInputs(taskState = VALID_STATE)
 
         coEvery { useCase.createTask(name = any(), projectId = any(), state = any()) } throws
                 PlanMateException.NotFoundException.StateNotFoundException
@@ -126,7 +137,7 @@ class CreateTaskUIControllerTest {
         controller.execute()
 
         Truth.assertThat(outContent.toString())
-            .contains(CreateTaskUIControllerTestFactory.STATE_NOT_FOUND_ERROR_MESSAGE)
+            .contains(STATE_NOT_FOUND_ERROR_MESSAGE)
     }
 
 }

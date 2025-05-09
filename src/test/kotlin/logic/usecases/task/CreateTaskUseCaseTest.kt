@@ -1,5 +1,12 @@
 package logic.usecases.task
 
+import helper.TaskFactory.INVALID_PROJECT_ID
+import helper.TaskFactory.INVALID_STATE
+import helper.TaskFactory.INVALID_TASK_NAME
+import helper.TaskFactory.NON_EXISTENT_STATE
+import helper.TaskFactory.existingStates
+import helper.TaskFactory.taskWithUnExistingProjectID
+import helper.TaskFactory.validTask
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -13,13 +20,6 @@ import logic.repository.ProjectRepository
 import logic.repository.TaskRepository
 import logic.usecases.logs.LoggerUseCase
 import logic.usecases.utils.ValidateInputUseCase
-import helper.CreateTaskTestFactory.INVALID_PROJECT_ID
-import helper.CreateTaskTestFactory.INVALID_STATE
-import helper.CreateTaskTestFactory.INVALID_TASK_NAME
-import helper.CreateTaskTestFactory.NON_EXISTENT_STATE
-import helper.CreateTaskTestFactory.existingStates
-import helper.CreateTaskTestFactory.taskWithUnExistingProjectID
-import helper.CreateTaskTestFactory.validTask
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
