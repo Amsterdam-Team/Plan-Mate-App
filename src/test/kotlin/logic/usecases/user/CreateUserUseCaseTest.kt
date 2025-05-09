@@ -8,12 +8,13 @@ import logic.exception.PlanMateException.ValidationException.InvalidPasswordExce
 import logic.exception.PlanMateException.ValidationException.InvalidUsernameException
 import logic.exception.PlanMateException.ValidationException.UserAlreadyExistsException
 import logic.repository.AuthRepository
-import logic.usecases.StateManager
-import logic.usecases.ValidateInputUseCase
+import logic.usecases.utils.StateManager
+import logic.usecases.utils.ValidateInputUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import utils.ResultStatus
-import utils.TestDataFactory.createUser
+import helper.TestDataFactory.createUser
+import org.junit.jupiter.api.assertThrows
+
 
 class CreateUserUseCaseTest {
 
@@ -40,7 +41,7 @@ class CreateUserUseCaseTest {
         val result = useCase.execute(user.username, user.password)
 
         // Then
-        assertThat(result).isInstanceOf(ResultStatus.Success::class.java)
+        assertThat(result).isTrue()
     }
 
     @Test
@@ -49,11 +50,8 @@ class CreateUserUseCaseTest {
         val user = createUser(username = "mohammad")
         coEvery { repository.createUser(any()) } throws UserAlreadyExistsException
 
-        // When
-        val result = useCase.execute(user.username, user.password)
-
-        // Then
-        assertThat((result as ResultStatus.Error).exception).isInstanceOf(UserAlreadyExistsException::class.java)
+        // When & Then
+        assertThrows <UserAlreadyExistsException>{  useCase.execute(user.username, user.password) }
     }
 
     @Test
@@ -62,11 +60,8 @@ class CreateUserUseCaseTest {
         val username = "mohammad"
         val blankPassword = "  "
 
-        // When
-        val result = useCase.execute(username, blankPassword)
-
-        // Then
-        assertThat((result as ResultStatus.Error).exception).isInstanceOf(InvalidPasswordException::class.java)
+        // When & Then
+        assertThrows<InvalidPasswordException>{useCase.execute(username, blankPassword)}
     }
 
     @Test
@@ -74,12 +69,8 @@ class CreateUserUseCaseTest {
         // Given
         val blankUsername = "  "
         val password = "123456"
-
-        // When
-        val result = useCase.execute(blankUsername, password)
-
-        // Then
-        assertThat((result as ResultStatus.Error).exception).isInstanceOf(InvalidUsernameException::class.java)
+        // When & Then
+        assertThrows<InvalidUsernameException>{useCase.execute(blankUsername, password)}
     }
 
     @Test
@@ -88,10 +79,7 @@ class CreateUserUseCaseTest {
         val blankUsername = "    "
         val blankPassword = "    "
 
-        // When
-        val result = useCase.execute(blankUsername, blankPassword)
-
-        // Then
-        assertThat((result as ResultStatus.Error).exception).isInstanceOf(InvalidUsernameException::class.java)
+        // When & Then
+        assertThrows<InvalidUsernameException>{useCase.execute(blankUsername, blankPassword)}
     }
 }

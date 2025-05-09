@@ -2,7 +2,7 @@ package logic.usecases.task
 
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.repository.TaskRepository
-import logic.usecases.LoggerUseCase
+import logic.usecases.logs.LoggerUseCase
 import java.util.UUID
 
 class DeleteTaskUseCase(

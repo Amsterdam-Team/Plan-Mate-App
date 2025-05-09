@@ -1,18 +1,19 @@
 package logic.usecases.state
 
-import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import logic.exception.PlanMateException
 import logic.repository.ProjectRepository
-import logic.usecases.StateManager
-import logic.usecases.ValidateInputUseCase
+import logic.usecases.utils.StateManager
+import logic.usecases.utils.ValidateInputUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import utils.ResultStatus
-import utils.TestDataFactory
+import helper.TestDataFactory
+import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
+import logic.exception.PlanMateException.ValidationException.InvalidStateNameException
+import logic.exception.PlanMateException.ValidationException.SameStateNameException
+import org.junit.jupiter.api.assertThrows
 import java.util.UUID
 
 class CreateStateUseCaseTest {
@@ -41,7 +42,7 @@ class CreateStateUseCaseTest {
         val result = useCase.execute(project.id.toString(), newState)
 
         // Then
-        assertThat(result).isInstanceOf(ResultStatus.Success::class.java)
+        assertThat(result).isTrue()
     }
 
     @Test
@@ -50,12 +51,8 @@ class CreateStateUseCaseTest {
         val project = TestDataFactory.createProject()
         val blankState = "  "
 
-        // When
-        val result = useCase.execute(project.id.toString(), blankState)
-
-        // Then
-        Truth.assertThat((result as ResultStatus.Error).exception)
-            .isInstanceOf(PlanMateException.ValidationException.InvalidStateNameException::class.java)
+        // When&Then
+        assertThrows <InvalidStateNameException>{ useCase.execute(project.id.toString(), blankState) }
     }
 
     @Test
@@ -68,14 +65,10 @@ class CreateStateUseCaseTest {
                 fakeProjectId,
                 state
             )
-        } throws PlanMateException.NotFoundException.ProjectNotFoundException
+        } throws ProjectNotFoundException
 
-        // When
-        val result = useCase.execute(fakeProjectId.toString(), state)
-
-        // Then
-        Truth.assertThat((result as ResultStatus.Error).exception)
-            .isInstanceOf(PlanMateException.NotFoundException.ProjectNotFoundException::class.java)
+        // When&Then
+        assertThrows <ProjectNotFoundException>{ useCase.execute(fakeProjectId.toString(), state) }
     }
 
     @Test
@@ -85,12 +78,8 @@ class CreateStateUseCaseTest {
         val duplicateState = "todo"
         coEvery { repository.getProject(project.id) } returns project
 
-        // When
-        val result = useCase.execute(project.id.toString(), duplicateState)
-
-        // Then
-        Truth.assertThat((result as ResultStatus.Error).exception)
-            .isInstanceOf(PlanMateException.ValidationException.SameStateNameException::class.java)
+        // when&Then
+        assertThrows <SameStateNameException>{ useCase.execute(project.id.toString(), duplicateState) }
     }
 
     @Test
@@ -100,11 +89,7 @@ class CreateStateUseCaseTest {
         val duplicateWithSpaces = "  in progress  "
         coEvery { repository.getProject(project.id) } returns project
 
-        // When
-        val result = useCase.execute(project.id.toString(), duplicateWithSpaces)
-
-        // Then
-        Truth.assertThat((result as ResultStatus.Error).exception)
-            .isInstanceOf(PlanMateException.ValidationException.SameStateNameException::class.java)
+        // When&Then
+        assertThrows <SameStateNameException>{ useCase.execute(project.id.toString(), duplicateWithSpaces) }
     }
 }

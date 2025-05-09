@@ -4,10 +4,10 @@ import logic.entities.User
 import logic.exception.PlanMateException
 import logic.repository.ProjectRepository
 import java.util.*
-import logic.usecases.ValidateInputUseCase
+import logic.usecases.utils.ValidateInputUseCase
 import logic.entities.Project
-import logic.usecases.LoggerUseCase
-import logic.usecases.StateManager
+import logic.usecases.logs.LoggerUseCase
+import logic.usecases.utils.StateManager
 
 
 class EditProjectUseCase(

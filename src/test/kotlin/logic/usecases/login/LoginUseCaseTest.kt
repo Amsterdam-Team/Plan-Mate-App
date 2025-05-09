@@ -7,9 +7,8 @@ import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException.AuthorizationException.WrongPasswordException
 import logic.exception.PlanMateException.AuthorizationException.WrongUsernameException
 import logic.repository.AuthRepository
-import logic.usecases.LoginUseCase
-import logic.usecases.StateManager
-import logic.usecases.testFactory.validUserData
+import logic.usecases.utils.StateManager
+import helper.validUserData
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
