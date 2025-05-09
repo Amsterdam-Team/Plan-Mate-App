@@ -7,11 +7,11 @@ import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.repository.TaskRepository
-import logic.usecases.state.testFactory.GetTaskStateUseCaseTestFactory.EXPECTED_TASK_STATE
-import logic.usecases.state.testFactory.GetTaskStateUseCaseTestFactory.existingTask
-import logic.usecases.state.testFactory.GetTaskStateUseCaseTestFactory.existingTaskID
-import logic.usecases.state.testFactory.GetTaskStateUseCaseTestFactory.invalidTaskID
-import logic.usecases.state.testFactory.GetTaskStateUseCaseTestFactory.notExistingTaskID
+import helper.ConstantsFactory.EXPECTED_TASK_STATE
+import helper.TaskFactory.existingTask
+import helper.ConstantsFactory.EXISTING_TASK_ID
+import helper.ConstantsFactory.INVALID_TASK_ID
+import helper.TaskFactory.notExistingTaskID
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
@@ -33,7 +33,7 @@ class GetTaskStateUseCaseTest {
         coEvery { repository.getTaskById(any()) } returns existingTask
 
         //When
-        val state = useCase.execute(existingTaskID)
+        val state = useCase.execute(EXISTING_TASK_ID)
 
         //Then
         assertThat(state).isEqualTo(EXPECTED_TASK_STATE)
@@ -42,7 +42,7 @@ class GetTaskStateUseCaseTest {
     @Test
     fun `should throw InvalidTaskIDException when the task ID is invalid`() = runTest{
         //Given & When & Then
-        assertThrows<InvalidTaskIDException> { useCase.execute(invalidTaskID) }
+        assertThrows<InvalidTaskIDException> { useCase.execute(INVALID_TASK_ID) }
     }
 
     @Test

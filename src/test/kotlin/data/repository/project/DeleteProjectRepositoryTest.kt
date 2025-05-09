@@ -3,15 +3,12 @@ package data.repository.project
 
 import com.google.common.truth.Truth.assertThat
 import data.datasources.projectDataSource.IProjectDataSource
+import helper.ProjectFactory.someProjects
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
-import logic.usecases.LoggerUseCase
-import logic.usecases.project.helper.DeleteProjectTestFactory.someProjects
 import org.junit.jupiter.api.Test
-
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import java.util.UUID
@@ -21,7 +18,6 @@ class DeleteProjectRepositoryTest {
     lateinit var dataSource: IProjectDataSource
     lateinit var repository: ProjectRepositoryImpl
     lateinit var dummyId: UUID
-    lateinit var logger : LoggerUseCase
 
     @BeforeEach
     fun setUp() {

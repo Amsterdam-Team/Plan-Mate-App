@@ -6,6 +6,7 @@ import io.ktor.server.netty.*
 import kotlinx.coroutines.runBlocking
 import org.koin.core.context.startKoin
 import org.koin.java.KoinJavaComponent.getKoin
+import ui.login.LoginUIController
 
 
 fun main() {

@@ -6,7 +6,6 @@ import com.mongodb.MongoClientSettings
 import com.mongodb.kotlin.client.coroutine.MongoClient
 import com.mongodb.kotlin.client.coroutine.MongoCollection
 import com.mongodb.kotlin.client.coroutine.MongoDatabase
-import io.mockk.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import logic.entities.User
@@ -14,7 +13,7 @@ import logic.exception.PlanMateException.DataSourceException.ObjectDoesNotExistE
 import org.bson.Document
 import org.bson.UuidRepresentation
 import org.junit.jupiter.api.*
-import utils.TestDataFactory
+import helper.UserFactory
 import java.util.*
 
 
@@ -235,7 +234,7 @@ class UserDataSourceTest {
 
     companion object {
         // Document Users
-        private val user1 = TestDataFactory.createUser()
+        private val user1 = UserFactory.createUser()
         private val user2Id = UUID.randomUUID()
         private val user2 = user1.copy(id = user2Id, username = "me")
         private val users = listOf(user1, user2)

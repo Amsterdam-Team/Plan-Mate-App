@@ -1,12 +1,12 @@
 package ui.project
 
 
-  import console.ConsoleIO
   import io.mockk.*
   import kotlinx.coroutines.test.runTest
   import logic.usecases.project.EditProjectUseCase
   import org.junit.jupiter.api.BeforeEach
   import org.junit.jupiter.api.Test
+  import ui.console.ConsoleIO
   import java.io.ByteArrayOutputStream
   import java.io.PrintStream
   import java.util.*

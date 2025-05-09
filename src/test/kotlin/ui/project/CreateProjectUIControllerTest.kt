@@ -1,17 +1,16 @@
 package ui.project
 
 import com.google.common.truth.Truth.assertThat
-import console.ConsoleIO
+import helper.ProjectFactory.inValidProjectNameTest
+import helper.ProjectFactory.validProjectTest
 import io.mockk.*
 import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException
 import logic.exception.PlanMateException.ValidationException.InvalidProjectNameException
 import logic.usecases.project.CreateProjectUseCase
-import logic.usecases.testFactories.CreateProjectTestFactory.inValidProjectNameTest
-import logic.usecases.testFactories.CreateProjectTestFactory.validProjectTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import ui.controllers.CreateProjectUIController
+import ui.console.ConsoleIO
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
 

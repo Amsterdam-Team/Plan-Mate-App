@@ -7,9 +7,9 @@ import logic.entities.User
 import logic.exception.PlanMateException.AuthorizationException.AdminPrivilegesRequiredException
 import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
 import logic.repository.ProjectRepository
-import logic.usecases.LoggerUseCase
-import logic.usecases.StateManager
-import logic.usecases.ValidateInputUseCase
+import logic.usecases.logs.LoggerUseCase
+import logic.usecases.utils.StateManager
+import logic.usecases.utils.ValidateInputUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

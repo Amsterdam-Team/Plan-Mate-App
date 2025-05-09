@@ -1,11 +1,6 @@
 package ui.utils
 
-import logic.exception.PlanMateException
-import logic.exception.PlanMateException.AuthorizationException.AdminPrivilegesRequiredException
-import logic.exception.PlanMateException.AuthorizationException.UnAuthenticatedException
-import logic.exception.PlanMateException.AuthorizationException.UserNotFoundException
-import logic.exception.PlanMateException.AuthorizationException.WrongPasswordException
-import logic.exception.PlanMateException.AuthorizationException.WrongUsernameException
+import logic.exception.PlanMateException.AuthorizationException.*
 import logic.exception.PlanMateException.NotFoundException.*
 import logic.exception.PlanMateException.ParsingException.CsvFormatException
 import logic.exception.PlanMateException.ValidationException.*
@@ -68,8 +63,6 @@ fun getErrorMessageByException(exception: Exception): String {
         is InvalidUUIDFormatException -> "Invalid UUID Format"
         is UnAuthenticatedException -> "Not logged in, please login first."
         is EmptyDataException -> "You must enter some data, this field cannot be empty"
-
-        is PlanMateException -> "Something went wrong with your request. Please try again."
 
         else -> "An unexpected error occurred. Please try again later."
     }

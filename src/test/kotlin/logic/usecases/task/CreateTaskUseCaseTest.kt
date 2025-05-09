@@ -1,5 +1,12 @@
 package logic.usecases.task
 
+import helper.ConstantsFactory.INVALID_PROJECT_ID
+import helper.ConstantsFactory.INVALID_STATE
+import helper.ConstantsFactory.INVALID_TASK_NAME
+import helper.ConstantsFactory.NON_EXISTENT_STATE
+import helper.TaskFactory.existingStates
+import helper.TaskFactory.taskWithUnExistingProjectID
+import helper.TaskFactory.validTask
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -11,15 +18,8 @@ import logic.exception.PlanMateException.ValidationException.InvalidProjectIDExc
 import logic.exception.PlanMateException.NotFoundException.StateNotFoundException
 import logic.repository.ProjectRepository
 import logic.repository.TaskRepository
-import logic.usecases.LoggerUseCase
-import logic.usecases.ValidateInputUseCase
-import logic.usecases.testFactory.CreateTaskTestFactory.INVALID_PROJECT_ID
-import logic.usecases.testFactory.CreateTaskTestFactory.INVALID_STATE
-import logic.usecases.testFactory.CreateTaskTestFactory.INVALID_TASK_NAME
-import logic.usecases.testFactory.CreateTaskTestFactory.NON_EXISTENT_STATE
-import logic.usecases.testFactory.CreateTaskTestFactory.existingStates
-import logic.usecases.testFactory.CreateTaskTestFactory.taskWithUnExistingProjectID
-import logic.usecases.testFactory.CreateTaskTestFactory.validTask
+import logic.usecases.logs.LoggerUseCase
+import logic.usecases.utils.ValidateInputUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow

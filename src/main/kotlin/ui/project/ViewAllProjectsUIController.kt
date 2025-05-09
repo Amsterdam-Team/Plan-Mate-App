@@ -6,7 +6,7 @@ import ui.controller.BaseUIController
 import ui.menuHandler.mainMenuProjects
 import ui.task.ViewAllTaksByProjectIdUIController
 import ui.utils.tryToExecute
-import utils.printSwimlanesView
+import ui.utils.printSwimlanesView
 
 class ViewAllProjectsUIController(
     private val getAllProjectsUseCase: GetAllProjectsUseCase

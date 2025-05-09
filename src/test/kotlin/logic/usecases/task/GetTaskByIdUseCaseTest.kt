@@ -1,14 +1,14 @@
 package logic.usecases.task
 
 import com.google.common.truth.Truth.assertThat
+import helper.TaskFactory.validTask
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
 import logic.repository.TaskRepository
-import logic.usecases.ValidateInputUseCase
-import logic.usecases.testFactory.CreateTaskTestFactory
+import logic.usecases.utils.ValidateInputUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -30,7 +30,7 @@ class GetTaskByIdUseCaseTest {
     fun `getTaskById should  get task by taskId from repository when called`() = runTest {
         // given
         val taskId = UUID.fromString("123e4567-e89b-12d3-a456-000000000000")
-        val taskOne = CreateTaskTestFactory.validTask.copy(id = taskId)
+        val taskOne = validTask.copy(id = taskId)
         coEvery { repository.getTaskById(taskId) } returns taskOne
 
         //When
@@ -44,7 +44,7 @@ class GetTaskByIdUseCaseTest {
     fun `should get task by task id when task is exists`() = runTest {
         // given
         val projectId = UUID.randomUUID()
-        val taskOne = CreateTaskTestFactory.validTask.copy(id = projectId)
+        val taskOne = validTask.copy(id = projectId)
 
         coEvery { repository.getTaskById(projectId) } returns taskOne
 
@@ -74,7 +74,7 @@ class GetTaskByIdUseCaseTest {
         // given
         val taskId = UUID.randomUUID()
 
-        val task = CreateTaskTestFactory.validTask.copy(id = taskId)
+        val task = validTask.copy(id = taskId)
 
         coEvery { repository.getTaskById(taskId) } returns task
 

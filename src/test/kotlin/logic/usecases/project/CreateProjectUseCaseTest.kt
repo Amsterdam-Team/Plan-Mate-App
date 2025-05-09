@@ -1,6 +1,11 @@
 package logic.usecases.project
 
 import com.google.common.truth.Truth.assertThat
+import helper.ProjectFactory.createProject
+import helper.ProjectFactory.emptyProjectNameTest
+import helper.ProjectFactory.emptyProjectStateTest
+import helper.ProjectFactory.inValidProjectNameTest
+import helper.ProjectFactory.validProjectTest
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
@@ -8,14 +13,9 @@ import logic.entities.User
 import logic.exception.PlanMateException.AuthorizationException.AdminPrivilegesRequiredException
 import logic.exception.PlanMateException.ValidationException.*
 import logic.repository.ProjectRepository
-import logic.usecases.LoggerUseCase
-import logic.usecases.StateManager
-import logic.usecases.ValidateInputUseCase
-import logic.usecases.testFactories.CreateProjectTestFactory.createProject
-import logic.usecases.testFactories.CreateProjectTestFactory.emptyProjectNameTest
-import logic.usecases.testFactories.CreateProjectTestFactory.emptyProjectStateTest
-import logic.usecases.testFactories.CreateProjectTestFactory.inValidProjectNameTest
-import logic.usecases.testFactories.CreateProjectTestFactory.validProjectTest
+import logic.usecases.logs.LoggerUseCase
+import logic.usecases.utils.StateManager
+import logic.usecases.utils.ValidateInputUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
