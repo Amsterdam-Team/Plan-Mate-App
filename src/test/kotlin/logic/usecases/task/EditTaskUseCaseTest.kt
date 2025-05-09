@@ -6,6 +6,7 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import logic.entities.Task
+import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskNameException
 import logic.usecases.logs.LoggerUseCase
@@ -32,8 +33,8 @@ class EditTaskUseCaseTest {
         taskId = UUID.randomUUID().toString()
         task = Task(
             id = UUID.randomUUID(),
-            name = "add test",
-            state = "todo",
+            name = "test task",
+            state = "TODO",
             projectId = UUID.randomUUID()
         )
 
@@ -43,6 +44,8 @@ class EditTaskUseCaseTest {
     fun `should return true when editing task function complete successfully`() = runTest {
         coEvery { validation.isValidUUID(task.id.toString()) } returns true
         coEvery { validation.isValidName("new name") } returns true
+        coEvery { validation.isValidName("new state") } returns true
+        coEvery { repository.getTaskById(task.id) } returns task
         coEvery { repository.updateTaskNameByID(task.id, "new name") } returns true
         coEvery { repository.updateStateNameByID(task.id, "new state") } returns true
 
@@ -53,7 +56,19 @@ class EditTaskUseCaseTest {
 
     @Test
     fun `should throw not found task exception when trying to update not existed task`() = runTest {
+        // Given
+        coEvery { validation.isValidUUID(task.id.toString()) } returns true
+        coEvery { validation.isValidName("new name") } returns true
+        coEvery { validation.isValidName("new state") } returns true
 
+        coEvery { repository.getTaskById(task.id) } returns task
+        coEvery { repository.updateTaskNameByID(task.id, "new name") } returns false
+        coEvery { repository.updateStateNameByID(task.id, "new state") } returns true
+
+        // When & Then
+        assertThrows<TaskNotFoundException> {
+            useCase.editTask(task.id.toString(), "new name", "new state")
+        }
     }
 
     @Test
@@ -71,11 +86,11 @@ class EditTaskUseCaseTest {
     @Test
     fun `should throw invalid task name when trying to add name contain not alphabet characters`() =
         runTest {
-            coEvery { repository.updateTaskNameByID(task.id, "new#$") } returns true
-            coEvery { repository.updateStateNameByID(task.id, "new state") } returns true
+            coEvery { validation.isValidUUID(task.id.toString()) } returns true
+            coEvery { validation.isValidName("new#$") } returns false
+
             assertThrows<InvalidTaskNameException> {
                 useCase.editTask(task.id.toString(), "new#$", "new state")
-
             }
         }
 

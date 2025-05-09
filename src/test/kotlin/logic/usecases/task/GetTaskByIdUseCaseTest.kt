@@ -12,7 +12,7 @@ import logic.usecases.utils.ValidateInputUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.util.*
+import java.util.UUID
 
 class GetTaskByIdUseCaseTest {
     private lateinit var repository: TaskRepository
@@ -22,8 +22,9 @@ class GetTaskByIdUseCaseTest {
     @BeforeEach
     fun setup() {
         repository = mockk(relaxed = true)
-        validateInputUseCase =mockk(relaxed = true)
-        useCase = GetTaskByIdUseCase(repository,validateInputUseCase)
+        validateInputUseCase = mockk(relaxed = true)
+        useCase = GetTaskByIdUseCase(repository, validateInputUseCase)
+        coEvery { validateInputUseCase.isValidUUID(any()) } returns true
     }
 
     @Test
@@ -37,19 +38,19 @@ class GetTaskByIdUseCaseTest {
         useCase(taskId.toString())
 
         // Then
-        coVerify (exactly = 1) { repository.getTaskById(taskId) }
+        coVerify(exactly = 1) { repository.getTaskById(taskId) }
     }
 
     @Test
     fun `should get task by task id when task is exists`() = runTest {
         // given
-        val projectId = UUID.randomUUID()
-        val taskOne = validTask.copy(id = projectId)
+        val taskId = UUID.randomUUID()
+        val taskOne = validTask.copy(id = taskId)
 
-        coEvery { repository.getTaskById(projectId) } returns taskOne
+        coEvery { repository.getTaskById(taskId) } returns taskOne
 
         // when
-        val result = useCase(projectId.toString())
+        val result = useCase(taskId.toString())
 
         //Then
         assertThat(result).isEqualTo(taskOne)
@@ -57,16 +58,17 @@ class GetTaskByIdUseCaseTest {
 
 
     @Test
-    fun `should throw NoTaskFoundException when there are no task for provided task id`()= runTest  {
-        // given
-        val taskId = UUID.randomUUID()
-        coEvery { repository.getTaskById(taskId) } throws TaskNotFoundException
+    fun `should throw NoTaskFoundException when there are no task for provided task id`() =
+        runTest {
+            // given
+            val taskId = UUID.randomUUID()
+            coEvery { repository.getTaskById(taskId) } throws TaskNotFoundException
 
-        // when && then
-        assertThrows<TaskNotFoundException> {
-            useCase(taskId.toString())
+            // when && then
+            assertThrows<TaskNotFoundException> {
+                useCase(taskId.toString())
+            }
         }
-    }
 
 
     @Test
