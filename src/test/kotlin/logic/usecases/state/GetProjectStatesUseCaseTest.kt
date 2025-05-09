@@ -7,9 +7,9 @@ import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
 import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
 import logic.repository.ProjectRepository
-import helper.GetProjectStatesUseCaseTestFactory.dummyProject
-import helper.GetProjectStatesUseCaseTestFactory.EXISTING_PROJECT_ID
-import helper.GetProjectStatesUseCaseTestFactory.INVALID_PROJECT_ID
+import helper.ProjectFactory.dummyProject
+import helper.ConstantsFactory.EXISTING_PROJECT_ID
+import helper.ConstantsFactory.INVALID_PROJECT_ID
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

@@ -6,7 +6,7 @@ import com.mongodb.MongoClientSettings
 import com.mongodb.kotlin.client.coroutine.MongoClient
 import com.mongodb.kotlin.client.coroutine.MongoCollection
 import com.mongodb.kotlin.client.coroutine.MongoDatabase
-import helper.LogTestFactory
+import helper.LogFactory
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import logic.entities.LogItem
@@ -172,7 +172,7 @@ class LogDataSourceTest{
 
     companion object{
         // Document Logs
-        private val log1 = LogTestFactory.createLogItem()
+        private val log1 = LogFactory.createLogItem()
         private val log2Id = UUID.randomUUID()
         private val entityId2 = UUID.randomUUID()
         private val log2 = log1.copy(id = log2Id, message = "log 2 message", entityId = entityId2)

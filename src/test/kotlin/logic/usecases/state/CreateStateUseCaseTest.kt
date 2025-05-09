@@ -1,6 +1,7 @@
 package logic.usecases.state
 
 import com.google.common.truth.Truth.assertThat
+import helper.ProjectFactory.createProject
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
@@ -9,7 +10,6 @@ import logic.usecases.utils.StateManager
 import logic.usecases.utils.ValidateInputUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import helper.TestDataFactory
 import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
 import logic.exception.PlanMateException.ValidationException.InvalidStateNameException
 import logic.exception.PlanMateException.ValidationException.SameStateNameException
@@ -34,7 +34,7 @@ class CreateStateUseCaseTest {
     @Test
     fun `should return success when state is valid and project exists`() = runTest{
         // Given
-        val project = TestDataFactory.createProject()
+        val project = createProject()
         val newState = "In Review"
         coEvery  { repository.addStateById(project.id, newState) } returns  true
 
@@ -48,7 +48,7 @@ class CreateStateUseCaseTest {
     @Test
     fun `should return error when state name is blank`()  = runTest{
         // Given
-        val project = TestDataFactory.createProject()
+        val project = createProject()
         val blankState = "  "
 
         // When&Then
@@ -74,7 +74,7 @@ class CreateStateUseCaseTest {
     @Test
     fun `should return error when state name already exists in the project`() = runTest{
         // Given
-        val project = TestDataFactory.createProject(states = listOf("TODO", "In Review"))
+        val project = createProject(states = listOf("TODO", "In Review"))
         val duplicateState = "todo"
         coEvery { repository.getProject(project.id) } returns project
 
@@ -85,7 +85,7 @@ class CreateStateUseCaseTest {
     @Test
     fun `should return error when state name with spaces already exists in the project`() = runTest{
         // Given
-        val project = TestDataFactory.createProject(states = listOf("In Progress", "Done"))
+        val project = createProject(states = listOf("In Progress", "Done"))
         val duplicateWithSpaces = "  in progress  "
         coEvery { repository.getProject(project.id) } returns project
 

@@ -1,7 +1,8 @@
 package logic.usecases.logs
 
 import com.google.common.truth.Truth
-import helper.ViewProjectHistoryTestFactory
+import helper.LogFactory.LOGS_FOR_PROJECT_1
+import helper.ProjectFactory.PROJECT_1
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
@@ -25,8 +26,8 @@ class ViewProjectHistoryUseCaseTest {
     @Test
     fun `should return the correct logs list when projectId is valid`() = runTest {
         // Given
-        val projectId = ViewProjectHistoryTestFactory.PROJECT_1.id
-        val logs = ViewProjectHistoryTestFactory.LOGS_FOR_PROJECT_1
+        val projectId = PROJECT_1.id
+        val logs = LOGS_FOR_PROJECT_1
         coEvery { logRepository.viewLogsById(projectId) } returns logs
 
         // When

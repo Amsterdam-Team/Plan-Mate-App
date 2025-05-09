@@ -1,11 +1,11 @@
 package ui.logs
 
 import com.google.common.truth.Truth
-import helper.INVALID_ID_FORMAT
-import helper.TASK_NOT_FOUND
-import helper.invalidId
-import helper.taskLogs
-import helper.validId
+import helper.ConstantsFactory.INVALID_ID_FORMAT
+import helper.ConstantsFactory.TASK_NOT_FOUND
+import helper.ConstantsFactory.invalidId
+import helper.LogFactory.taskLogs
+import helper.ConstantsFactory.validId
 import io.mockk.CapturingSlot
 import io.mockk.Runs
 import io.mockk.coEvery

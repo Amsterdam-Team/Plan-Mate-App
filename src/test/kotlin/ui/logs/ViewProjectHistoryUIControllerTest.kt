@@ -1,6 +1,7 @@
 package ui.logs
 
-import helper.ViewProjectHistoryTestFactory
+import helper.LogFactory.LOGS_FOR_PROJECT_1
+import helper.ProjectFactory.PROJECT_1
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -39,7 +40,7 @@ class ViewProjectHistoryUIControllerTest {
     @Test
     fun `should call viewProjectHistoryUseCase when user enter the input`() = runTest {
         // Given
-        val selectedProjectId = ViewProjectHistoryTestFactory.PROJECT_1.id.toString()
+        val selectedProjectId = PROJECT_1.id.toString()
         coEvery { consoleIO.readFromUser() } returns selectedProjectId
 
         // When
@@ -52,14 +53,14 @@ class ViewProjectHistoryUIControllerTest {
     @Test
     fun `should print logs for selected project`() = runTest {
         // Given
-        val selectedProjectId = ViewProjectHistoryTestFactory.PROJECT_1.id.toString()
+        val selectedProjectId = PROJECT_1.id.toString()
         every { consoleIO.readFromUser() } returns selectedProjectId
-        coEvery { useCase.execute(selectedProjectId) } returns ViewProjectHistoryTestFactory.LOGS_FOR_PROJECT_1
+        coEvery { useCase.execute(selectedProjectId) } returns LOGS_FOR_PROJECT_1
         // When
         controller.execute()
 
         // Then
-        ViewProjectHistoryTestFactory.LOGS_FOR_PROJECT_1.forEach {
+        LOGS_FOR_PROJECT_1.forEach {
             verify(exactly = 1) { consoleIO.println(formatLogItem(it)) }
         }
     }

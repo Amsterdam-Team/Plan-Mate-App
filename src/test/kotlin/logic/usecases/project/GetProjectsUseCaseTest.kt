@@ -1,13 +1,13 @@
 package logic.usecases.project
 
 import com.google.common.truth.Truth.assertThat
+import helper.ProjectFactory.createProject
 import io.mockk.*
 import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
 import logic.exception.PlanMateException.ValidationException.InvalidUUIDFormatException
 import logic.repository.ProjectRepository
 import logic.usecases.utils.ValidateInputUseCase
-import helper.createProject
 import logic.usecases.task.GetAllTasksByProjectIdUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

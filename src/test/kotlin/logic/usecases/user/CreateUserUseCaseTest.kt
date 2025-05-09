@@ -12,7 +12,7 @@ import logic.usecases.utils.StateManager
 import logic.usecases.utils.ValidateInputUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import helper.TestDataFactory.createUser
+import helper.UserFactory.createUser
 import org.junit.jupiter.api.assertThrows
 
 

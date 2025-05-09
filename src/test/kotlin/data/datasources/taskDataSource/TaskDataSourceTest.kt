@@ -6,7 +6,7 @@ import com.mongodb.MongoClientSettings
 import com.mongodb.kotlin.client.coroutine.MongoClient
 import com.mongodb.kotlin.client.coroutine.MongoCollection
 import com.mongodb.kotlin.client.coroutine.MongoDatabase
-import helper.CreateTaskTestFactory
+import helper.TaskFactory.validTask
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import logic.entities.Task
@@ -262,7 +262,7 @@ class TaskDataSourceTest{
     companion object{
         // Document Tasks
         private val project1Id = UUID.randomUUID()
-        private val task1Project1 = CreateTaskTestFactory.validTask.copy(projectId = project1Id)
+        private val task1Project1 = validTask.copy(projectId = project1Id)
         private val task2Id = UUID.randomUUID()
         private val task2Project1 = task1Project1.copy(id = task2Id, name = "task 2 same project")
         private val project2Id = UUID.randomUUID()
