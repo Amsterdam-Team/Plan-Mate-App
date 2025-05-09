@@ -6,12 +6,12 @@ import org.koin.java.KoinJavaComponent.getKoin
 import ui.console.ConsoleIO
 
 import ui.controller.BaseUIController
-import ui.utils.mainMenuTasks
-import ui.utils.printTasksSwimlanesView
+import ui.menuHandler.mainMenuTasks
+import ui.swimlane.printTasksSwimlanesView
 import ui.utils.DisplayUtils
 import ui.utils.tryToExecute
 
-class ViewAllTasksByProjectIdUIController(
+class ViewAllTaksByProjectIdUIController(
     private val getAllTasksByProjectIdUseCase: GetAllTasksByProjectIdUseCase,
     private val createTaskUseCase: CreateTaskUseCase,
     private val consoleIO: ConsoleIO
@@ -25,7 +25,7 @@ class ViewAllTasksByProjectIdUIController(
 
         tryToExecute(
             action = {
-                DisplayUtils.promptInput("Enter Task ID:")
+                DisplayUtils.promptInput("Enter project ID:")
                 val uuid = consoleIO.readFromUser()
                 getAllTasksByProjectIdUseCase(uuid)
             },
@@ -35,8 +35,8 @@ class ViewAllTasksByProjectIdUIController(
         )
         mainMenuTasks(
             onViewTaskDetails = {
-                val viewTaskDetailsUIController: ViewTaskDetailsUIController = getKoin().get()
-                viewTaskDetailsUIController.execute()
+                val ViewTaskDetailsUIController: ViewTaskDetailsUIController = getKoin().get()
+                ViewTaskDetailsUIController.execute()
             },
             onCreateTask = {
                 val controller = CreateTaskUIController(createTaskUseCase, consoleIO)
