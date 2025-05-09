@@ -1,16 +1,17 @@
 package ui.menuHandler
 
 import ui.controller.BaseUIController
+import ui.utils.DisplayUtils.printLine
 import ui.utils.printAsAFailState
 import ui.utils.printAsASuccessState
 
 open class MainMenuHandler {
 
     protected open suspend fun start() {
-        println("👋 Welcome to PlanMate!\nLet's get things organized.")
+        printLine()
     }
 
-    protected suspend fun baseMenuStart(showMenu: () -> Unit, featureControllers: Map<Int, BaseUIController>){
+    protected suspend fun baseMenuStart(showMenu: () -> Unit, featureControllers: Map<Int, BaseUIController>) {
         while (true) {
             showMenu()
 
@@ -23,6 +24,7 @@ open class MainMenuHandler {
                     "See You Later 🙂".printAsASuccessState()
                     break
                 }
+
                 null -> "❌ Invalid input. Please enter a valid number.".printAsAFailState()
                 else -> "❌ Unknown feature number.".printAsAFailState()
             }
