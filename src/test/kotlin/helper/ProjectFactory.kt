@@ -3,6 +3,7 @@ package helper
 
 import helper.TaskFactory.TASK_1
 import helper.TaskFactory.TASK_2
+import helper.UserFactory.createUser
 import logic.entities.Project
 import logic.entities.Task
 import logic.entities.User

@@ -4,7 +4,7 @@ package helper
 import logic.entities.User
 import java.util.UUID
 
-object TestDataFactory {
+object UserFactory {
 
     fun createUser(
         id: UUID = UUID.randomUUID(),
@@ -19,6 +19,11 @@ object TestDataFactory {
             isAdmin = isAdmin
         )
     }
-
+    fun validUserData() = User(
+        username = "Hend",
+        password = "H123456",
+        isAdmin = true,
+        id = UUID.fromString("ebcb217c-b373-4e88-afbd-cbb5640a031a")
+    )
 
 }

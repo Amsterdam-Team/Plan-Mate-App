@@ -2,9 +2,9 @@ package ui.login
 
 import com.google.common.truth.Truth
 import helper.SUCCESS_MESSAGE_FOR_LOGIN
+import helper.UserFactory.validUserData
 import helper.WRONG_PASSWORD
 import helper.WRONG_USER_NAME
-import helper.validUserData
 import io.mockk.CapturingSlot
 import io.mockk.Runs
 import io.mockk.coEvery

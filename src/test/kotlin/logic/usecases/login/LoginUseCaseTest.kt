@@ -1,6 +1,7 @@
 package logic.usecases.login
 
 import com.google.common.truth.Truth.assertThat
+import helper.UserFactory.validUserData
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
@@ -8,7 +9,6 @@ import logic.exception.PlanMateException.AuthorizationException.WrongPasswordExc
 import logic.exception.PlanMateException.AuthorizationException.WrongUsernameException
 import logic.repository.AuthRepository
 import logic.usecases.utils.StateManager
-import helper.validUserData
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

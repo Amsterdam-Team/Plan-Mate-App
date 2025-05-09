@@ -13,7 +13,7 @@ import logic.exception.PlanMateException.DataSourceException.ObjectDoesNotExistE
 import org.bson.Document
 import org.bson.UuidRepresentation
 import org.junit.jupiter.api.*
-import helper.TestDataFactory
+import helper.UserFactory
 import java.util.*
 
 
@@ -234,7 +234,7 @@ class UserDataSourceTest {
 
     companion object {
         // Document Users
-        private val user1 = TestDataFactory.createUser()
+        private val user1 = UserFactory.createUser()
         private val user2Id = UUID.randomUUID()
         private val user2 = user1.copy(id = user2Id, username = "me")
         private val users = listOf(user1, user2)
