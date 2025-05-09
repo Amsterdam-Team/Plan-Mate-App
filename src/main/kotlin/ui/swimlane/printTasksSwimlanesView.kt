@@ -1,7 +1,6 @@
 package ui.swimlane
 
 import logic.entities.Task
-import ui.console.ConsoleIOImpl
 import ui.utils.DisplayUtils
 import ui.utils.DisplayUtils.printLine
 
@@ -35,31 +34,4 @@ fun printTasksSwimlanesView(
 
     println(printLine)
 
-}
-
-suspend fun mainMenuTasks(
-    onCreateTask: suspend () -> Unit,
-    onViewTaskDetails: suspend () -> Unit,
-
-    ) {
-    DisplayUtils.printBoxedMessage("Tip: Select an option.")
-    printLine()
-    DisplayUtils.printSubTitle("Main Menu")
-
-    print("[C] Create task New          ")
-    print("[V] View task details          ")
-    print("[Q] Quit          ")
-    println("           ")
-
-    val consoleIO = ConsoleIOImpl()
-
-    val input = consoleIO.readFromUser().trim().uppercase()
-    consoleIO.println("option :$input")
-
-    when (input) {
-        "C" -> onCreateTask()
-        "V" -> onViewTaskDetails()
-        "Q" -> return
-        else -> println("Invalid option")
-    }
 }

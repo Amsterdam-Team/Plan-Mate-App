@@ -7,7 +7,7 @@ import org.koin.java.KoinJavaComponent.getKoin
 
 import ui.controller.BaseUIController
 import ui.controller.CreateTaskUIController
-import ui.swimlane.mainMenuTasks
+import ui.menuHandler.mainMenuTasks
 import ui.swimlane.printTasksSwimlanesView
 import ui.utils.DisplayUtils
 import ui.utils.tryToExecute
@@ -26,7 +26,7 @@ class ViewAllTaksByProjectIdUIController(
 
         tryToExecute(
             action = {
-                DisplayUtils.promptInput("Enter Task ID:")
+                DisplayUtils.promptInput("Enter project ID:")
                 val uuid = consoleIO.readFromUser()
                 getAllTasksByProjectIdUseCase(uuid)
             },
