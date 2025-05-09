@@ -54,6 +54,11 @@ val appModule = module {
     val userMap = named("userMap")
     val adminMap = named("adminMap")
 
+    // Collection names
+    val usersCollection = named("usersCollection")
+    val projectsCollection = named("projectsCollection")
+    val logsCollection = named("logsCollection")
+    val tasksCollection = named("tasksCollection")
 
     // AdminUIController names
     val updateStateUiController = named("updateStateUiController")
@@ -66,6 +71,7 @@ val appModule = module {
     val viewProjectHistoryUiController = named("viewProjectHistoryUiController")
     val getProjectUiController = named("getProjectUiController")
     val viewAllProjectsUiController = named("viewAllProjectsUiController")
+    val editProjectUiController = named("editProjectUiController")
 
     // TaskUIController names
     val createTaskUiController = named("createTaskUiController")
@@ -76,16 +82,16 @@ val appModule = module {
     val viewAllTasksByProjectIdUiController = named("viewAllTasksByProjectIdUiController")
 
     // MongoCollections
-    single<MongoCollection<User>> { MongoDatabaseFactory.db.getCollection<User>("users") }
-    single<MongoCollection<Project>> { MongoDatabaseFactory.db.getCollection<Project>("projects") }
-    single<MongoCollection<Task>> { MongoDatabaseFactory.db.getCollection<Task>("tasks") }
-    single<MongoCollection<LogItem>> { MongoDatabaseFactory.db.getCollection<LogItem>("logs") }
+    single<MongoCollection<User>>(usersCollection) { MongoDatabaseFactory.db.getCollection<User>("users") }
+    single<MongoCollection<Project>>(projectsCollection) { MongoDatabaseFactory.db.getCollection<Project>("projects") }
+    single<MongoCollection<Task>>(tasksCollection) { MongoDatabaseFactory.db.getCollection<Task>("tasks") }
+    single<MongoCollection<LogItem>>(logsCollection) { MongoDatabaseFactory.db.getCollection<LogItem>("logs") }
 
     // DataSources
-    single<ILogDataSource> { LogDataSource(get()) }
-    single<IProjectDataSource> { ProjectDataSource(get()) }
-    single<IUserDataSource> { UserDataSource(get()) }
-    single<ITaskDataSource> { TaskDataSource(get()) }
+    single<ILogDataSource> { LogDataSource(get(logsCollection)) }
+    single<IProjectDataSource> { ProjectDataSource(get(projectsCollection)) }
+    single<IUserDataSource> { UserDataSource(get(usersCollection)) }
+    single<ITaskDataSource> { TaskDataSource(get(tasksCollection)) }
 
 
     // Repositories
@@ -145,6 +151,7 @@ val appModule = module {
     single<BaseUIController>(viewProjectHistoryUiController) { ViewProjectHistoryUIController(get(), get()) }
     single<BaseUIController>(getProjectUiController) { GetProjectUIController(get(), get()) }
     single<BaseUIController>(viewAllProjectsUiController) { ViewAllProjectsUIController(get()) }
+    single<BaseUIController>(editProjectUiController) { EditProjectUIController(get(), get()) }
 
     // TaskUIController
     single<BaseUIController>(createTaskUiController) { CreateTaskUIController(get(), get()) }
@@ -161,12 +168,21 @@ val appModule = module {
     }
 
 
+    // User Menus
     single<Map<Int, BaseUIController>>(userMap) {
         mapOf(
-            1 to get(createTaskUiController),
+            1 to get(viewAllProjectsUiController),
+            2 to get(getProjectUiController),
+            3 to get(createTaskUiController),
+            4 to get(editTaskUiController),
+            5 to get(deleteTaskUiController),
+            6 to get(viewAllTasksByProjectIdUiController),
+            7 to get(viewProjectHistoryUiController),
+            8 to get(viewTaskLogsUiController)
         )
     }
 
+    // Admin Menus
     single<Map<Int, BaseUIController>>(adminMap) {
         mapOf(
             1 to get(viewAllProjectsUiController),
@@ -175,6 +191,7 @@ val appModule = module {
             4 to get(createUserUiController),
         )
     }
+
 
     // Menu Handlers
     single { AdminMenuHandler(get(adminMap)) }
