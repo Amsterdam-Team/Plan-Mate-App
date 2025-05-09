@@ -1,6 +1,5 @@
 package ui.task
 
-import console.ConsoleIO
 import helpers.DeleteTaskTestFactory.TASK_1
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -11,6 +10,7 @@ import kotlinx.coroutines.test.runTest
 import logic.usecases.task.DeleteTaskUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import ui.console.ConsoleIO
 
 class DeleteTaskUIControllerTest {
 

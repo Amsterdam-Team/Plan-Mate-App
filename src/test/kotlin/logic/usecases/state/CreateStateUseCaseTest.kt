@@ -5,15 +5,12 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import logic.repository.ProjectRepository
+import logic.usecases.utils.StateManager
+import logic.usecases.utils.ValidateInputUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
-import logic.exception.PlanMateException.ValidationException.InvalidStateNameException
-import logic.exception.PlanMateException.ValidationException.SameStateNameException
-import logic.usecases.StateManager
-import logic.usecases.ValidateInputUseCase
-import org.junit.jupiter.api.assertThrows
-import utils.TestDataFactory
+import utils.ResultStatus
+import helper.TestDataFactory
 import java.util.UUID
 
 class CreateStateUseCaseTest {
@@ -42,7 +39,7 @@ class CreateStateUseCaseTest {
         val result = useCase.execute(project.id.toString(), newState)
 
         // Then
-        assertThat(result).isTrue()
+        assertThat(result).isInstanceOf(ResultStatus.Success::class.java)
     }
 
     @Test

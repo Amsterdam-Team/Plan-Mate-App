@@ -1,7 +1,6 @@
 package di
 
 import com.mongodb.kotlin.client.coroutine.MongoCollection
-import console.ConsoleIoImpl
 import data.datasources.MongoDatabaseFactory
 import data.datasources.logDataSource.ILogDataSource
 import data.datasources.logDataSource.LogDataSource
@@ -23,36 +22,37 @@ import logic.repository.AuthRepository
 import logic.repository.LogRepository
 import logic.repository.ProjectRepository
 import logic.repository.TaskRepository
-import logic.usecases.LoggerUseCase
-import logic.usecases.LoginUseCase
-import logic.usecases.StateManager
-import logic.usecases.ValidateInputUseCase
-import logic.usecases.ViewTaskLogsUseCase
+import logic.usecases.logs.LoggerUseCase
+import logic.usecases.login.LoginUseCase
+import logic.usecases.utils.StateManager
+import logic.usecases.utils.ValidateInputUseCase
+import logic.usecases.logs.GetProjectHistoryUseCase
+import logic.usecases.logs.ViewTaskLogsUseCase
 import logic.usecases.project.*
 import logic.usecases.state.*
 import logic.usecases.task.*
 import logic.usecases.user.CreateUserUseCase
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import ui.LoginUIController
-import ui.ViewTaskLogsUIController
+import ui.login.LoginUIController
+import ui.logs.ViewTaskLogsUIController
 import ui.console.ConsoleIO
 import ui.console.ConsoleIOImpl
 import ui.controller.BaseUIController
-import ui.controller.CreateTaskUIController
-import ui.controllers.AddStateUIController
-import ui.controllers.CreateProjectUIController
-import ui.controllers.CreateUserUIController
-import ui.controllers.UpdateStateUiController
+import ui.task.CreateTaskUIController
+import ui.state.AddStateUIController
+import ui.project.CreateProjectUIController
+import ui.user.CreateUserUIController
+import ui.state.UpdateStateUiController
 import ui.menuHandler.AdminMenuHandler
 import ui.menuHandler.MateMenuHandler
 import ui.project.DeleteProjectUiController
 import ui.project.GetProjectUIController
 import ui.project.ViewAllProjectsUIController
-import ui.project.ViewProjectHistoryUIController
+import ui.logs.ViewProjectHistoryUIController
 import ui.task.DeleteTaskUIController
 import ui.task.EditTaskUiController
-import ui.task.ViewAllTaksByProjectIdUIController
+import ui.task.ViewAllTasksByProjectIdUIController
 import ui.task.ViewTaskDetailsUIController
 import java.util.*
 
@@ -140,7 +140,6 @@ val appModule = module {
 
     // ConsoleIO
     single<ConsoleIO> { ConsoleIOImpl() }
-    single<console.ConsoleIO> { ConsoleIoImpl() }
 
     // AdminUIController
     single<BaseUIController>(updateStateUiController) { UpdateStateUiController(get(), get()) }
@@ -160,7 +159,7 @@ val appModule = module {
     single<BaseUIController>(viewTaskLogsUiController) { ViewTaskLogsUIController(get(), get()) }
     single<BaseUIController>(editTaskUiController) { EditTaskUiController(get(), get()) }
     single<BaseUIController>(viewTaskDetailsUiController) { ViewTaskDetailsUIController(get(), get(), get(), get()) }
-    single<BaseUIController>(viewAllTasksByProjectIdUiController) { ViewAllTaksByProjectIdUIController(get(), get(), get()) }
+    single<BaseUIController>(viewAllTasksByProjectIdUiController) { ViewAllTasksByProjectIdUIController(get(), get(), get()) }
 
 
     single<Map<Int, BaseUIController>>(userMap) {
