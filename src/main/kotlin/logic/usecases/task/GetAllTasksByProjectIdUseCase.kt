@@ -1,10 +1,11 @@
 package logic.usecases.task
 
 import logic.entities.Task
+import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
 import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
 import logic.repository.TaskRepository
 import logic.usecases.utils.ValidateInputUseCase
-import java.util.*
+import java.util.UUID
 
 class GetAllTasksByProjectIdUseCase(
     private val repository: TaskRepository,
@@ -14,6 +15,8 @@ class GetAllTasksByProjectIdUseCase(
         if (!validateInputUseCase.isValidUUID(uuid = projectId)) {
             throw InvalidProjectIDException
         }
-        return repository.getAllTasksByProjectId(UUID.fromString(projectId))
+        val tasks = repository.getAllTasksByProjectId(UUID.fromString(projectId))
+        if (tasks.isEmpty()) throw TaskNotFoundException
+        return tasks
     }
 }
