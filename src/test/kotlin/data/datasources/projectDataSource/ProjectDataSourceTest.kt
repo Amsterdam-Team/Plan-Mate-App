@@ -6,6 +6,7 @@ import com.mongodb.MongoClientSettings
 import com.mongodb.kotlin.client.coroutine.MongoClient
 import com.mongodb.kotlin.client.coroutine.MongoCollection
 import com.mongodb.kotlin.client.coroutine.MongoDatabase
+import helper.TestDataFactory
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import logic.entities.Project
@@ -14,7 +15,6 @@ import org.bson.Document
 import org.bson.UuidRepresentation
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
-import utils.TestDataFactory
 import java.util.*
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
