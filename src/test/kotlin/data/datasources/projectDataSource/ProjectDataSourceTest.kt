@@ -6,7 +6,7 @@ import com.mongodb.MongoClientSettings
 import com.mongodb.kotlin.client.coroutine.MongoClient
 import com.mongodb.kotlin.client.coroutine.MongoCollection
 import com.mongodb.kotlin.client.coroutine.MongoDatabase
-import helper.TestDataFactory
+import helper.ProjectFactory.createProject
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import logic.entities.Project
@@ -14,7 +14,6 @@ import logic.exception.PlanMateException.DataSourceException.ObjectDoesNotExistE
 import org.bson.Document
 import org.bson.UuidRepresentation
 import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.*
 import java.util.*
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -310,7 +309,7 @@ class ProjectDataSourceTest{
     
     companion object {
         // Document Projects
-        private val project1 = TestDataFactory.createProject()
+        private val project1 = createProject()
         private val project2Id = UUID.randomUUID()
         private val project2 = project1.copy(id = project2Id, name = "amsterdam")
         private val projects = listOf(project1, project2)

@@ -1,20 +1,15 @@
 package helper
 
+import helper.ProjectFactory.PROJECT_1
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import logic.entities.LogItem
-import logic.entities.Project
 import java.util.UUID
 
 object ViewProjectHistoryTestFactory {
 
-    val PROJECT_1 = Project(
-        id = UUID.fromString("11111111-1111-1111-1111-111111111111"),
-        name = "Project Alpha",
-        states = listOf("Todo", "In Progress", "Done"),
-        tasks = emptyList()
-    )
+
 
 
 

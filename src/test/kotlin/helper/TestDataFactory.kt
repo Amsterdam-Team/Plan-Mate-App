@@ -1,7 +1,6 @@
 package helper
 
-import logic.entities.Project
-import logic.entities.Task
+
 import logic.entities.User
 import java.util.UUID
 
@@ -21,17 +20,5 @@ object TestDataFactory {
         )
     }
 
-    fun createProject(
-        id: UUID = UUID.randomUUID(),
-        name: String = "Test Project",
-        states: List<String> = listOf("TODO", "In Progress"),
-        tasks: List<Task> = emptyList()
-    ): Project {
-        return Project(
-            id = id,
-            name = name,
-            states = states,
-            tasks = tasks
-        )
-    }
+
 }

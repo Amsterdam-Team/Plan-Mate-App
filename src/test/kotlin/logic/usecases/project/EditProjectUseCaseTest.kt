@@ -1,5 +1,7 @@
 package logic.usecases.project
 
+import helper.ProjectFactory.adminUser
+import helper.ProjectFactory.mateUser
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -10,7 +12,8 @@ import logic.repository.ProjectRepository
 import logic.usecases.logs.LoggerUseCase
 import logic.usecases.utils.StateManager
 import logic.usecases.utils.ValidateInputUseCase
-import helper.EditProjectFactory
+import helper.ProjectFactory.validProject
+import helper.ProjectFactory.validProjectId
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -38,24 +41,24 @@ class EditProjectUseCaseTest{
     fun `should update project name when user is admin, name valid and not taken`() = runTest{
         val newName = "Updated Project Name"
         every { validateInputUseCase.isValidName(newName) } returns true
-        coEvery { projectRepository.getProject(EditProjectFactory.validProjectId) } returns EditProjectFactory.validProject()
-        coEvery { projectRepository.getProjects() } returns listOf(EditProjectFactory.validProject())
-        coEvery { projectRepository.updateProjectNameById(EditProjectFactory.validProjectId, newName) } returns true
-        every { stateManager.getLoggedInUser() } returns EditProjectFactory.adminUser()
-        val result = editProjectNameUseCase.editProjectName(EditProjectFactory.validProjectId, newName)
+        coEvery { projectRepository.getProject(validProjectId) } returns validProject()
+        coEvery { projectRepository.getProjects() } returns listOf(validProject())
+        coEvery { projectRepository.updateProjectNameById(validProjectId, newName) } returns true
+        every { stateManager.getLoggedInUser() } returns adminUser()
+        val result = editProjectNameUseCase.editProjectName(validProjectId, newName)
 
         assertTrue(result)
-        coVerify { projectRepository.updateProjectNameById(EditProjectFactory.validProjectId, newName) }
+        coVerify { projectRepository.updateProjectNameById(validProjectId, newName) }
     }
 
 
     @Test
    fun `should throw AdminPrivilegesRequiredException when user is not admin`() = runTest{
     val newName = "Updated Project Name"
-        every { stateManager.getLoggedInUser() } returns EditProjectFactory.mateUser
+        every { stateManager.getLoggedInUser() } returns mateUser
 
     assertThrows<PlanMateException.AuthorizationException.AdminPrivilegesRequiredException> {
-     editProjectNameUseCase.editProjectName( EditProjectFactory.validProjectId, newName)
+     editProjectNameUseCase.editProjectName( validProjectId, newName)
     }
    }
 
@@ -64,23 +67,23 @@ class EditProjectUseCaseTest{
    fun `should throw InvalidProjectNameException when new name is invalid`() = runTest{
     val newName = "    "
     every { validateInputUseCase.isValidName(newName) } returns false
-       every { stateManager.getLoggedInUser() } returns EditProjectFactory.adminUser()
+       every { stateManager.getLoggedInUser() } returns adminUser()
 
     assertThrows<PlanMateException.ValidationException.InvalidProjectNameException> {
-     editProjectNameUseCase.editProjectName( EditProjectFactory.validProjectId, newName)
+     editProjectNameUseCase.editProjectName( validProjectId, newName)
     }
    }
 
    @Test
    fun `should throw ProjectNameAlreadyExistException when project name already exists`() = runTest{
     val newName = "Duplicate Project"
-    val project1 = EditProjectFactory.validProject()
+    val project1 = validProject()
     val duplicateProject = project1.copy(id = UUID.randomUUID(), name = newName)
 
     every { validateInputUseCase.isValidName(newName) } returns true
        coEvery { projectRepository.getProject(project1.id) } returns project1
        coEvery { projectRepository.getProjects() } returns listOf(project1, duplicateProject)
-       every { stateManager.getLoggedInUser() } returns EditProjectFactory.adminUser()
+       every { stateManager.getLoggedInUser() } returns adminUser()
 
     assertThrows<PlanMateException.ValidationException.ProjectNameAlreadyExistException> {
      editProjectNameUseCase.editProjectName(project1.id, newName)
@@ -90,13 +93,13 @@ class EditProjectUseCaseTest{
     @Test
     fun `should add log entry when project name is updated`() =runTest{
         val newName = "Updated Project Name"
-        val project = EditProjectFactory.validProject()
+        val project = validProject()
 
         every { validateInputUseCase.isValidName(newName) } returns true
         coEvery { projectRepository.getProject(project.id) } returns project
         coEvery { projectRepository.getProjects() } returns listOf(project)
         coEvery { projectRepository.updateProjectNameById(project.id, newName) } returns true
-        every { stateManager.getLoggedInUser() } returns EditProjectFactory.adminUser()
+        every { stateManager.getLoggedInUser() } returns adminUser()
 
         val result = editProjectNameUseCase.editProjectName(project.id, newName)
 

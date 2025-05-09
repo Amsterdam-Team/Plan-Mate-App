@@ -3,7 +3,7 @@ package data.repository.project
 
 import com.google.common.truth.Truth.assertThat
 import data.datasources.projectDataSource.IProjectDataSource
-import helper.DeleteProjectTestFactory.someProjects
+import helper.ProjectFactory.someProjects
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
