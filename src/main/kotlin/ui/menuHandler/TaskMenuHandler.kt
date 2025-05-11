@@ -20,7 +20,7 @@ class TaskMenuHandler(
             ========================
             📋 Task Menu
             ========================
-            [1] Create task New          [2] View task details          [0] Quit   
+            [1] Create task New          [2] View task details          [3] view task logs          [0] Quit   
          
             """.trimIndent()
         )
