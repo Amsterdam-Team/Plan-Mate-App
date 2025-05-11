@@ -11,7 +11,7 @@ import ui.utils.tryToExecute
 
 class ViewTaskDetailsUIController(
     private val getTaskByIdUseCase: GetTaskByIdUseCase,
-    private val updateTaskUseCase: EditTaskUseCase,
+    private val editTaskUseCase: EditTaskUseCase,
     private val deleteTaskUseCase: DeleteTaskUseCase,
     private val consoleIO: ConsoleIO
 ) : BaseUIController {
@@ -19,10 +19,10 @@ class ViewTaskDetailsUIController(
 
     override suspend fun execute() {
         consoleIO.println("🔍 Please enter Task ID to view details:")
+        val taskId = consoleIO.readFromUser()
 
         tryToExecute(
             action = {
-                val taskId = consoleIO.readFromUser()
                 getTaskByIdUseCase(taskId)
             },
             onSuccess = { task ->
@@ -30,7 +30,15 @@ class ViewTaskDetailsUIController(
                 showTaskOptionsMenu(
 
                     onEditTaskDetails = {
-                        //todo EditTask UIController
+                        consoleIO.println("Please enter new task name: ")
+                        val newTaskName = consoleIO.readFromUser()
+                        consoleIO.println("Available states: ${task.state}")
+                        consoleIO.println("Please enter new task state: ")
+                        val newTaskState = consoleIO.readFromUser()
+
+                        if(editTaskUseCase.editTask(taskId, newTaskName, newTaskState )){
+                            consoleIO.println("Task edited successfully")
+                        }
 
                     },
                     onDeleteTaskDetails = {
@@ -54,7 +62,7 @@ class ViewTaskDetailsUIController(
 
     //
     private suspend fun showTaskOptionsMenu(
-        onEditTaskDetails:  () -> Unit,
+        onEditTaskDetails: suspend () -> Unit,
         onDeleteTaskDetails: suspend () -> Unit,
         onBackTask: () -> Unit,
 
