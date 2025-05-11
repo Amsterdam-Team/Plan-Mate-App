@@ -22,7 +22,7 @@ open class MainMenuHandler {
                 in featureControllers.keys -> featureControllers[choice]?.execute()
                 0 -> {
                     "See You Later 🙂".printAsASuccessState()
-                    break
+                    return
                 }
 
                 null -> "❌ Invalid input. Please enter a valid number.".printAsAFailState()

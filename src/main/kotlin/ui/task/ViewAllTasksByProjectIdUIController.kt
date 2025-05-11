@@ -6,6 +6,7 @@ import org.koin.java.KoinJavaComponent.getKoin
 import ui.console.ConsoleIO
 
 import ui.controller.BaseUIController
+import ui.logs.ViewTaskLogsUIController
 import ui.menuHandler.mainMenuTasks
 import ui.swimlane.printTasksSwimlanesView
 import ui.utils.DisplayUtils
@@ -42,6 +43,10 @@ class ViewAllTaksByProjectIdUIController(
                 val controller = CreateTaskUIController(createTaskUseCase, consoleIO)
                 controller.execute()
             },
+            onViewTasksLogs = {
+                val taskLogsUiControllers: ViewTaskLogsUIController = ViewTaskLogsUIController(getKoin().get(), getKoin().get())
+                taskLogsUiControllers.execute()
+            }
 
 
             )

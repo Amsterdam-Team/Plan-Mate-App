@@ -150,7 +150,7 @@ val appModule = module {
     single<BaseUIController>(deleteProjectUiController) { DeleteProjectUiController(get(), get()) }
     single<BaseUIController>(viewProjectHistoryUiController) { ViewProjectHistoryUIController(get(), get()) }
     single<BaseUIController>(getProjectUiController) { GetProjectUIController(get(), get()) }
-    single<BaseUIController>(viewAllProjectsUiController) { ViewAllProjectsUIController(get()) }
+    single<BaseUIController>(viewAllProjectsUiController) { ViewAllProjectsUIController(get(),get()) }
     single<BaseUIController>(editProjectUiController) { EditProjectUIController(get(), get()) }
 
     // TaskUIController
@@ -166,19 +166,23 @@ val appModule = module {
             get()
         )
     }
+    single { ViewTaskDetailsUIController(get(), get(), get(), get()) }
+    single { ViewAllTaksByProjectIdUIController(get(), get(), get()) }
+    single { EditProjectUIController(get(), get()) }
+    single { DeleteProjectUiController(get(), get()) }
 
 
     // User Menus
     single<Map<Int, BaseUIController>>(userMap) {
         mapOf(
             1 to get(viewAllProjectsUiController),
-            2 to get(getProjectUiController),
-            3 to get(createTaskUiController),
-            4 to get(editTaskUiController),
-            5 to get(deleteTaskUiController),
-            6 to get(viewAllTasksByProjectIdUiController),
-            7 to get(viewProjectHistoryUiController),
-            8 to get(viewTaskLogsUiController)
+//            2 to get(getProjectUiController),
+//            3 to get(createTaskUiController),
+//            4 to get(editTaskUiController),
+//            5 to get(deleteTaskUiController),
+//            6 to get(viewAllTasksByProjectIdUiController),
+//            7 to get(viewProjectHistoryUiController),
+//            8 to get(viewTaskLogsUiController)
         )
     }
 
@@ -186,9 +190,9 @@ val appModule = module {
     single<Map<Int, BaseUIController>>(adminMap) {
         mapOf(
             1 to get(viewAllProjectsUiController),
-            2 to get(viewProjectHistoryUiController),
-            3 to get(viewTaskLogsUiController),
-            4 to get(createUserUiController),
+//            2 to get(viewProjectHistoryUiController),
+//            3 to get(viewTaskLogsUiController),
+            2 to get(createUserUiController),
         )
     }
 
@@ -199,8 +203,4 @@ val appModule = module {
 
     // LoginUiController
     single { LoginUIController(get(), get(), get(), get()) }
-    single { ViewTaskDetailsUIController(get(), get(), get(), get()) }
-    single { ViewAllTaksByProjectIdUIController(get(), get(), get()) }
-    single { EditProjectUIController(get(), get()) }
-    single { DeleteProjectUiController(get(), get()) }
-}
+   }

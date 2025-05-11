@@ -5,6 +5,7 @@ import ui.controller.BaseUIController
 suspend fun mainMenuTasks(
     onCreateTask: suspend () -> Unit,
     onViewTaskDetails: suspend () -> Unit,
+    onViewTasksLogs:  suspend ()-> Unit,
 ) {
     val taskControllers = mapOf(
         1 to object : BaseUIController {
@@ -13,6 +14,10 @@ suspend fun mainMenuTasks(
         2 to object : BaseUIController {
             override suspend fun execute() = onViewTaskDetails()
         },
+        3 to object : BaseUIController{
+            override suspend fun execute() = onViewTasksLogs()
+
+        }
 
         )
 
