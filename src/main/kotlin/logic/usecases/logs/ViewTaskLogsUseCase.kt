@@ -14,7 +14,7 @@ class ViewTaskLogsUseCase(
 
     suspend fun viewTaskLogs(taskId : String) : List<LogItem>{
         if(!validationInputUseCase.isValidUUID(taskId)) throw InvalidTaskIDException
-        val logs = logRepository.viewLogsById(UUID.fromString(taskId))
+        val logs = logRepository.viewLogsByLogId(UUID.fromString(taskId))
         return logs
     }
 }

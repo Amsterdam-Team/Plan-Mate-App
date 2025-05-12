@@ -23,7 +23,7 @@ class AddStateUseCase(
         if (!validateInputUseCase.isValidUUID(projectId)) throw InvalidProjectIDException
 
         val uuid = UUID.fromString(projectId)
-        val project = repository.getProject(uuid)
+        val project = repository.getProjectById(uuid)
 
         if (project.states.any { it.trim().equals(state.trim(), ignoreCase = true) }) {
             throw PlanMateException.ValidationException.SameStateNameException

@@ -6,8 +6,8 @@ import logic.repository.ILogRepository
 import java.util.*
 
 class LogRepository(private val logDataSource: ILogDataSource): ILogRepository {
-    override suspend fun viewLogsById(entityId: UUID) =
-        logDataSource.getLogsByEntityId(entityId)
+    override suspend fun viewLogsByLogId(id: UUID) =
+        logDataSource.getLogsByEntityId(id)
 
     override suspend fun viewAllLogs() =
         logDataSource.getAllLogs()

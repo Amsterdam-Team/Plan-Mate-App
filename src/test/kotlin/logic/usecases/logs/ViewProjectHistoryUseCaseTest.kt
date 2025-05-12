@@ -28,7 +28,7 @@ class ViewProjectHistoryUseCaseTest {
         // Given
         val projectId = PROJECT_1.id
         val logs = LOGS_FOR_PROJECT_1
-        coEvery { logRepository.viewLogsById(projectId) } returns logs
+        coEvery { logRepository.viewLogsByLogId(projectId) } returns logs
 
         // When
         val result = getProjectHistoryUseCase.execute(projectId.toString())

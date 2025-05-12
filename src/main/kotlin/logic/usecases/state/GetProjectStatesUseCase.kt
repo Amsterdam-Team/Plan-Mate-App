@@ -7,7 +7,7 @@ import java.util.UUID
 class GetProjectStatesUseCase(private val repository: IProjectRepository) {
 
     suspend fun execute(projectID: String): List<String> {
-        return if (isValidUUID(projectID)) repository.getProject(UUID.fromString(projectID)).states
+        return if (isValidUUID(projectID)) repository.getProjectById(UUID.fromString(projectID)).states
         else throw InvalidProjectIDException
     }
 

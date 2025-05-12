@@ -17,6 +17,6 @@ class GetProjectHistoryUseCase(
             throw PlanMateException.ValidationException.InvalidProjectIDException
         }
 
-        return logRepository.viewLogsById(projectUUID)
+        return logRepository.viewLogsByLogId(projectUUID)
     }
 }

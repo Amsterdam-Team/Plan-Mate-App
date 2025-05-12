@@ -54,7 +54,7 @@ class GetProjectsUseCaseTest() {
     @Test
     fun `should return correct project when project id exists in projects`() = runTest {
         //Given
-        coEvery { repository.getProject(projectOneId)} returns projects[0]
+        coEvery { repository.getProjectById(projectOneId)} returns projects[0]
         every { validationUseCase.isValidUUID(projectOneId.toString()) } returns true
         //When
         val result = useCase(projectOneId.toString())
@@ -65,7 +65,7 @@ class GetProjectsUseCaseTest() {
     @Test
     fun `should throw ProjectNotFoundException when projectID does not exist in Projects`() = runTest{
         //Given
-        coEvery { repository.getProject(UUID.fromString("db373589-b656-4e68-a7c0-2ccc705ca169")) } throws ProjectNotFoundException
+        coEvery { repository.getProjectById(UUID.fromString("db373589-b656-4e68-a7c0-2ccc705ca169")) } throws ProjectNotFoundException
         every { validationUseCase.isValidUUID("db373589-b656-4e68-a7c0-2ccc705ca169") } returns true
 
         //When&Then

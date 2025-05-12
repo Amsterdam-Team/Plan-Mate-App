@@ -42,7 +42,7 @@ class EditProjectUseCase(
     }
 
     private suspend fun ensureProjectExists(projectId: UUID): Project {
-        return projectRepository.getProject(projectId)
+        return projectRepository.getProjectById(projectId)
     }
 
     private suspend  fun validateProjectNameNotTaken(projectId: UUID, newName: String) {

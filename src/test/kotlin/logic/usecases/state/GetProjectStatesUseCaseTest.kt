@@ -28,7 +28,7 @@ class GetProjectStatesUseCaseTest{
     @Test
     fun `should return the correct states when the project exists`() = runTest {
         //Given
-        coEvery { repository.getProject(any()) } returns dummyProject
+        coEvery { repository.getProjectById(any()) } returns dummyProject
 
         //When
         val states = useCase.execute(EXISTING_PROJECT_ID)
@@ -46,7 +46,7 @@ class GetProjectStatesUseCaseTest{
     @Test
     fun `should throw ProjectNotFoundException when the project is not exists`() = runTest{
         //Given
-        coEvery { repository.getProject(any()) } throws  ProjectNotFoundException
+        coEvery { repository.getProjectById(any()) } throws  ProjectNotFoundException
 
         //When & Then
         assertThrows<InvalidProjectIDException> { useCase.execute(INVALID_PROJECT_ID) }

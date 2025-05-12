@@ -33,7 +33,7 @@ class CreateTaskUseCase(
             exception = InvalidStateNameException
         )
 
-        val targetProject = projectRepository.getProject(UUID.fromString(projectId))
+        val targetProject = projectRepository.getProjectById(UUID.fromString(projectId))
         requireOrThrow(
             condition = isStateInProject(state = state, projectStates = targetProject.states),
             exception = StateNotFoundException

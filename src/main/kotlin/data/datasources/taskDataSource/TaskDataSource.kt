@@ -17,7 +17,7 @@ class TaskDataSource(
         return tasksCollection.find().toList()
     }
 
-    override suspend fun getAllProjectTasks(projectId: UUID): List<Task> {
+    override suspend fun getAllTasksByProjectId(projectId: UUID): List<Task> {
         return tasksCollection.find(Filters.eq(FIELD_PROJECT_ID, projectId)).toList()
     }
 

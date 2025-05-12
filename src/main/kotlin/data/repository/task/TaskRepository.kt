@@ -32,5 +32,5 @@ class TaskRepository(private val taskDataSource: ITaskDataSource): ITaskReposito
 
 
     override suspend fun getAllTasksByProjectId(projectId: UUID) =
-        taskDataSource.getAllProjectTasks(projectId)
+        taskDataSource.getAllTasksByProjectId(projectId)
 }

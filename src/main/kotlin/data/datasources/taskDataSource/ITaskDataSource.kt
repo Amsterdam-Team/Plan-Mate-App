@@ -7,7 +7,7 @@ interface ITaskDataSource {
 
     suspend fun getAllTasks(): List<Task>
 
-    suspend fun getAllProjectTasks(projectId: UUID): List<Task>
+    suspend fun getAllTasksByProjectId(projectId: UUID): List<Task>
 
     suspend fun getTaskById(taskId: UUID): Task
 

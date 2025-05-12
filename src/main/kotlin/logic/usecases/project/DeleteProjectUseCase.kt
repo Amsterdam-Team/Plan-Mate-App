@@ -20,8 +20,8 @@ class DeleteProjectUseCase(
         if (!stateManager.getLoggedInUser().isAdmin) throw AdminPrivilegesRequiredException
         if (!validateInputUseCase.isValidUUID(projectId)) throw InvalidProjectIDException
         val projectUUID = UUID.fromString(projectId)
-        val project = projectRepository.getProject(projectUUID)
-        return projectRepository.deleteProject(projectUUID).also { isDeleted ->
+        val project = projectRepository.getProjectById(projectUUID)
+        return projectRepository.deleteProjectById(projectUUID).also { isDeleted ->
             if (isDeleted) loggerUseCase.createLog("deleted ${project.name} Project", projectUUID)
         }
     }

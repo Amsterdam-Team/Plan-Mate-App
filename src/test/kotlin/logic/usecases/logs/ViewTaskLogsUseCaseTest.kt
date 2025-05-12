@@ -33,7 +33,7 @@ class ViewTaskLogsUseCaseTest {
     fun `should return logs of task when id is valid format of UUID and found`() = runTest {
 
         every { validationInputUseCase.isValidUUID(validId.toString()) } returns true
-        coEvery { repository.viewLogsById(validId) } returns taskLogs()
+        coEvery { repository.viewLogsByLogId(validId) } returns taskLogs()
 
         val returnedLogs = useCase.viewTaskLogs(validId.toString())
 
@@ -62,7 +62,7 @@ class ViewTaskLogsUseCaseTest {
     fun `should throw TaskNotFoundException when id of task is valid format of UUID but not found`()= runTest {
 
         every { validationInputUseCase.isValidUUID(validId.toString()) } returns true
-        coEvery { repository.viewLogsById(validId) } throws PlanMateException.NotFoundException.TaskNotFoundException
+        coEvery { repository.viewLogsByLogId(validId) } throws PlanMateException.NotFoundException.TaskNotFoundException
 
         assertThrows<PlanMateException.NotFoundException.TaskNotFoundException> {
             useCase.viewTaskLogs(validId.toString())

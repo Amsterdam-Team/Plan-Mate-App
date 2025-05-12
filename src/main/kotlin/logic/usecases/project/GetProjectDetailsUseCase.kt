@@ -17,7 +17,7 @@ class GetProjectDetailsUseCase(
     suspend operator fun invoke(projectID: String): Project {
 
         if (validateInputUseCase.isValidUUID(projectID)) {
-            val project = projectRepository.getProject(UUID.fromString(projectID))
+            val project = projectRepository.getProjectById(UUID.fromString(projectID))
             val tasks = getTasksUseCase.invoke(projectID)
             return project.copy(
                 tasks = tasks

@@ -74,7 +74,7 @@ class TaskDataSourceTest{
     @Test
     fun `should return tasks for specific project`() = runTest {
         // When
-        val result = dataSource.getAllProjectTasks(project1Id)
+        val result = dataSource.getAllTasksByProjectId(project1Id)
 
         // Then
         assertThat(result).containsExactly(task1Project1, task2Project1)
@@ -83,7 +83,7 @@ class TaskDataSourceTest{
     @Test
     fun `should return empty list when no tasks for project`() = runTest {
         // When
-        val result = dataSource.getAllProjectTasks(UUID.randomUUID())
+        val result = dataSource.getAllTasksByProjectId(UUID.randomUUID())
 
         // Then
         assertThat(result).isEmpty()

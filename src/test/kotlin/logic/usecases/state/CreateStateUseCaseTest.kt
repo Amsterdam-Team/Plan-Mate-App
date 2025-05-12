@@ -103,7 +103,7 @@ class CreateStateUseCaseTest {
             "pass",
             true
         )
-        coEvery { repository.getProject(project.id) } returns project
+        coEvery { repository.getProjectById(project.id) } returns project
 
         // When & Then
         assertThrows<SameStateNameException> {
@@ -126,7 +126,7 @@ class CreateStateUseCaseTest {
                 "pass",
                 true
             )
-            coEvery { repository.getProject(project.id) } returns project
+            coEvery { repository.getProjectById(project.id) } returns project
 
             // When & Then
             assertThrows<SameStateNameException> {

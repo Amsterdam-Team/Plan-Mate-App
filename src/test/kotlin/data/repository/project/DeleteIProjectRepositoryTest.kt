@@ -32,7 +32,7 @@ class DeleteIProjectRepositoryTest {
         // given
         coEvery { dataSource.deleteProject(someProjects[0].id) } returns true
         // when
-        val result = repository.deleteProject(someProjects[0].id)
+        val result = repository.deleteProjectById(someProjects[0].id)
 
         // then
         assertThat(result).isTrue()
@@ -48,7 +48,7 @@ class DeleteIProjectRepositoryTest {
 
         // when & then
         assertThrows <ProjectNotFoundException> {
-            repository.deleteProject(someProjects[0].id)
+            repository.deleteProjectById(someProjects[0].id)
 
         }
     }

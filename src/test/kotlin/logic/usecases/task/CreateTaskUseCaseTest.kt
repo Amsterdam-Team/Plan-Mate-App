@@ -45,7 +45,7 @@ class CreateTaskUseCaseTest {
     @Test
     fun `should create task when all input are valid`() =runTest {
         //Given
-        coEvery { projectRepository.getProject(validTask.projectId) } returns mockk {
+        coEvery { projectRepository.getProjectById(validTask.projectId) } returns mockk {
             every { id } returns validTask.projectId
             every { states } returns listOf(validTask.state)
         }
@@ -64,7 +64,7 @@ class CreateTaskUseCaseTest {
     @Test
     fun `should throw ProjectNotFoundException when project does not exist`() =runTest {
         // Given
-        coEvery { projectRepository.getProject(taskWithUnExistingProjectID.projectId) } throws ProjectNotFoundException
+        coEvery { projectRepository.getProjectById(taskWithUnExistingProjectID.projectId) } throws ProjectNotFoundException
 
         //When & Then
         assertThrows<ProjectNotFoundException> {
@@ -79,7 +79,7 @@ class CreateTaskUseCaseTest {
     @Test
     fun `should throw InvalidTaskNameException when task name is invalid`() =runTest {
         // Given
-        coEvery { projectRepository.getProject(validTask.projectId) } returns mockk {
+        coEvery { projectRepository.getProjectById(validTask.projectId) } returns mockk {
             every { id } returns validTask.projectId
             every { states } returns listOf(validTask.state)
         }
@@ -93,7 +93,7 @@ class CreateTaskUseCaseTest {
     @Test
     fun `should throw InvalidProjectIDException when project ID is invalid`() =runTest {
         // Given
-        coEvery { projectRepository.getProject(UUID.fromString(validTask.projectId.toString())) } returns mockk {
+        coEvery { projectRepository.getProjectById(UUID.fromString(validTask.projectId.toString())) } returns mockk {
             every { id } returns validTask.projectId
             every { states } returns listOf(validTask.state)
         }
@@ -107,7 +107,7 @@ class CreateTaskUseCaseTest {
     @Test
     fun `should throw InvalidStateNameException when state name is invalid`() =runTest {
         // Given
-        coEvery { projectRepository.getProject(validTask.projectId) } returns mockk {
+        coEvery { projectRepository.getProjectById(validTask.projectId) } returns mockk {
             every { id } returns validTask.projectId
             every { states } returns listOf(validTask.state)
         }
@@ -121,7 +121,7 @@ class CreateTaskUseCaseTest {
     @Test
     fun `should throw StateNotFoundException when state is not found in project`() =runTest {
         // Given
-        coEvery { projectRepository.getProject(validTask.projectId) } returns mockk {
+        coEvery { projectRepository.getProjectById(validTask.projectId) } returns mockk {
             every { id } returns validTask.projectId
             every { states } returns existingStates
         }

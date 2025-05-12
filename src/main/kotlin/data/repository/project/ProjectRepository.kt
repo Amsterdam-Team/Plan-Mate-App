@@ -25,11 +25,11 @@ class ProjectRepository(
         projectDataSource.updateProjectName(projectId, newName)
 
 
-    override suspend fun deleteProject(projectId: UUID) = projectDataSource.deleteProject(projectId)
+    override suspend fun deleteProjectById(projectId: UUID) = projectDataSource.deleteProject(projectId)
 
     override suspend fun getProjects() = projectDataSource.getAllProjects()
 
-    override suspend fun getProject(projectId: UUID): Project {
+    override suspend fun getProjectById(projectId: UUID): Project {
         val project = try {
             projectDataSource.getProjectById(projectId)
         } catch (ex: PlanMateException.DataSourceException.ObjectDoesNotExistException) {
