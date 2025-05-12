@@ -10,18 +10,18 @@ import data.datasources.taskDataSource.ITaskDataSource
 import data.datasources.taskDataSource.TaskDataSource
 import data.datasources.userDataSource.IUserDataSource
 import data.datasources.userDataSource.UserDataSource
-import data.repository.auth.AuthRepositoryImpl
-import data.repository.log.LogRepositoryImpl
-import data.repository.project.ProjectRepositoryImpl
-import data.repository.task.TaskRepositoryImpl
+import data.repository.auth.AuthRepository
+import data.repository.log.LogRepository
+import data.repository.project.ProjectRepository
+import data.repository.task.TaskRepository
 import logic.entities.LogItem
 import logic.entities.Project
 import logic.entities.Task
 import logic.entities.User
-import logic.repository.AuthRepository
-import logic.repository.LogRepository
-import logic.repository.ProjectRepository
-import logic.repository.TaskRepository
+import logic.repository.IAuthRepository
+import logic.repository.ILogRepository
+import logic.repository.IProjectRepository
+import logic.repository.ITaskRepository
 import logic.usecases.login.LoginUseCase
 import logic.usecases.logs.GetProjectHistoryUseCase
 import logic.usecases.logs.LoggerUseCase
@@ -95,10 +95,10 @@ val appModule = module {
 
 
     // Repositories
-    single<AuthRepository> { AuthRepositoryImpl(get()) }
-    single<TaskRepository> { TaskRepositoryImpl(get()) }
-    single<LogRepository> { LogRepositoryImpl(get()) }
-    single<ProjectRepository> { ProjectRepositoryImpl(get()) }
+    single<IAuthRepository> { AuthRepository(get()) }
+    single<ITaskRepository> { TaskRepository(get()) }
+    single<ILogRepository> { LogRepository(get()) }
+    single<IProjectRepository> { ProjectRepository(get()) }
     single<StateManager>{ StateManager }
 
 

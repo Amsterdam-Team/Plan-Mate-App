@@ -16,8 +16,8 @@ import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundExcept
 import logic.exception.PlanMateException.ValidationException.InvalidTaskNameException
 import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
 import logic.exception.PlanMateException.NotFoundException.StateNotFoundException
-import logic.repository.ProjectRepository
-import logic.repository.TaskRepository
+import logic.repository.IProjectRepository
+import logic.repository.ITaskRepository
 import logic.usecases.logs.LoggerUseCase
 import logic.usecases.utils.ValidateInputUseCase
 import org.junit.jupiter.api.BeforeEach
@@ -28,8 +28,8 @@ import java.util.UUID
 
 class CreateTaskUseCaseTest {
 
-    private lateinit var taskRepository: TaskRepository
-    private lateinit var projectRepository: ProjectRepository
+    private lateinit var taskRepository: ITaskRepository
+    private lateinit var projectRepository: IProjectRepository
     private lateinit var useCase: CreateTaskUseCase
     private val validateInputUseCase = ValidateInputUseCase()
     private lateinit var loggerUseCase: LoggerUseCase

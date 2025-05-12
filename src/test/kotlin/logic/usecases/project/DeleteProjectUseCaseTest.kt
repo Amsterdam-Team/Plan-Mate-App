@@ -8,7 +8,7 @@ import kotlinx.coroutines.test.runTest
 import logic.entities.User
 import logic.exception.PlanMateException.AuthorizationException.AdminPrivilegesRequiredException
 import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
-import logic.repository.ProjectRepository
+import logic.repository.IProjectRepository
 import logic.usecases.logs.LoggerUseCase
 import logic.usecases.utils.StateManager
 import logic.usecases.utils.ValidateInputUseCase
@@ -20,7 +20,7 @@ import org.junit.jupiter.params.provider.CsvSource
 import java.util.UUID
 
 class DeleteProjectUseCaseTest {
-    lateinit var repository: ProjectRepository
+    lateinit var repository: IProjectRepository
     lateinit var useCase: DeleteProjectUseCase
     lateinit var dummyProjectId: UUID
     lateinit var validateInputUseCase: ValidateInputUseCase

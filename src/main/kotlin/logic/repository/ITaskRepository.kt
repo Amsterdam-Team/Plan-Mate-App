@@ -3,7 +3,7 @@ package logic.repository
 import logic.entities.Task
 import java.util.*
 
-interface TaskRepository {
+interface ITaskRepository {
     suspend fun createTask(task: Task): Boolean
     suspend fun deleteTask(taskId: UUID): Boolean
     suspend fun getTaskById(taskId : UUID) : Task

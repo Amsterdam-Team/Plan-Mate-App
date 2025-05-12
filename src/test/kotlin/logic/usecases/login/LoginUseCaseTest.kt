@@ -7,7 +7,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException.AuthorizationException.WrongPasswordException
 import logic.exception.PlanMateException.AuthorizationException.WrongUsernameException
-import logic.repository.AuthRepository
+import logic.repository.IAuthRepository
 import logic.usecases.utils.StateManager
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -15,7 +15,7 @@ import org.junit.jupiter.api.assertThrows
 import ui.utils.md5Hash
 
 class LoginUseCaseTest {
-    private lateinit var repository: AuthRepository
+    private lateinit var repository: IAuthRepository
     private lateinit var stateManager: StateManager
     private lateinit var useCase: LoginUseCase
 

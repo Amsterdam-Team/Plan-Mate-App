@@ -14,15 +14,15 @@ import org.junit.jupiter.api.assertThrows
 import java.util.UUID
 import java.util.UUID.randomUUID
 
-class DeleteProjectRepositoryTest {
+class DeleteIProjectRepositoryTest {
     lateinit var dataSource: IProjectDataSource
-    lateinit var repository: ProjectRepositoryImpl
+    lateinit var repository: ProjectRepository
     lateinit var dummyId: UUID
 
     @BeforeEach
     fun setUp() {
         dataSource = mockk(relaxed = true)
-        repository = ProjectRepositoryImpl(dataSource)
+        repository = ProjectRepository(dataSource)
         dummyId = randomUUID()
 
     }

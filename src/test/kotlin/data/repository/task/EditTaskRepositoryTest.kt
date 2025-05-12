@@ -7,23 +7,21 @@ import kotlinx.coroutines.test.runTest
 import logic.entities.Task
 import logic.exception.PlanMateException.NotFoundException
 import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
-import logic.repository.TaskRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import java.util.UUID.randomUUID
 
 class EditTasKRepositoryTest {
 
     lateinit var dataSource: ITaskDataSource
-    lateinit var repository: TaskRepositoryImpl
+    lateinit var repository: TaskRepository
     lateinit var authenticationTask: Task
 
     @BeforeEach
     fun setUp() {
         dataSource = mockk()
-        repository = TaskRepositoryImpl(dataSource)
+        repository = TaskRepository(dataSource)
         authenticationTask = Task(
             id = randomUUID(),
             name = "add auth function",

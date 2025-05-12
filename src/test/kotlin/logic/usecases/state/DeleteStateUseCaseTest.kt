@@ -6,7 +6,7 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException
-import logic.repository.ProjectRepository
+import logic.repository.IProjectRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -14,7 +14,7 @@ import java.util.*
 
 
 class DeleteStateUseCaseTest {
-    private lateinit var repository: ProjectRepository
+    private lateinit var repository: IProjectRepository
     private lateinit var useCase: DeleteStateUseCase
 
     @BeforeEach

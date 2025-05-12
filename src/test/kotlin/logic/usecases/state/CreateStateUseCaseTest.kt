@@ -9,7 +9,7 @@ import logic.entities.User
 import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
 import logic.exception.PlanMateException.ValidationException.InvalidStateNameException
 import logic.exception.PlanMateException.ValidationException.SameStateNameException
-import logic.repository.ProjectRepository
+import logic.repository.IProjectRepository
 import logic.usecases.utils.StateManager
 import logic.usecases.utils.ValidateInputUseCase
 import org.junit.jupiter.api.BeforeEach
@@ -19,7 +19,7 @@ import java.util.UUID
 
 class CreateStateUseCaseTest {
 
-    private lateinit var repository: ProjectRepository
+    private lateinit var repository: IProjectRepository
     private lateinit var useCase: AddStateUseCase
     private lateinit var validateInputUseCase: ValidateInputUseCase
     private lateinit var stateManager: StateManager

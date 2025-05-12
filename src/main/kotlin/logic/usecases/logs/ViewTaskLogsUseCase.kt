@@ -3,12 +3,12 @@ package logic.usecases.logs
 import logic.entities.LogItem
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 
-import logic.repository.LogRepository
+import logic.repository.ILogRepository
 import logic.usecases.utils.ValidateInputUseCase
 import java.util.UUID
 
 class ViewTaskLogsUseCase(
-    private val logRepository : LogRepository,
+    private val logRepository : ILogRepository,
     private val validationInputUseCase: ValidateInputUseCase
 ) {
 

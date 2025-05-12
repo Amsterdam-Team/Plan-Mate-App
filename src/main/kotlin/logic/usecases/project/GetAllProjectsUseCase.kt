@@ -1,10 +1,10 @@
 package logic.usecases.project
 
-import logic.repository.ProjectRepository
+import logic.repository.IProjectRepository
 import logic.usecases.task.GetAllTasksByProjectIdUseCase
 
 class GetAllProjectsUseCase(
-    private val projectRepository: ProjectRepository,
+    private val projectRepository: IProjectRepository,
     private val getTasksUseCase: GetAllTasksByProjectIdUseCase
 ) {
     suspend fun execute() =

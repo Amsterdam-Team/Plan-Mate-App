@@ -6,7 +6,7 @@ import io.mockk.*
 import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
 import logic.exception.PlanMateException.ValidationException.InvalidUUIDFormatException
-import logic.repository.ProjectRepository
+import logic.repository.IProjectRepository
 import logic.usecases.utils.ValidateInputUseCase
 import logic.usecases.task.GetAllTasksByProjectIdUseCase
 import org.junit.jupiter.api.BeforeEach
@@ -18,7 +18,7 @@ import java.util.UUID
 
 class GetProjectsUseCaseTest() {
 
-    private lateinit var repository: ProjectRepository
+    private lateinit var repository: IProjectRepository
     private lateinit var tasksUseCase: GetAllTasksByProjectIdUseCase
     private lateinit var validationUseCase:ValidateInputUseCase
     private lateinit var useCase: GetProjectDetailsUseCase

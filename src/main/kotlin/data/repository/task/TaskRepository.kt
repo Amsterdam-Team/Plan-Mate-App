@@ -2,10 +2,10 @@ package data.repository.task
 
 import data.datasources.taskDataSource.ITaskDataSource
 import logic.entities.Task
-import logic.repository.TaskRepository
+import logic.repository.ITaskRepository
 import java.util.*
 
-class TaskRepositoryImpl(private val taskDataSource: ITaskDataSource): TaskRepository {
+class TaskRepository(private val taskDataSource: ITaskDataSource): ITaskRepository {
     override suspend fun createTask(task: Task) =
         taskDataSource.insertTask(task)
 

@@ -2,13 +2,13 @@ package logic.usecases.project
 
 import logic.entities.Project
 import logic.exception.PlanMateException.ValidationException.InvalidUUIDFormatException
-import logic.repository.ProjectRepository
+import logic.repository.IProjectRepository
 import logic.usecases.utils.ValidateInputUseCase
 import logic.usecases.task.GetAllTasksByProjectIdUseCase
 import java.util.*
 
 class GetProjectDetailsUseCase(
-    private val projectRepository: ProjectRepository,
+    private val projectRepository: IProjectRepository,
     private val getTasksUseCase: GetAllTasksByProjectIdUseCase,
     private val validateInputUseCase: ValidateInputUseCase
 

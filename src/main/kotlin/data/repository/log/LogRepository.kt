@@ -2,10 +2,10 @@ package data.repository.log
 
 import data.datasources.logDataSource.ILogDataSource
 import logic.entities.LogItem
-import logic.repository.LogRepository
+import logic.repository.ILogRepository
 import java.util.*
 
-class LogRepositoryImpl(private val logDataSource: ILogDataSource): LogRepository {
+class LogRepository(private val logDataSource: ILogDataSource): ILogRepository {
     override suspend fun viewLogsById(entityId: UUID) =
         logDataSource.getLogsByEntityId(entityId)
 

@@ -9,7 +9,7 @@ import logic.entities.User
 import logic.exception.PlanMateException.ValidationException.InvalidPasswordException
 import logic.exception.PlanMateException.ValidationException.InvalidUsernameException
 import logic.exception.PlanMateException.ValidationException.UserAlreadyExistsException
-import logic.repository.AuthRepository
+import logic.repository.IAuthRepository
 import logic.usecases.utils.StateManager
 import logic.usecases.utils.ValidateInputUseCase
 import org.junit.jupiter.api.BeforeEach
@@ -20,7 +20,7 @@ import java.util.UUID
 
 class CreateUserUseCaseTest {
 
-    private lateinit var repository: AuthRepository
+    private lateinit var repository: IAuthRepository
     private lateinit var useCase: CreateUserUseCase
     private lateinit var validateInputUseCase: ValidateInputUseCase
     private lateinit var stateManager: StateManager

@@ -2,7 +2,7 @@ package logic.usecases.project
 
 import logic.entities.User
 import logic.exception.PlanMateException
-import logic.repository.ProjectRepository
+import logic.repository.IProjectRepository
 import java.util.*
 import logic.usecases.utils.ValidateInputUseCase
 import logic.entities.Project
@@ -11,7 +11,7 @@ import logic.usecases.utils.StateManager
 
 
 class EditProjectUseCase(
-    private val projectRepository: ProjectRepository,
+    private val projectRepository: IProjectRepository,
     private val validateInputUseCase: ValidateInputUseCase,
     private val stateManager: StateManager,
     private val loggerUseCase: LoggerUseCase

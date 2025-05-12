@@ -6,12 +6,12 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import logic.entities.LogItem
-import logic.repository.LogRepository
+import logic.repository.ILogRepository
 import logic.usecases.utils.StateManager
 import java.util.UUID
 
 class LoggerUseCase(
-    private val logRepository: LogRepository,
+    private val logRepository: ILogRepository,
     private val stateManager: StateManager,
 ) {
 

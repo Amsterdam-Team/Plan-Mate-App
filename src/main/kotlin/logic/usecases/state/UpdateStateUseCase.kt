@@ -1,6 +1,6 @@
 package logic.usecases.state
 
-import logic.repository.ProjectRepository
+import logic.repository.IProjectRepository
 import java.util.UUID
 
 import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
@@ -11,7 +11,7 @@ import logic.usecases.utils.StateManager
 import logic.usecases.utils.ValidateInputUseCase
 
 class UpdateStateUseCase(
-    private val projectRepository: ProjectRepository,
+    private val projectRepository: IProjectRepository,
     private val stateManager: StateManager,
     private val validateInputUseCase: ValidateInputUseCase
 ) {

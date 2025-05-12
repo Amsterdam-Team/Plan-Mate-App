@@ -2,11 +2,11 @@ package logic.usecases.logs
 
 import logic.entities.LogItem
 import logic.exception.PlanMateException
-import logic.repository.LogRepository
+import logic.repository.ILogRepository
 import java.util.UUID
 
 class GetProjectHistoryUseCase(
-    private val logRepository: LogRepository
+    private val logRepository: ILogRepository
 ) {
     suspend fun execute(projectId: String?): List<LogItem> {
         if (projectId.isNullOrBlank()) throw PlanMateException.ValidationException.InvalidProjectIDException

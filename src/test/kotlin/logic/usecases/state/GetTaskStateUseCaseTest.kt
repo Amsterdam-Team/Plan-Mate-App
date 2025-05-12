@@ -6,7 +6,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
-import logic.repository.TaskRepository
+import logic.repository.ITaskRepository
 import helper.ConstantsFactory.EXPECTED_TASK_STATE
 import helper.TaskFactory.existingTask
 import helper.ConstantsFactory.EXISTING_TASK_ID
@@ -18,7 +18,7 @@ import kotlin.test.Test
 
 class GetTaskStateUseCaseTest {
 
-    private lateinit var repository: TaskRepository
+    private lateinit var repository: ITaskRepository
     private lateinit var useCase: GetTaskStateUseCase
 
     @BeforeEach

@@ -69,20 +69,20 @@ It supports both **Admin** and **Mate** user types, providing a flexible and sec
 │   │   │   ├── ChangeDataSource.kt
 │   │   │   ├── ChangeCsvDataSource.kt
 │   ├── 📁 auth/
-│   │   └── AuthRepositoryImpl.kt
+│   │   └── AuthRepository.kt
 │   ├── 📁 project/
-│   │   └── ProjectRepositoryImpl.kt
+│   │   └── ProjectRepository.kt
 │   └── 📁 task/
-│       └── TaskRepositoryImpl.kt
+│       └── TaskRepository.kt
 ├── 📁 logic/
 │   ├── 📁 entities/         # Models
 │   │   ├── User.kt
 │   │   ├── Project.kt
 │   │   └── Task.kt
 │   ├── 📁 repositories/     # Repository Interfaces
-│   │   ├── AuthRepository.kt
-│   │   ├── ProjectRepository.kt
-│   │   └── TaskRepository.kt
+│   │   ├── IAuthRepository.kt
+│   │   ├── IProjectRepository.kt
+│   │   └── ITaskRepository.kt
 │   └── 📁 usecases/         # Application Use Cases
 │       ├── AuthUseCases.kt
 │       ├── ProjectUseCases.kt

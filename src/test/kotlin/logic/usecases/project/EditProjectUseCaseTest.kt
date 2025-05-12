@@ -8,7 +8,7 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException
-import logic.repository.ProjectRepository
+import logic.repository.IProjectRepository
 import logic.usecases.logs.LoggerUseCase
 import logic.usecases.utils.StateManager
 import logic.usecases.utils.ValidateInputUseCase
@@ -22,7 +22,7 @@ import java.util.*
 
 class EditProjectUseCaseTest{
 
-   private lateinit var projectRepository: ProjectRepository
+   private lateinit var projectRepository: IProjectRepository
    private lateinit var validateInputUseCase: ValidateInputUseCase
    private lateinit var editProjectNameUseCase: EditProjectUseCase
    private lateinit var loggerUseCase: LoggerUseCase

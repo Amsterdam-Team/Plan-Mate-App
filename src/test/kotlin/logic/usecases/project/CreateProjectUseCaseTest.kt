@@ -12,7 +12,7 @@ import logic.entities.User
 import logic.exception.PlanMateException.AuthorizationException.AdminPrivilegesRequiredException
 import logic.exception.PlanMateException.ValidationException.InvalidProjectNameException
 import logic.exception.PlanMateException.ValidationException.InvalidStateNameException
-import logic.repository.ProjectRepository
+import logic.repository.IProjectRepository
 import logic.usecases.logs.LoggerUseCase
 import logic.usecases.utils.StateManager
 import logic.usecases.utils.ValidateInputUseCase
@@ -22,7 +22,7 @@ import org.junit.jupiter.api.assertThrows
 import java.util.UUID
 
 class CreateProjectUseCaseTest {
-    private lateinit var repository: ProjectRepository
+    private lateinit var repository: IProjectRepository
     private lateinit var useCase: CreateProjectUseCase
     private lateinit var loggerUseCase: LoggerUseCase
     private lateinit var stateManager: StateManager

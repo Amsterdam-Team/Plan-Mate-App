@@ -3,7 +3,7 @@ package logic.repository
 import logic.entities.Project
 import java.util.*
 
-interface ProjectRepository {
+interface IProjectRepository {
     suspend fun createProject(project: Project): Boolean
     suspend fun updateProjectNameById(projectId: UUID, newName: String): Boolean
     suspend fun deleteProject(projectId: UUID): Boolean

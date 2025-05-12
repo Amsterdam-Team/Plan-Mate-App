@@ -8,7 +8,7 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException
-import logic.repository.LogRepository
+import logic.repository.ILogRepository
 import logic.usecases.utils.ValidateInputUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -17,7 +17,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
 class ViewTaskLogsUseCaseTest {
-    private lateinit var repository : LogRepository
+    private lateinit var repository : ILogRepository
     private lateinit var useCase : ViewTaskLogsUseCase
     private lateinit var validationInputUseCase: ValidateInputUseCase
 

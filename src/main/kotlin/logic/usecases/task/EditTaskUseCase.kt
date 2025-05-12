@@ -5,13 +5,13 @@ import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
 import logic.exception.PlanMateException.ValidationException.InvalidStateNameException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskNameException
-import logic.repository.TaskRepository
+import logic.repository.ITaskRepository
 import logic.usecases.logs.LoggerUseCase
 import logic.usecases.utils.ValidateInputUseCase
 import java.util.UUID
 
 class EditTaskUseCase(
-    private val taskRepository: TaskRepository,
+    private val taskRepository: ITaskRepository,
     private val validateInputUseCase: ValidateInputUseCase,
     private val loggerUseCase: LoggerUseCase
 ) {

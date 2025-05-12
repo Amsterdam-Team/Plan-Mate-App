@@ -5,13 +5,13 @@ import logic.exception.PlanMateException
 import logic.exception.PlanMateException.AuthorizationException.AdminPrivilegesRequiredException
 import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
 import logic.exception.PlanMateException.ValidationException.InvalidStateNameException
-import logic.repository.ProjectRepository
+import logic.repository.IProjectRepository
 import logic.usecases.utils.StateManager
 import logic.usecases.utils.ValidateInputUseCase
 import java.util.UUID
 
 class AddStateUseCase(
-    private val repository: ProjectRepository,
+    private val repository: IProjectRepository,
     private val validateInputUseCase: ValidateInputUseCase,
     private val stateManager: StateManager,
 ) {
