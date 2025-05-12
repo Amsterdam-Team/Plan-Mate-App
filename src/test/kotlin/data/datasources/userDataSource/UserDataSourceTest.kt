@@ -214,10 +214,6 @@ class UserDataSourceTest {
         private val notFoundId = UUID.randomUUID()
         private val userWithSameName = user1.copy(id = UUID.randomUUID())
         private val userWithSameId = user1.copy(username = "luigi")
-        private val usersReplace = listOf(userWithSameId, userWithSameName)
-        private val duplicatedUserNames = listOf(user1, userWithSameName)
-        private val duplicatedUserIds = listOf(user1, userWithSameId)
-
 
         // Testing Purposes
         private const val CONNECTION_STRING = "mongodb+srv://7amasa:9LlgpCLbd99zoRrJ@amsterdam.qpathz3.mongodb.net/?retryWrites=true&w=majority&appName=Amsterdam"
