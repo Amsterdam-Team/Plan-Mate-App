@@ -38,17 +38,17 @@ class TaskDataSource(
         return updateResult.upsertedId != null
     }
 
-    override suspend fun deleteTask(taskId: UUID): Boolean {
+    override suspend fun deleteTaskById(taskId: UUID): Boolean {
         val deleteResult = tasksCollection.deleteOne(Filters.eq(FIELD_TASK_ID, taskId))
         return deleteResult.deletedCount > 0
     }
 
-    override suspend fun getTaskState(taskId: UUID): String {
+    override suspend fun getTaskStateById(taskId: UUID): String {
         val task = tasksCollection.find(Filters.eq(FIELD_TASK_ID, taskId)).firstOrNull() ?: throw ObjectDoesNotExistException
         return task.state
     }
 
-    override suspend fun updateTaskName(taskId: UUID, newName: String): Boolean {
+    override suspend fun updateTaskNameById(taskId: UUID, newName: String): Boolean {
         val task = tasksCollection.find(Filters.eq(FIELD_TASK_ID, taskId)).firstOrNull() ?: return false
         val duplicateInSameProject = tasksCollection.find(
             Filters.and(
@@ -69,7 +69,7 @@ class TaskDataSource(
         return updateResult.modifiedCount > 0
     }
 
-    override suspend fun updateTaskState(taskId: UUID, newState: String): Boolean {
+    override suspend fun updateTaskStateById(taskId: UUID, newState: String): Boolean {
         val updateResult = tasksCollection.updateOne(
             Filters.eq(FIELD_TASK_ID, taskId),
             Updates.set(FIELD_STATE, newState)

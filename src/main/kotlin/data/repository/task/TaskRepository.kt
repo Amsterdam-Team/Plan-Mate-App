@@ -11,20 +11,20 @@ class TaskRepository(private val taskDataSource: ITaskDataSource): ITaskReposito
 
 
     override suspend fun updateTask(task: Task) =
-        taskDataSource.updateTaskName(task.id,task.name)&&
-        taskDataSource.updateTaskState(task.id,task.state)
+        taskDataSource.updateTaskNameById(task.id,task.name)&&
+        taskDataSource.updateTaskStateById(task.id,task.state)
 
 
     override suspend fun updateTaskNameByID(taskId: UUID, newName: String) =
-        taskDataSource.updateTaskName(taskId,newName)
+        taskDataSource.updateTaskNameById(taskId,newName)
 
 
     override suspend fun updateStateNameByID(taskId: UUID, newState: String) =
-        taskDataSource.updateTaskState(taskId,newState)
+        taskDataSource.updateTaskStateById(taskId,newState)
 
 
     override suspend fun deleteTask(taskId: UUID) =
-        taskDataSource.deleteTask(taskId)
+        taskDataSource.deleteTaskById(taskId)
 
     override suspend fun getTaskById(taskId: UUID): Task =
         taskDataSource.getTaskById(taskId)

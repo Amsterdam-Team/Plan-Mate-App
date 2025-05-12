@@ -127,7 +127,7 @@ class UserDataSourceTest {
     @Test
     fun `should return true when user is deleted successfully`() = runTest {
         // When
-        val result = dataSource.deleteUser(user2Id)
+        val result = dataSource.deleteUserById(user2Id)
 
         // Then
         assertThat(result).isTrue()
@@ -136,7 +136,7 @@ class UserDataSourceTest {
     @Test
     fun `should return false when user to delete is not found`() = runTest {
         // When
-        val result = dataSource.deleteUser(notFoundId)
+        val result = dataSource.deleteUserById(notFoundId)
 
         // Then
         assertThat(result).isFalse()
@@ -147,7 +147,7 @@ class UserDataSourceTest {
     @Test
     fun `should return true when username is updated successfully`() = runTest{
         // When
-        val result = dataSource.updateUserName(user2Id, "mohamed")
+        val result = dataSource.updateUserNameById(user2Id, "mohamed")
 
         // Then
         assertThat(result).isTrue()
@@ -156,7 +156,7 @@ class UserDataSourceTest {
     @Test
     fun `should return false when user is not found for username update`() = runTest{
         // When
-        val result = dataSource.updateUserName(notFoundId, "mohamed")
+        val result = dataSource.updateUserNameById(notFoundId, "mohamed")
 
         // Then
         assertThat(result).isFalse()
@@ -167,7 +167,7 @@ class UserDataSourceTest {
     @Test
     fun `should return true when password is updated successfully`() = runTest{
         // When
-        val result = dataSource.updatePassword(user2Id, "passwordVerySecure")
+        val result = dataSource.updatePasswordById(user2Id, "passwordVerySecure")
 
         // Then
         assertThat(result).isTrue()
@@ -176,7 +176,7 @@ class UserDataSourceTest {
     @Test
     fun `should return false when user is not found for password update`() = runTest{
         // When
-        val result = dataSource.updatePassword(notFoundId, "passwordVerySecure")
+        val result = dataSource.updatePasswordById(notFoundId, "passwordVerySecure")
 
         // Then
         assertThat(result).isFalse()

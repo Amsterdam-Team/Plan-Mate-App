@@ -39,7 +39,7 @@ class LogDataSource(private val logsCollection: MongoCollection<LogItem>): ILogD
         return insertResult.upsertedId != null
     }
 
-    override suspend fun deleteLog(logId: UUID): Boolean {
+    override suspend fun deleteLogBy(logId: UUID): Boolean {
         val deleteResult = logsCollection.deleteOne(Filters.eq(FIELD_LOG_ID, logId))
         return deleteResult.deletedCount > 0
     }

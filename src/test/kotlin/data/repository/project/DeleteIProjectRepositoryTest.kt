@@ -30,7 +30,7 @@ class DeleteIProjectRepositoryTest {
     @Test
     fun `should return true when deleting project complete successfully`() = runTest{
         // given
-        coEvery { dataSource.deleteProject(someProjects[0].id) } returns true
+        coEvery { dataSource.deleteProjectById(someProjects[0].id) } returns true
         // when
         val result = repository.deleteProjectById(someProjects[0].id)
 
@@ -44,7 +44,7 @@ class DeleteIProjectRepositoryTest {
     @Test
     fun `should throw project not found when deleting project not exist`() = runTest{
         // given
-        coEvery { dataSource.deleteProject(someProjects[0].id) } throws ProjectNotFoundException
+        coEvery { dataSource.deleteProjectById(someProjects[0].id) } throws ProjectNotFoundException
 
         // when & then
         assertThrows <ProjectNotFoundException> {

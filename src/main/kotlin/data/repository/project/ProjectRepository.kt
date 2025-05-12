@@ -25,7 +25,7 @@ class ProjectRepository(
         projectDataSource.updateProjectName(projectId, newName)
 
 
-    override suspend fun deleteProjectById(projectId: UUID) = projectDataSource.deleteProject(projectId)
+    override suspend fun deleteProjectById(projectId: UUID) = projectDataSource.deleteProjectById(projectId)
 
     override suspend fun getProjects() = projectDataSource.getAllProjects()
 
@@ -39,11 +39,11 @@ class ProjectRepository(
     }
 
     override suspend fun updateProjectStateById(projectId: UUID, oldState: String, newState: String) =
-        projectDataSource.updateProjectState(projectId, oldState, newState)
+        projectDataSource.updateProjectStateById(projectId, oldState, newState)
 
 
     override suspend fun deleteStateById(projectId: UUID, oldState: String) =
-        projectDataSource.deleteProjectState(projectId, oldState)
+        projectDataSource.deleteProjectStateById(projectId, oldState)
 
     override suspend fun addStateById(projectId: UUID, state: String) = projectDataSource.insertProjectState(projectId, state)
 

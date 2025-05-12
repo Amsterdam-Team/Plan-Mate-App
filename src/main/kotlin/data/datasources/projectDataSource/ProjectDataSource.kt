@@ -40,7 +40,7 @@ class ProjectDataSource(
         return updateResult.upsertedId != null || updateResult.modifiedCount > 0
     }
 
-    override suspend fun deleteProject(projectId: UUID): Boolean {
+    override suspend fun deleteProjectById(projectId: UUID): Boolean {
         val result = projectCollection.deleteOne(Filters.eq(FIELD_ID, projectId))
         return result.deletedCount > 0
     }
@@ -61,7 +61,7 @@ class ProjectDataSource(
         return result.modifiedCount > 0
     }
 
-    override suspend fun getProjectStates(projectId: UUID): List<String> {
+    override suspend fun getProjectStatesById(projectId: UUID): List<String> {
         val project =
             projectCollection.find(Filters.eq(FIELD_ID, projectId)).firstOrNull()
                 ?: return emptyList()
@@ -69,7 +69,7 @@ class ProjectDataSource(
         return project.states
     }
 
-    override suspend fun deleteProjectState(projectId: UUID, state: String): Boolean {
+    override suspend fun deleteProjectStateById(projectId: UUID, state: String): Boolean {
         val result =
             projectCollection.updateOne(
                 Filters.eq(FIELD_ID, projectId),
@@ -79,7 +79,7 @@ class ProjectDataSource(
         return result.modifiedCount > 0
     }
 
-    override suspend fun updateProjectState(
+    override suspend fun updateProjectStateById(
         projectId: UUID,
         oldState: String,
         newState: String

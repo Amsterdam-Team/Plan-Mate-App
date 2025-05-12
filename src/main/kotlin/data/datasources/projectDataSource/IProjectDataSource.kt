@@ -10,16 +10,16 @@ interface IProjectDataSource {
 
     suspend fun insertProject(project: Project): Boolean
 
-    suspend fun deleteProject(projectId: UUID): Boolean
+    suspend fun deleteProjectById(projectId: UUID): Boolean
 
 
     suspend fun updateProjectName(projectId: UUID, newName: String): Boolean
 
     suspend fun insertProjectState(projectId: UUID, state: String): Boolean
 
-    suspend fun getProjectStates(projectId: UUID): List<String>
+    suspend fun getProjectStatesById(projectId: UUID): List<String>
 
-    suspend fun deleteProjectState(projectId: UUID, state: String): Boolean
+    suspend fun deleteProjectStateById(projectId: UUID, state: String): Boolean
 
-    suspend fun updateProjectState(projectId: UUID, oldState: String, newState: String): Boolean
+    suspend fun updateProjectStateById(projectId: UUID, oldState: String, newState: String): Boolean
 }

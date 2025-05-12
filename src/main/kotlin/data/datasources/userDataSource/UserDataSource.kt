@@ -37,12 +37,12 @@ class UserDataSource(
         return insertResult.upsertedId != null
     }
 
-    override suspend fun deleteUser(userId: UUID): Boolean {
+    override suspend fun deleteUserById(userId: UUID): Boolean {
         val deleteResult = usersCollection.deleteOne(Filters.eq(FIELD_ID, userId))
         return deleteResult.deletedCount > 0
     }
 
-    override suspend fun updateUserName(userId: UUID, newName: String): Boolean {
+    override suspend fun updateUserNameById(userId: UUID, newName: String): Boolean {
         val updateResult = usersCollection.updateOne(
             Filters.eq(FIELD_ID, userId),
             Updates.set(FIELD_USERNAME, newName)
@@ -50,7 +50,7 @@ class UserDataSource(
         return updateResult.modifiedCount > 0
     }
 
-    override suspend fun updatePassword(userId: UUID, newPassword: String): Boolean {
+    override suspend fun updatePasswordById(userId: UUID, newPassword: String): Boolean {
         val updateResult = usersCollection.updateOne(
             Filters.eq(FIELD_ID, userId),
             Updates.set(FIELD_PASSWORD, newPassword)

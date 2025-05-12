@@ -10,11 +10,11 @@ interface IUserDataSource {
 
     suspend fun upsertUser(user: User): Boolean
 
-    suspend fun deleteUser(userId: UUID): Boolean
+    suspend fun deleteUserById(userId: UUID): Boolean
 
-    suspend fun updateUserName(userId: UUID, newName: String): Boolean
+    suspend fun updateUserNameById(userId: UUID, newName: String): Boolean
 
-    suspend fun updatePassword(userId: UUID, newPassword: String): Boolean
+    suspend fun updatePasswordById(userId: UUID, newPassword: String): Boolean
 
     suspend fun findUserByCredentials(username:String, password:String):User
 }

@@ -134,7 +134,7 @@ class LogDataSourceTest{
     @Test
     fun `should return true when log is deleted successfully`() = runTest {
         // When
-        val result = dataSource.deleteLog(log2Id)
+        val result = dataSource.deleteLogBy(log2Id)
 
         // Then
         assertThat(result).isTrue()
@@ -143,7 +143,7 @@ class LogDataSourceTest{
     @Test
     fun `should return false when log to delete is not found`() = runTest {
         // When
-        val result = dataSource.deleteLog(notFoundId)
+        val result = dataSource.deleteLogBy(notFoundId)
 
         // Then
         assertThat(result).isFalse()
