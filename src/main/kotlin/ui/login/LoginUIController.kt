@@ -24,7 +24,7 @@ class LoginUIController(
         tryToExecute(
             action = {
                 user = loginUseCase.validateUserCredentials(username, password)
-                onLoginSuccess(user)
+//                onLoginSuccess(user)
             },
             onSuccess = { consoleIO.println("Success Login......") }
         )

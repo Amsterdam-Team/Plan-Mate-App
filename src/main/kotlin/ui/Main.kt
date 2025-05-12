@@ -7,6 +7,7 @@ import kotlinx.coroutines.runBlocking
 import org.koin.core.context.startKoin
 import org.koin.java.KoinJavaComponent.getKoin
 import ui.login.LoginUIController
+import ui.menuHandler.ProjectsView
 
 
 fun main() {
@@ -17,9 +18,10 @@ fun main() {
     }
 
     val loginUIController: LoginUIController = getKoin().get()
-
+    val projectsView: ProjectsView = getKoin().get()
     runBlocking {
         loginUIController.execute()
+        projectsView.start()
     }
 
 

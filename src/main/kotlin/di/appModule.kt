@@ -42,6 +42,7 @@ import ui.logs.ViewProjectHistoryUIController
 import ui.logs.ViewTaskLogsUIController
 import ui.menuHandler.AdminMenuHandler
 import ui.menuHandler.MateMenuHandler
+import ui.menuHandler.ProjectsView
 import ui.project.*
 import ui.state.AddStateUIController
 import ui.state.UpdateStateUiController
@@ -176,6 +177,8 @@ val appModule = module {
         )
     }
 
+    single { ProjectsView(get(),get(),get()) }
+
     // Admin Menus
     single<Map<Int, BaseUIController>>(adminMap) {
         mapOf(
@@ -203,4 +206,6 @@ val appModule = module {
 
     // LoginUiController
     single { LoginUIController(get(), get(), get(), get()) }
+
+    // project view
 }

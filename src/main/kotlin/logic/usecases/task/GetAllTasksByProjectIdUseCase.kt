@@ -13,10 +13,11 @@ class GetAllTasksByProjectIdUseCase(
 ) {
     suspend operator fun invoke(projectId: String): List<Task> {
         if (!validateInputUseCase.isValidUUID(uuid = projectId)) {
+            println("invalid id")
             throw InvalidProjectIDException
         }
         val tasks = repository.getAllTasksByProjectId(UUID.fromString(projectId))
-        if (tasks.isEmpty()) throw TaskNotFoundException
+//        if (tasks.isEmpty()) throw TaskNotFoundException
         return tasks
     }
 }
