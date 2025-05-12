@@ -19,8 +19,8 @@ class TaskRepository(private val taskDataSource: ITaskDataSource): ITaskReposito
         taskDataSource.updateTaskNameById(taskId,newName)
 
 
-    override suspend fun updateStateNameByID(taskId: UUID, newState: String) =
-        taskDataSource.updateTaskStateById(taskId,newState)
+    override suspend fun updateStateNameByID(taskId: UUID, newStateName: String) =
+        taskDataSource.updateTaskStateById(taskId,newStateName)
 
 
     override suspend fun deleteTask(taskId: UUID) =

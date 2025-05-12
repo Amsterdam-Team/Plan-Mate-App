@@ -301,10 +301,6 @@ class ProjectDataSourceTest {
         private val notFoundId = UUID.randomUUID()
         private val projectWithSameName = project1.copy(id = UUID.randomUUID())
         private val projectWithSameId = project1.copy(name = "very important")
-        private val projectsReplace = listOf(projectWithSameId, projectWithSameName)
-        private val duplicatedProjectNames = listOf(project1, projectWithSameName)
-        private val duplicatedProjectIds = listOf(project1, projectWithSameId)
-
 
         // Testing Purposes
         private const val CONNECTION_STRING =

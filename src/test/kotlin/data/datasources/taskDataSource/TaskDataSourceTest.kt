@@ -246,10 +246,6 @@ class TaskDataSourceTest{
         private val taskNotInDatabase = task1Project1.copy(id = UUID.randomUUID(), name = "task not in database")
         private val notFoundId = UUID.randomUUID()
         private val taskWithSameName = task1Project1.copy(id = UUID.randomUUID())
-        private val taskWithSameId = task1Project1.copy(name = "renamed task")
-        private val tasksReplace = listOf(taskWithSameId, taskWithSameName)
-        private val duplicatedTaskNamesInSameProject = listOf(task1Project1, taskWithSameName)
-        private val duplicatedTaskIds = listOf(task1Project1, taskWithSameId)
 
         // Testing Purposes
         private const val CONNECTION_STRING = "mongodb+srv://7amasa:9LlgpCLbd99zoRrJ@amsterdam.qpathz3.mongodb.net/?retryWrites=true&w=majority&appName=Amsterdam"

@@ -48,7 +48,7 @@ class EditTasKRepositoryTest {
         coEvery { dataSource.updateTaskStateById(taskId = authenticationTask.id, newState = "new state") } returns true
         val result = repository.updateStateNameByID(
             taskId = authenticationTask.id,
-            newState = "new state"
+            newStateName = "new state"
         )
         assertThat(result).isTrue()
 
@@ -60,7 +60,7 @@ class EditTasKRepositoryTest {
         assertThrows<NotFoundException> {
             repository.updateStateNameByID(
                 taskId = authenticationTask.id,
-                newState = "new state"
+                newStateName = "new state"
             )
         }
 
