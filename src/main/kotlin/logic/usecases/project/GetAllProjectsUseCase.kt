@@ -1,15 +1,15 @@
 package logic.usecases.project
 
 import logic.repository.ProjectRepository
-import logic.usecases.task.GetAllTasksByProjectIdUseCase
+import logic.repository.TaskRepository
 
 class GetAllProjectsUseCase(
     private val projectRepository: ProjectRepository,
-    private val getTasksUseCase: GetAllTasksByProjectIdUseCase
-) {
+    private val taskRepository: TaskRepository
+    ) {
     suspend fun execute() =
         projectRepository.getProjects().map { project ->
-            val tasks = getTasksUseCase(project.id.toString())
+            val tasks = taskRepository.getAllTasksByProjectId(project.id)
             project.copy(tasks = tasks)
         }
 }
