@@ -8,7 +8,7 @@ class AuthRepository(
     private val userDataSource : IUserDataSource
 ): IAuthRepository {
     override suspend fun createUser(user: User): Boolean {
-        return userDataSource.insertUser(user)
+        return userDataSource.upsertUser(user)
     }
 
     override suspend fun login(username: String, password: String): User {

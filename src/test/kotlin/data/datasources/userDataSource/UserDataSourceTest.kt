@@ -97,7 +97,7 @@ class UserDataSourceTest {
     @Test
     fun `should return true when user is inserted successfully`() = runTest {
         // When
-        val result = dataSource.insertUser(userNotInDatabase)
+        val result = dataSource.upsertUser(userNotInDatabase)
 
         // Then
         assertThat(result).isTrue()
@@ -106,7 +106,7 @@ class UserDataSourceTest {
     @Test
     fun `should return false when inserting user with existing id fails`() = runTest {
         // When
-        val result = dataSource.insertUser(userWithSameId)
+        val result = dataSource.upsertUser(userWithSameId)
 
         // Then
         assertThat(result).isFalse()
@@ -115,7 +115,7 @@ class UserDataSourceTest {
     @Test
     fun `should return false when inserting user with existing username fails`() = runTest {
         // When
-        val result = dataSource.insertUser(userWithSameName)
+        val result = dataSource.upsertUser(userWithSameName)
 
         // Then
         assertThat(result).isFalse()
@@ -183,41 +183,11 @@ class UserDataSourceTest {
     }
     // endregion
 
-    // region replaceAllUsers
-    @Test
-    fun `should return true when all users are replaced successfully`() = runTest{
-        // When
-        val result = dataSource.replaceAllUsers(usersReplace)
-
-        // Then
-        assertThat(result).isTrue()
-
-    }
-
-    @Test
-    fun `should return false when users have duplicated Ids`() = runTest{
-        // When
-        val result = dataSource.replaceAllUsers(duplicatedUserIds)
-
-        // Then
-        assertThat(result).isFalse()
-    }
-
-    @Test
-    fun `should return false when users have duplicated usernames`() = runTest{
-        // When
-        val result = dataSource.replaceAllUsers(duplicatedUserNames)
-
-        // Then
-        assertThat(result).isFalse()
-    }
-    // endregion
-
     // region findUserByCredentials
     @Test
     fun `should return user when credentials match`() = runTest {
         // When
-        val result = dataSource.findUserByCredentials(user1.username, user1.password)
+        val result = dataSource.findUserByCredentials("omer faris", "ee2b80364a7b0f611d8eac7f1cf42cae")
 
         // Then
         assertThat(result).isEqualTo(user1)
