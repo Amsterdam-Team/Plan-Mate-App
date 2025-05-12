@@ -50,7 +50,7 @@ class EditTaskUseCase(
     }
 
 
-    fun validateTaskInputs(taskId: String, name: String, state: String): Boolean {
+   private fun validateTaskInputs(taskId: String, name: String, state: String): Boolean {
         if (!validateInputUseCase.isValidUUID(taskId)) {
             throw InvalidTaskIDException
         }
