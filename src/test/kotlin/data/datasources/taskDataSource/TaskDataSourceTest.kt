@@ -230,35 +230,6 @@ class TaskDataSourceTest{
     }
     // endregion
 
-    // region replaceAllTasks
-    @Test
-    fun `should replace all tasks when no duplicates in project`() = runTest {
-        // When
-        val result = dataSource.replaceAllTasks(tasksReplace)
-
-        // Then
-        assertThat(result).isTrue()
-    }
-
-    @Test
-    fun `should not replace all tasks when duplicate names exist in same project`() = runTest {
-        // When
-        val result = dataSource.replaceAllTasks(duplicatedTaskNamesInSameProject)
-
-        // Then
-        assertThat(result).isFalse()
-    }
-
-    @Test
-    fun `should not replace all tasks when duplicate Ids exist in same project`() = runTest {
-        // When
-        val result = dataSource.replaceAllTasks(duplicatedTaskIds)
-
-        // Then
-        assertThat(result).isFalse()
-    }
-    // endregion
-
     companion object{
         // Document Tasks
         private val project1Id = UUID.randomUUID()

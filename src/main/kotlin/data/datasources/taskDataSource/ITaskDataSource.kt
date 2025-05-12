@@ -20,6 +20,4 @@ interface ITaskDataSource {
     suspend fun updateTaskName(taskId: UUID, newName: String): Boolean
 
     suspend fun updateTaskState(taskId: UUID, newState: String): Boolean
-
-    suspend fun replaceAllTasks(tasks: List<Task>): Boolean
 }

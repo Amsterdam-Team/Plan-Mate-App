@@ -1,13 +1,13 @@
 package data.datasources.taskDataSource
 
 import com.mongodb.client.model.Filters
+import com.mongodb.client.model.UpdateOptions
 import com.mongodb.client.model.Updates
 import com.mongodb.kotlin.client.coroutine.MongoCollection
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.toList
 import logic.entities.Task
 import logic.exception.PlanMateException.DataSourceException.ObjectDoesNotExistException
-import org.bson.Document
 import java.util.*
 
 class TaskDataSource(
@@ -18,46 +18,43 @@ class TaskDataSource(
     }
 
     override suspend fun getAllProjectTasks(projectId: UUID): List<Task> {
-        return tasksCollection.find(Filters.eq("projectId", projectId)).toList()
+        return tasksCollection.find(Filters.eq(FIELD_PROJECT_ID, projectId)).toList()
     }
 
     override suspend fun getTaskById(taskId: UUID): Task {
-        return tasksCollection.find(Filters.eq("id", taskId)).firstOrNull() ?: throw ObjectDoesNotExistException
+        return tasksCollection.find(Filters.eq(FIELD_TASK_ID, taskId)).firstOrNull() ?: throw ObjectDoesNotExistException
     }
 
     override suspend fun insertTask(task: Task): Boolean {
-        val existingTask = tasksCollection.find(
-            Filters.or(
-                Filters.eq("id", task.id),
-                Filters.and(
-                    Filters.eq("projectId", task.projectId),
-                    Filters.eq("name", task.name)
-                )
-            )
-        ).firstOrNull()
+        val result = tasksCollection.updateOne(
+            Filters.and(
+                Filters.eq(FIELD_PROJECT_ID, task.projectId),
+                Filters.eq(FIELD_NAME, task.name)
+            ),
+            Updates.setOnInsert(FIELD_TASK_ID, task.id),
+            UpdateOptions().upsert(true)
+        )
 
-        if (existingTask != null) return false
-
-        return tasksCollection.insertOne(task).wasAcknowledged()
+        return result.upsertedId != null
     }
 
     override suspend fun deleteTask(taskId: UUID): Boolean {
-        val result = tasksCollection.deleteOne(Filters.eq("id", taskId))
+        val result = tasksCollection.deleteOne(Filters.eq(FIELD_TASK_ID, taskId))
         return result.deletedCount > 0
     }
 
     override suspend fun getTaskState(taskId: UUID): String {
-        val task = tasksCollection.find(Filters.eq("id", taskId)).firstOrNull() ?: throw ObjectDoesNotExistException
+        val task = tasksCollection.find(Filters.eq(FIELD_TASK_ID, taskId)).firstOrNull() ?: throw ObjectDoesNotExistException
         return task.state
     }
 
     override suspend fun updateTaskName(taskId: UUID, newName: String): Boolean {
-        val task = tasksCollection.find(Filters.eq("id", taskId)).firstOrNull() ?: return false
+        val task = tasksCollection.find(Filters.eq(FIELD_TASK_ID, taskId)).firstOrNull() ?: return false
         val duplicateInSameProject = tasksCollection.find(
             Filters.and(
-                Filters.eq("projectId", task.projectId),
-                Filters.eq("name", newName),
-                Filters.ne("id", taskId)
+                Filters.eq(FIELD_PROJECT_ID, task.projectId),
+                Filters.eq(FIELD_NAME, newName),
+                Filters.ne(FIELD_TASK_ID, taskId)
             )
         ).firstOrNull()
 
@@ -65,8 +62,8 @@ class TaskDataSource(
         if (duplicateInSameProject != null) return false
 
         val result = tasksCollection.updateOne(
-            Filters.eq("id", taskId),
-            Updates.set("name", newName)
+            Filters.eq(FIELD_TASK_ID, taskId),
+            Updates.set(FIELD_NAME, newName)
         )
 
         return result.modifiedCount > 0
@@ -74,28 +71,16 @@ class TaskDataSource(
 
     override suspend fun updateTaskState(taskId: UUID, newState: String): Boolean {
         val result = tasksCollection.updateOne(
-            Filters.eq("id", taskId),
-            Updates.set("state", newState)
+            Filters.eq(FIELD_TASK_ID, taskId),
+            Updates.set(FIELD_STATE, newState)
         )
         return result.modifiedCount > 0
     }
 
-    override suspend fun replaceAllTasks(tasks: List<Task>): Boolean {
-
-        val uniqueIds = tasks.map { it.id }.toSet()
-        if (uniqueIds.size != tasks.size) return false
-
-        val hasDuplicateNameInProject = tasks
-            .groupBy { it.projectId }
-            .values
-            .any { tasksInProject ->
-                tasksInProject.map { it.name }.toSet().size != tasksInProject.size
-            }
-
-        if (hasDuplicateNameInProject) return false
-
-        tasksCollection.deleteMany(Document())
-        tasksCollection.insertMany(tasks)
-        return true
+    private companion object {
+        const val FIELD_TASK_ID = "id"
+        const val FIELD_PROJECT_ID = "projectId"
+        const val FIELD_NAME = "name"
+        const val FIELD_STATE = "state"
     }
 }
