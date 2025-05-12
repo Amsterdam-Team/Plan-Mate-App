@@ -1,114 +1,104 @@
 package data.datasources.projectDataSource
 
 import com.mongodb.client.model.Filters
+import com.mongodb.client.model.UpdateOptions
 import com.mongodb.client.model.Updates
 import com.mongodb.kotlin.client.coroutine.MongoCollection
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.toList
 import logic.entities.Project
+import logic.entities.Task
 import logic.exception.PlanMateException.DataSourceException.ObjectDoesNotExistException
-import org.bson.Document
 import java.util.*
 
 class ProjectDataSource(
     private val projectCollection: MongoCollection<Project>
-): IProjectDataSource {
+) : IProjectDataSource {
     override suspend fun getAllProjects(): List<Project> {
         return projectCollection.find().toList()
     }
 
     override suspend fun getProjectById(projectId: UUID): Project {
-        return projectCollection.find(Filters.eq("id", projectId)).firstOrNull() ?: throw ObjectDoesNotExistException
+        return projectCollection.find(Filters.eq(FIELD_ID, projectId)).firstOrNull()
+            ?: throw ObjectDoesNotExistException
     }
 
     override suspend fun insertProject(project: Project): Boolean {
-        val existingProject = projectCollection.find(
+        val updateResult = projectCollection.updateOne(
             Filters.or(
-                Filters.eq("id", project.id),
-                Filters.eq("name", project.name)
-            )
-        ).firstOrNull()
+                Filters.eq(FIELD_ID, project.id),
+                Filters.eq(FIELD_NAME, project.name)
+            ),
+            Updates.combine(
+                Updates.setOnInsert(FIELD_NAME, project.name),
+                Updates.setOnInsert(FIELD_TASKS, emptyList<Task>()),
+                Updates.addEachToSet(FIELD_STATES, project.states)
+            ),
+            UpdateOptions().upsert(true)
+        )
 
-        if (existingProject != null) return false
-
-        return projectCollection.insertOne(project.copy(tasks = emptyList())).wasAcknowledged()
+        return updateResult.upsertedId != null || updateResult.modifiedCount > 0
     }
 
     override suspend fun deleteProject(projectId: UUID): Boolean {
-        val result = projectCollection.deleteOne(Filters.eq("id", projectId))
+        val result = projectCollection.deleteOne(Filters.eq(FIELD_ID, projectId))
         return result.deletedCount > 0
     }
 
     override suspend fun updateProjectName(projectId: UUID, newName: String): Boolean {
         val result = projectCollection.updateOne(
-            Filters.eq("id", projectId),
-            Updates.set("name", newName)
+            Filters.eq(FIELD_ID, projectId),
+            Updates.set(FIELD_NAME, newName)
         )
         return result.modifiedCount > 0
     }
 
-    override suspend fun replaceAllProjects(projects: List<Project>): Boolean {
-        val hasDuplicateId = projects.map { it.id }.toSet().size != projects.size
-        val hasDuplicateNames = projects.map { it.name }.toSet().size != projects.size
-
-        if (hasDuplicateId || hasDuplicateNames) return false
-
-        projectCollection.deleteMany(Document())
-        val result = projectCollection.insertMany(projects.map { it.copy(tasks = emptyList()) })
-        return result.wasAcknowledged() && result.insertedIds.size == projects.size
-    }
-
     override suspend fun insertProjectState(projectId: UUID, state: String): Boolean {
-        val project = projectCollection.find(Filters.eq("id", projectId)).firstOrNull() ?: return false
-
-        if (state in project.states) return false
-
-        val updatedStates = project.states.toMutableList()
-        updatedStates.add(state)
-
         val result = projectCollection.updateOne(
-            Filters.eq("id", projectId),
-            Updates.set("states", updatedStates)
+            Filters.eq(FIELD_ID, projectId),
+            Updates.addToSet(FIELD_STATES, state)
         )
-
         return result.modifiedCount > 0
     }
 
     override suspend fun getProjectStates(projectId: UUID): List<String> {
-        val project = projectCollection.find(Filters.eq("id", projectId)).firstOrNull() ?: return emptyList()
+        val project =
+            projectCollection.find(Filters.eq(FIELD_ID, projectId)).firstOrNull()
+                ?: return emptyList()
 
         return project.states
     }
 
     override suspend fun deleteProjectState(projectId: UUID, state: String): Boolean {
-        val project = projectCollection.find(Filters.eq("id", projectId)).firstOrNull() ?: return false
-
-        if (state !in project.states) return false
-
-        val updatedStates = project.states.filterNot { state == it }
-
-        val result = projectCollection.updateOne(
-            Filters.eq("id", projectId),
-            Updates.set("states", updatedStates)
-        )
+        val result =
+            projectCollection.updateOne(
+                Filters.eq(FIELD_ID, projectId),
+                Updates.pull(FIELD_STATES, state)
+            )
 
         return result.modifiedCount > 0
     }
 
-    override suspend fun updateProjectState(projectId: UUID, oldState: String, newState: String): Boolean {
-        val project = projectCollection.find(Filters.eq("id", projectId)).firstOrNull() ?: return false
+    override suspend fun updateProjectState(
+        projectId: UUID,
+        oldState: String,
+        newState: String
+    ): Boolean {
+        val idFilter = Filters.eq(FIELD_ID, projectId)
+        val removeResult =
+            projectCollection.updateOne(idFilter, Updates.pull(FIELD_STATES, oldState))
+        if (removeResult.modifiedCount.toInt() == 0) return false
 
-        if (oldState !in project.states) return false
+        val addResult =
+            projectCollection.updateOne(idFilter, Updates.addToSet(FIELD_STATES, newState))
 
-        if (newState in project.states) return false
+        return addResult.modifiedCount > 0
+    }
 
-        val updatedStates = project.states.map { if (it == oldState) newState else it }
-
-        val result = projectCollection.updateOne(
-            Filters.eq("id", projectId),
-            Updates.set("states", updatedStates)
-        )
-
-        return result.modifiedCount > 0
+    private companion object {
+        const val FIELD_ID = "id"
+        const val FIELD_NAME = "name"
+        const val FIELD_STATES = "states"
+        const val FIELD_TASKS = "tasks"
     }
 }
