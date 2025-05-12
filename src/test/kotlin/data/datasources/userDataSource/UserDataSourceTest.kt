@@ -187,7 +187,7 @@ class UserDataSourceTest {
     @Test
     fun `should return user when credentials match`() = runTest {
         // When
-        val result = dataSource.findUserByCredentials("omer faris", "ee2b80364a7b0f611d8eac7f1cf42cae")
+        val result = dataSource.findUserByCredentials(user1.username, user1.password)
 
         // Then
         assertThat(result).isEqualTo(user1)
@@ -197,7 +197,7 @@ class UserDataSourceTest {
     fun `should throw exception when credentials do not match any user`() = runTest{
         // When & Then
         assertThrows<ObjectDoesNotExistException>{
-            dataSource.findUserByCredentials(userNotInDatabase.username, userNotInDatabase.password)
+            dataSource.findUserByCredentials("omer faris", "ee2b80364a7b0f611d8eac7f1cf42cae")
         }
     }
     // endregion

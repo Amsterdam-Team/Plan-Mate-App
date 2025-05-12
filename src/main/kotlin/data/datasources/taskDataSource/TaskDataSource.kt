@@ -26,7 +26,7 @@ class TaskDataSource(
     }
 
     override suspend fun insertTask(task: Task): Boolean {
-        val result = tasksCollection.updateOne(
+        val updateResult = tasksCollection.updateOne(
             Filters.and(
                 Filters.eq(FIELD_PROJECT_ID, task.projectId),
                 Filters.eq(FIELD_NAME, task.name)
@@ -35,12 +35,12 @@ class TaskDataSource(
             UpdateOptions().upsert(true)
         )
 
-        return result.upsertedId != null
+        return updateResult.upsertedId != null
     }
 
     override suspend fun deleteTask(taskId: UUID): Boolean {
-        val result = tasksCollection.deleteOne(Filters.eq(FIELD_TASK_ID, taskId))
-        return result.deletedCount > 0
+        val deleteResult = tasksCollection.deleteOne(Filters.eq(FIELD_TASK_ID, taskId))
+        return deleteResult.deletedCount > 0
     }
 
     override suspend fun getTaskState(taskId: UUID): String {
@@ -61,20 +61,20 @@ class TaskDataSource(
 
         if (duplicateInSameProject != null) return false
 
-        val result = tasksCollection.updateOne(
+        val updateResult = tasksCollection.updateOne(
             Filters.eq(FIELD_TASK_ID, taskId),
             Updates.set(FIELD_NAME, newName)
         )
 
-        return result.modifiedCount > 0
+        return updateResult.modifiedCount > 0
     }
 
     override suspend fun updateTaskState(taskId: UUID, newState: String): Boolean {
-        val result = tasksCollection.updateOne(
+        val updateResult = tasksCollection.updateOne(
             Filters.eq(FIELD_TASK_ID, taskId),
             Updates.set(FIELD_STATE, newState)
         )
-        return result.modifiedCount > 0
+        return updateResult.modifiedCount > 0
     }
 
     private companion object {

@@ -1,48 +1,53 @@
 package data.datasources.logDataSource
 
 import com.mongodb.client.model.Filters
+import com.mongodb.client.model.UpdateOptions
+import com.mongodb.client.model.Updates
 import com.mongodb.kotlin.client.coroutine.MongoCollection
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.toList
 import logic.entities.LogItem
 import logic.exception.PlanMateException.DataSourceException.ObjectDoesNotExistException
-import org.bson.Document
 import java.util.*
 
-class LogDataSource(
-    private val logsCollection: MongoCollection<LogItem>
-): ILogDataSource {
+class LogDataSource(private val logsCollection: MongoCollection<LogItem>): ILogDataSource {
+
     override suspend fun getAllLogs(): List<LogItem> {
         return logsCollection.find().toList()
     }
 
     override suspend fun getLogsByEntityId(entityId: UUID): List<LogItem> {
-        return logsCollection.find(Filters.eq("entityId", entityId)).toList()
+        return logsCollection.find(Filters.eq(FIELD_ENTITY_ID, entityId)).toList()
     }
 
     override suspend fun getLogById(logId: UUID): LogItem {
-        return logsCollection.find(Filters.eq("id", logId)).firstOrNull()
+        return logsCollection.find(Filters.eq(FIELD_LOG_ID, logId)).firstOrNull()
             ?: throw ObjectDoesNotExistException
     }
 
     override suspend fun insertLog(logItem: LogItem): Boolean {
-        val existingLog = logsCollection.find(Filters.eq("id", logItem.id)).firstOrNull()
-        if (existingLog != null) return false
-
-        return logsCollection.insertOne(logItem).wasAcknowledged()
+        val insertResult = logsCollection.updateOne(
+            Filters.eq(FIELD_LOG_ID, logItem.id),
+            Updates.combine(
+                Updates.setOnInsert(FIELD_LOG_ID, logItem.id),
+                Updates.setOnInsert(FIELD_ENTITY_ID, logItem.entityId),
+                Updates.setOnInsert(FIELD_TIMESTAMP, logItem.date),
+                Updates.setOnInsert(FIELD_MESSAGE, logItem.message)
+            ),
+            UpdateOptions().upsert(true)
+        )
+        return insertResult.upsertedId != null
     }
 
     override suspend fun deleteLog(logId: UUID): Boolean {
-        val result = logsCollection.deleteOne(Filters.eq("id", logId))
-        return result.deletedCount > 0
+        val deleteResult = logsCollection.deleteOne(Filters.eq(FIELD_LOG_ID, logId))
+        return deleteResult.deletedCount > 0
     }
 
-    override suspend fun replaceAllLogs(logs: List<LogItem>): Boolean {
-        val hasDuplicateIds = logs.map { it.id }.toSet().size != logs.size
-        if (hasDuplicateIds) return false
-
-        logsCollection.deleteMany(Document())
-        val result = logsCollection.insertMany(logs)
-        return result.wasAcknowledged() && result.insertedIds.size == logs.size
+    private companion object {
+        const val FIELD_LOG_ID = "id"
+        const val FIELD_ENTITY_ID = "entityId"
+        const val FIELD_TIMESTAMP = "timestamp"
+        const val FIELD_MESSAGE = "message"
     }
 }
