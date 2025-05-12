@@ -24,21 +24,23 @@ class ViewAllProjectsUIController(
                 projects.forEach { project ->
                     printSwimlanesView(project)
                 }
+                if(stateManager.getLoggedInUser().isAdmin){
+                    startProjectAdminMenu()
+                }else {
+                    startProjectMateMenu()
+                }
             }
         )
-        if(stateManager.getLoggedInUser().isAdmin){
-            startProjectAdminMenu()
-        }else {
-            startProjectMateMenu()
-        }
+
     }
 
     private suspend fun startProjectAdminMenu() {
         mainMenuProjectsForAdmin(
             stateManager.getLoggedInUser(),
             onCreateProject = {
-
-            },
+                val createProjectUIController: CreateProjectUIController = CreateProjectUIController(getKoin().get(), getKoin().get())
+                createProjectUIController.execute()
+                              },
             onViewProject = {
                 val viewAllTasksByProjectIdUIController: ViewAllTaksByProjectIdUIController = getKoin().get()
                 viewAllTasksByProjectIdUIController.execute()

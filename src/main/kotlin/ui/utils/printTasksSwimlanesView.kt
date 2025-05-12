@@ -8,6 +8,10 @@ fun printTasksSwimlanesView(
     tasks: List<Task>,
 
     ) {
+    if(tasks.isEmpty()){
+        println("No Available tasks")
+        return
+    }
     val lanes = tasks.map { it.state }.distinct()
     val taskFormatter: (Task) -> String = { "${it.id} - ${it.name}" }
     val columnWidth = tasks.maxOfOrNull { taskFormatter(it).length }?.coerceAtLeast(20) ?: 20

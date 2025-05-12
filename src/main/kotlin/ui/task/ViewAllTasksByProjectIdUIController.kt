@@ -32,24 +32,25 @@ class ViewAllTaksByProjectIdUIController(
             },
             onSuccess = { tasks ->
                 printTasksSwimlanesView(tasks)
+                mainMenuTasks(
+                    onViewTaskDetails = {
+                        val ViewTaskDetailsUIController: ViewTaskDetailsUIController = getKoin().get()
+                        ViewTaskDetailsUIController.execute()
+                    },
+                    onCreateTask = {
+                        val controller = CreateTaskUIController(createTaskUseCase, consoleIO)
+                        controller.execute()
+                    },
+                    onViewTasksLogs = {
+                        val taskLogsUiControllers: ViewTaskLogsUIController = ViewTaskLogsUIController(getKoin().get(), getKoin().get())
+                        taskLogsUiControllers.execute()
+                    }
+
+
+                )
             }
         )
-        mainMenuTasks(
-            onViewTaskDetails = {
-                val ViewTaskDetailsUIController: ViewTaskDetailsUIController = getKoin().get()
-                ViewTaskDetailsUIController.execute()
-            },
-            onCreateTask = {
-                val controller = CreateTaskUIController(createTaskUseCase, consoleIO)
-                controller.execute()
-            },
-            onViewTasksLogs = {
-                val taskLogsUiControllers: ViewTaskLogsUIController = ViewTaskLogsUIController(getKoin().get(), getKoin().get())
-                taskLogsUiControllers.execute()
-            }
 
-
-            )
     }
 
 }
