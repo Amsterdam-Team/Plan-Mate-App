@@ -43,7 +43,7 @@ class GetProjectUIControllerTest {
         val project = createProject(UUID.fromString(projectID), "", listOf(), listOf())
         coEvery { usecase(any()) } returns project
         every { consoleIO.readFromUser() } returns projectID
-        every { printSwimlanesView(listOf(project)) } just Runs
+        every { printSwimlanesView(project) } just Runs
 
         //When
         uiController.execute()
@@ -51,7 +51,7 @@ class GetProjectUIControllerTest {
         //Then
         assertThat(slot.captured == "Enter Project ID :)")
         verify(exactly = 1) { consoleIO.readFromUser() }
-        verify { printSwimlanesView(listOf(project)) }
+        verify { printSwimlanesView(project) }
 
     }
 
