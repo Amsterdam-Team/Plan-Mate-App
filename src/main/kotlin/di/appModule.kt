@@ -82,10 +82,10 @@ val appModule = module {
     val viewAllTasksByProjectIdUiController = named("viewAllTasksByProjectIdUiController")
 
     // MongoCollections
-    single<MongoCollection<User>>(usersCollection){MongoDatabaseFactory.db.getCollection<User>("users")}
-    single<MongoCollection<Project>>(projectsCollection){MongoDatabaseFactory.db.getCollection<Project>("projects")}
-    single<MongoCollection<Task>>(tasksCollection){MongoDatabaseFactory.db.getCollection<Task>("tasks")}
-    single<MongoCollection<LogItem>>(logsCollection){MongoDatabaseFactory.db.getCollection<LogItem>("logs")}
+    single<MongoCollection<User>>(usersCollection){MongoDatabaseFactory.database.getCollection<User>("users")}
+    single<MongoCollection<Project>>(projectsCollection){MongoDatabaseFactory.database.getCollection<Project>("projects")}
+    single<MongoCollection<Task>>(tasksCollection){MongoDatabaseFactory.database.getCollection<Task>("tasks")}
+    single<MongoCollection<LogItem>>(logsCollection){MongoDatabaseFactory.database.getCollection<LogItem>("logs")}
 
     // DataSources
     single<ILogDataSource> { LogDataSource(get(logsCollection)) }
