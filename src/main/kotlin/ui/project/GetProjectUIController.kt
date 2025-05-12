@@ -19,7 +19,7 @@ class GetProjectUIController(
         tryToExecute({
             getProjectsUseCase(id)
         },{
-            printSwimlanesView(it)
+            printSwimlanesView(listOf(it))
         })
     }
 

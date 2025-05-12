@@ -12,9 +12,7 @@ class ViewAllProjectsUIController(
         tryToExecute (
             action = {getAllProjectsUseCase.execute()},
             onSuccess = { projects ->
-                projects.forEach { project ->
-                    printSwimlanesView(project)
-                }
+                printSwimlanesView(projects)
             }
         )
     }
