@@ -170,37 +170,6 @@ class ProjectDataSourceTest {
     }
     // endregion
 
-
-    // region replaceAllProjects
-    @Test
-    fun `should return true when all projects are replaced successfully`() = runTest {
-        // When
-        val result = dataSource.replaceAllProjects(projectsReplace)
-
-        // Then
-        assertThat(result).isTrue()
-
-    }
-
-    @Test
-    fun `should return false when projects have duplicated Ids`() = runTest {
-        // When
-        val result = dataSource.replaceAllProjects(duplicatedProjectIds)
-
-        // Then
-        assertThat(result).isFalse()
-    }
-
-    @Test
-    fun `should return false when projects have duplicated names`() = runTest {
-        // When
-        val result = dataSource.replaceAllProjects(duplicatedProjectNames)
-
-        // Then
-        assertThat(result).isFalse()
-    }
-    // endregion
-
     // region insertProjectState
     @Test
     fun `should return true when state is inserted successfully`() = runTest {

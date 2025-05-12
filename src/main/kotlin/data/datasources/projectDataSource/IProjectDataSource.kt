@@ -15,8 +15,6 @@ interface IProjectDataSource {
 
     suspend fun updateProjectName(projectId: UUID, newName: String): Boolean
 
-    suspend fun replaceAllProjects(projects: List<Project>): Boolean
-
     suspend fun insertProjectState(projectId: UUID, state: String): Boolean
 
     suspend fun getProjectStates(projectId: UUID): List<String>
