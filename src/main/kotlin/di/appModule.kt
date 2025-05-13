@@ -178,7 +178,7 @@ val appModule = module {
         )
     }
     single {TaskManagerView(get(),get(),get(),get())}
-    single { ProjectsView(get(),get(),get(),get(), get(), get(), get() ) }
+    single { ProjectsView(get(),get(),get(),get(), get(), get(), get(), get(), get(), get() ) }
 
     // Admin Menus
     single<Map<Int, BaseUIController>>(adminMap) {

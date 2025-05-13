@@ -130,10 +130,9 @@ class ProjectsView(
         val projectName = getValidatedInputString()
         consoleIO.println("Enter project states (comma separated; ex. todo, in progress....):")
         val projectStateString = getValidatedInputString()
-        if (projectName.isEmpty() || projectStateString.isEmpty()) {
-            createProject()
-        }
-        if (createProjectsUseCase.createProject(projectName, projectStateString.split(","))) {
+        val projectStates = projectStateString.split(',').map { it.trim() }
+
+        if (createProjectsUseCase.createProject(projectName,projectStates )) {
             consoleIO.println("Project with name ${projectName} created successfully")
             start()
         }
