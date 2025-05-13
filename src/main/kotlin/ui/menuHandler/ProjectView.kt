@@ -6,6 +6,7 @@ import logic.entities.Task
 import logic.usecases.logs.GetProjectHistoryUseCase
 import logic.usecases.project.CreateProjectUseCase
 import logic.usecases.project.DeleteProjectUseCase
+import logic.usecases.project.EditProjectUseCase
 import logic.usecases.project.GetAllProjectsUseCase
 import logic.usecases.user.CreateUserUseCase
 import logic.usecases.utils.StateManager
@@ -21,8 +22,8 @@ class ProjectsView(
     private val createUserUseCase: CreateUserUseCase,
     private val createProjectsUseCase: CreateProjectUseCase,
     private val deleteProjectUseCase: DeleteProjectUseCase,
-    private val getProjectHistoryUseCase: GetProjectHistoryUseCase
-
+    private val getProjectHistoryUseCase: GetProjectHistoryUseCase,
+    private val editProjectUseCase: EditProjectUseCase,
 ) {
     private lateinit var allProjects: List<Project>
     private lateinit var currentProject: Project
@@ -75,7 +76,7 @@ class ProjectsView(
                 "3" -> createProject()
                 "4" -> showProjectHistory()
                 "5" -> deleteProject()
-                "6" -> Unit
+                "6" -> editProject()
                 "7" -> Unit
                 "0" -> return
             }
@@ -179,6 +180,36 @@ class ProjectsView(
         }
 
     }
+
+    private suspend fun editProject() {
+        consoleIO.println("Enter the project number to edit, or 0 to exit:")
+        val input = consoleIO.readFromUser().trim()
+        if (input == "0") return
+
+        val projectIndex = input.toIntOrNull()
+        if (projectIndex == null || projectIndex !in 1..allProjects.size) {
+            consoleIO.println("Invalid project number. Please try again.")
+            return editProject()
+        }
+
+        val selectedProject = allProjects[projectIndex - 1]
+        consoleIO.println("Enter new name for project '${selectedProject.name}':")
+        val newName = getValidatedInputString()
+
+        try {
+            val isEdited = editProjectUseCase.editProjectName(selectedProject.id, newName)
+            if (isEdited) {
+                consoleIO.println("Project name updated successfully to '$newName'")
+            } else {
+                consoleIO.println("Failed to update project name.")
+            }
+        } catch (e: Exception) {
+            consoleIO.println(getErrorMessageByException(e))
+        }
+
+        start()
+    }
+
 
     private fun getValidatedInputString(): String {
 
