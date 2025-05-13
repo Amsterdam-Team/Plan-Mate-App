@@ -8,6 +8,7 @@ import logic.usecases.project.CreateProjectUseCase
 import logic.usecases.project.DeleteProjectUseCase
 import logic.usecases.project.EditProjectUseCase
 import logic.usecases.project.GetAllProjectsUseCase
+import logic.usecases.state.AddStateUseCase
 import logic.usecases.user.CreateUserUseCase
 import logic.usecases.utils.StateManager
 import ui.console.ConsoleIO
@@ -24,6 +25,7 @@ class ProjectsView(
     private val deleteProjectUseCase: DeleteProjectUseCase,
     private val getProjectHistoryUseCase: GetProjectHistoryUseCase,
     private val editProjectUseCase: EditProjectUseCase,
+    private val addStateUseCase: AddStateUseCase
 ) {
     private lateinit var allProjects: List<Project>
     private lateinit var currentProject: Project
@@ -77,7 +79,7 @@ class ProjectsView(
                 "4" -> showProjectHistory()
                 "5" -> deleteProject()
                 "6" -> editProject()
-                "7" -> Unit
+                "7" -> addState()
                 "0" -> return
             }
 
@@ -202,6 +204,35 @@ class ProjectsView(
                 consoleIO.println("Project name updated successfully to '$newName'")
             } else {
                 consoleIO.println("Failed to update project name.")
+            }
+        } catch (e: Exception) {
+            consoleIO.println(getErrorMessageByException(e))
+        }
+
+        start()
+    }
+
+    suspend fun addState() {
+        consoleIO.println("Enter the project number to add a state to, or 0 to exit:")
+        val input = consoleIO.readFromUser().trim()
+        if (input == "0") return
+
+        val projectIndex = input.toIntOrNull()
+        if (projectIndex == null || projectIndex !in 1..allProjects.size) {
+            consoleIO.println("Invalid project number. Please try again.")
+            return addState()
+        }
+
+        val selectedProject = allProjects[projectIndex - 1]
+        consoleIO.println("Enter the new state name to add to project '${selectedProject.name}':")
+        val newState = getValidatedInputString()
+
+        try {
+            val isAdded = addStateUseCase.execute(selectedProject.id.toString(), newState)
+            if (isAdded) {
+                consoleIO.println("State '$newState' added successfully to project '${selectedProject.name}'")
+            } else {
+                consoleIO.println("Failed to add state.")
             }
         } catch (e: Exception) {
             consoleIO.println(getErrorMessageByException(e))
