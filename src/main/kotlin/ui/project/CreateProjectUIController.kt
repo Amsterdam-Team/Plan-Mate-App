@@ -3,17 +3,20 @@ package ui.project
 import logic.usecases.project.CreateProjectUseCase
 import ui.console.ConsoleIO
 import ui.controller.BaseUIController
+import ui.utils.DisplayUtils.printError
+import ui.utils.DisplayUtils.printSuccess
+import ui.utils.DisplayUtils.promptInput
 import ui.utils.tryToExecute
 
 class CreateProjectUIController(
     private val createProjectUseCase: CreateProjectUseCase, private val consoleIO: ConsoleIO
 ) : BaseUIController {
 
-    override suspend  fun execute() {
+    override suspend fun execute() {
 
-        consoleIO.println(PROJECT_NAME_PROMPT_MESSAGE)
+        promptInput(PROJECT_NAME_PROMPT_MESSAGE)
         val projectName = consoleIO.readFromUser()
-        consoleIO.println(PROJECT_STATES_PROMPT_MESSAGE)
+        promptInput(PROJECT_STATES_PROMPT_MESSAGE)
         val state = consoleIO.readFromUser()
         val projectStates = state.split(",").map { it.trim() }
 
@@ -26,13 +29,13 @@ class CreateProjectUIController(
 
     private fun onCreateProjectSuccess(isCreatedSuccessfully: Boolean) {
         if (isCreatedSuccessfully) {
-            consoleIO.println(PROJECT_CREATED_SUCCESSFULLY_MESSAGE)
+            printSuccess(PROJECT_CREATED_SUCCESSFULLY_MESSAGE)
             return
         }
     }
 
     private suspend fun onCreateProjectFail(exception: Exception) {
-        consoleIO.println(FAIL_TO_CREATE_PROJECT_MESSAGE)
+        printError(FAIL_TO_CREATE_PROJECT_MESSAGE)
 
         val input = consoleIO.readFromUser().trim().uppercase()
         when (input) {
@@ -49,6 +52,7 @@ class CreateProjectUIController(
         const val PROJECT_CREATED_SUCCESSFULLY_MESSAGE = "✅ Your project has been Created Successfully"
         const val RETRY = "retry"
         const val CANCEL = "cancel"
-        const val FAIL_TO_CREATE_PROJECT_MESSAGE = "❌ Please Enter All Inputs Correctly, inter $RETRY or $CANCEL"
+        const val FAIL_TO_CREATE_PROJECT_MESSAGE =
+            "Please Enter All Inputs Correctly,\n Enter $RETRY to re enter ur inputs again or $CANCEL to exit"
     }
 }

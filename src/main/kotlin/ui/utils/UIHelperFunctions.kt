@@ -1,33 +1,20 @@
 package ui.utils
 
 import logic.exception.PlanMateException.AuthorizationException.*
+import logic.exception.PlanMateException.DataSourceException.ObjectDoesNotExistException
 import logic.exception.PlanMateException.NotFoundException.*
 import logic.exception.PlanMateException.ParsingException.CsvFormatException
 import logic.exception.PlanMateException.ValidationException.*
 
-fun String.printAsASuccessState() {
-    val green = "\u001B[32m"
-    val reset = "\u001B[0m"
-    println("$green$this$reset")
-}
-
-fun String.printAsAFailState() {
-    val red = "\u001b[31m"
-    val reset = "\u001B[0m"
-    println("$red$this$reset")
-}
 
 fun getErrorMessageByException(exception: Exception): String {
 
     return when (exception) {
         is AdminPrivilegesRequiredException -> "You need admin privileges to perform this action."
 
+        is WrongPasswordException -> "The password you entered is wrong , Please enter correct password"
 
-        is WrongPasswordException ->
-               "The password you entered is wrong , Please enter correct password"
-
-        is WrongUsernameException ->
-            "The user name you entered is wrong , Please enter correct user name"
+        is WrongUsernameException -> "The user name you entered is wrong , Please enter correct user name"
 
         is UserNotFoundException -> "User not found. Please check the user ID or try again."
 
@@ -57,12 +44,17 @@ fun getErrorMessageByException(exception: Exception): String {
 
         is EmptyProjectStatesException -> "Project states shouldn't be empty,Please enter the project states"
 
-
         is SameStateNameException -> "Current state and new state are identical. No changes applied."
+
         is TaskLogsNotFound -> "This task not have any logs till now..."
+
         is InvalidUUIDFormatException -> "Invalid UUID Format"
+
         is UnAuthenticatedException -> "Not logged in, please login first."
+
         is EmptyDataException -> "You must enter some data, this field cannot be empty"
+
+        is ObjectDoesNotExistException -> "No data was found for ur input"
 
         else -> "An unexpected error occurred. Please try again later."
     }

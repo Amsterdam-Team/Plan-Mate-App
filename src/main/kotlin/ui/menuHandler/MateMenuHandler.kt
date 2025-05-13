@@ -1,18 +1,18 @@
 package ui.menuHandler
 
 import ui.controller.BaseUIController
+import ui.utils.DisplayUtils.printBoxedMessage
 
-class MateMenuHandler(private val mateFeatureControllers: Map<Int, BaseUIController>): MainMenuHandler(){
+class MateMenuHandler(private val mateFeatureControllers: Map<Int, BaseUIController>) : MainMenuHandler() {
 
     public override suspend fun start() {
         baseMenuStart(
-            showMenu = ::showMateMenu,
-            featureControllers = mateFeatureControllers
+            showMenu = ::showMateMenu, featureControllers = mateFeatureControllers
         )
     }
 
     private fun showMateMenu() {
-        println(
+        printBoxedMessage(
             """
     ================================
     Mate Main Menu

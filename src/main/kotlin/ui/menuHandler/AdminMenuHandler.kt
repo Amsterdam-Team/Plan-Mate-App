@@ -1,20 +1,20 @@
 package ui.menuHandler
 
 import ui.controller.BaseUIController
+import ui.utils.DisplayUtils.printBoxedMessage
 
 
-class AdminMenuHandler(private val adminFeatureControllers: Map<Int, BaseUIController>): MainMenuHandler() {
+class AdminMenuHandler(private val adminFeatureControllers: Map<Int, BaseUIController>) : MainMenuHandler() {
 
     public override suspend fun start() {
         super.start()
         baseMenuStart(
-            showMenu = ::showAdminMenu,
-            featureControllers = adminFeatureControllers
+            showMenu = ::showAdminMenu, featureControllers = adminFeatureControllers
         )
     }
 
     private fun showAdminMenu() {
-        println(
+        printBoxedMessage(
             """
     ================================
     Admin Main Menu

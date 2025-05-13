@@ -20,27 +20,24 @@ class ViewTaskDetailsUIController(
     override suspend fun execute() {
         consoleIO.println("🔍 Please enter Task ID to view details:")
 
-        tryToExecute(
-            action = {
-                val taskId = consoleIO.readFromUser()
-                getTaskByIdUseCase(taskId)
-            },
-            onSuccess = { task ->
-                showTaskDetails(task)
-                showTaskOptionsMenu(
+        tryToExecute(action = {
+            val taskId = consoleIO.readFromUser()
+            getTaskByIdUseCase(taskId)
+        }, onSuccess = { task ->
+            showTaskDetails(task)
+            showTaskOptionsMenu(
 
-                    onEditTaskDetails = {
-                        //todo EditTask UIController
+                onEditTaskDetails = {
+                    //todo EditTask UIController
 
-                    },
-                    onDeleteTaskDetails = {
-                        deleteTaskUseCase.execute(task.id.toString())
-                    },
-                    onBackTask = {},
-                )
+                },
+                onDeleteTaskDetails = {
+                    deleteTaskUseCase.execute(task.id.toString())
+                },
+                onBackTask = {},
+            )
 
-            }
-        )
+        })
     }
 
 
@@ -54,7 +51,7 @@ class ViewTaskDetailsUIController(
 
     //
     private suspend fun showTaskOptionsMenu(
-        onEditTaskDetails:  () -> Unit,
+        onEditTaskDetails: () -> Unit,
         onDeleteTaskDetails: suspend () -> Unit,
         onBackTask: () -> Unit,
 
