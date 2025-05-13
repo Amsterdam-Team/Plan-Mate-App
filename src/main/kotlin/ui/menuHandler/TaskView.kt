@@ -1,9 +1,12 @@
+package ui.menuHandler
+
 import logic.entities.Project
 import logic.entities.Task
 import logic.usecases.logs.ViewTaskLogsUseCase
 import logic.usecases.task.CreateTaskUseCase
 import logic.usecases.task.DeleteTaskUseCase
 import logic.usecases.task.EditTaskUseCase
+import logic.usecases.task.GetAllTasksByProjectIdUseCase
 import ui.console.ConsoleIO
 import ui.utils.getErrorMessageByException
 
@@ -12,6 +15,7 @@ class TaskManagerView(
     private val deleteTaskUseCase: DeleteTaskUseCase,
     private val viewTaskLogsUseCase: ViewTaskLogsUseCase,
     private val editTaskUseCase: EditTaskUseCase,
+    private val getAllTasksByProjectIdUseCase: GetAllTasksByProjectIdUseCase,
     private val consoleIO: ConsoleIO
 ) {
     private lateinit var currentProject: Project
@@ -56,23 +60,46 @@ class TaskManagerView(
         consoleIO.println("Enter task state; ${currentProject.states}:")
         val taskState = getValidatedInputString()
 
-        createTaskUseCase.createTask(taskName, currentProject.id.toString(), taskState)
-        consoleIO.println("Task '$taskName' created successfully!")
+        try {
+            createTaskUseCase.createTask(taskName, currentProject.id.toString(), taskState)
+            consoleIO.println("Task '$taskName' created successfully.")
+
+            refreshProjectTasks()
+
+        } catch (e: Exception) {
+            consoleIO.println(getErrorMessageByException(e))
+        }
+
         showTaskOptions(currentProject)
     }
+
 
     private suspend fun deleteTask() {
         showAllTasks()
         val index = getValidatedTaskIndex()
         val selectedTask = currentTasks[index]
 
-        if (deleteTaskUseCase.execute(selectedTask.id.toString())) {
-            consoleIO.println("Task Deleted Successfully.")
-        } else {
-            consoleIO.println("Failed to delete task.")
+        try {
+            val isDeleted = deleteTaskUseCase.execute(selectedTask.id.toString())
+
+            if (isDeleted) {
+                consoleIO.println("Task '${selectedTask.name}' deleted successfully.")
+
+                refreshProjectTasks()
+
+                if (currentTasks.isEmpty()) {
+                    consoleIO.println("No tasks remaining in this project.")
+                }
+            } else {
+                consoleIO.println("Failed to delete task.")
+            }
+        } catch (e: Exception) {
+            consoleIO.println(getErrorMessageByException(e))
         }
+
         showTaskOptions(currentProject)
     }
+
 
     private suspend fun showTaskLogs() {
         showAllTasks()
@@ -80,8 +107,17 @@ class TaskManagerView(
         val selectedTask = currentTasks[index]
 
         consoleIO.println("Logs for Task '${selectedTask.name}':")
+
         val logs = viewTaskLogsUseCase.viewTaskLogs(selectedTask.id.toString())
-        logs.forEach { consoleIO.println(it.message) }
+
+        if (logs.isEmpty()) {
+            consoleIO.println("No logs available for this task.")
+        } else {
+            logs.forEach { log ->
+                consoleIO.println("- ${log.message}")
+            }
+        }
+
         showTaskOptions(currentProject)
     }
 
@@ -95,8 +131,16 @@ class TaskManagerView(
         consoleIO.println("Enter new name (leave blank to keep '${selectedTask.name}'):")
         val newName = consoleIO.readFromUser().trim().ifEmpty { selectedTask.name }
 
-        consoleIO.println("Enter new state (leave blank to keep '${selectedTask.state}'): ${currentProject.states}")
-        val newState = consoleIO.readFromUser().trim().ifEmpty { selectedTask.state }
+        val validStates = currentProject.states
+        var newState: String
+        while (true) {
+            consoleIO.println("Enter new state (leave blank to keep '${selectedTask.state}'): $validStates")
+            val input = consoleIO.readFromUser().trim()
+            newState = input.ifBlank { selectedTask.state }
+
+            if (validStates.contains(newState)) break
+            consoleIO.println("Invalid state. Please enter one of the listed states.")
+        }
 
         try {
             val updated = editTaskUseCase.editTask(
@@ -111,7 +155,7 @@ class TaskManagerView(
                 consoleIO.println("No changes were made.")
             }
 
-            currentTasks = currentProject.tasks
+            refreshProjectTasks()
 
         } catch (e: Exception) {
             consoleIO.println(getErrorMessageByException(e))
@@ -146,4 +190,12 @@ class TaskManagerView(
             consoleIO.println("Invalid task number. Please try again.")
         }
     }
+
+    private suspend fun refreshProjectTasks() {
+        val allTasks = getAllTasksByProjectIdUseCase(currentProject.id.toString())
+        currentTasks = allTasks.filter { currentProject.states.contains(it.state) }
+
+        currentProject = currentProject.copy(tasks = currentTasks)
+    }
+
 }

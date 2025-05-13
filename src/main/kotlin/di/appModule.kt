@@ -1,6 +1,6 @@
 package di
 
-import TaskManagerView
+import ui.menuHandler.TaskManagerView
 import com.mongodb.kotlin.client.coroutine.MongoCollection
 import data.datasources.MongoDatabaseFactory
 import data.datasources.logDataSource.ILogDataSource
@@ -177,7 +177,7 @@ val appModule = module {
             8 to get(viewTaskLogsUiController)
         )
     }
-    single {TaskManagerView(get(),get(),get(),get(), get())}
+    single { TaskManagerView(get(),get(),get(),get(), get(), get()) }
     single { ProjectsView(get(),get(),get(),get(), get(), get(), get() ) }
 
     // Admin Menus
