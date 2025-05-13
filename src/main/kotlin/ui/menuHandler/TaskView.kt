@@ -78,6 +78,10 @@ class TaskManagerView(
     }
 
     private suspend fun showTaskLogs() {
+        if(currentProject.tasks.isEmpty()){
+            consoleIO.println("No Logs Available")
+            return
+        }
         showAllTasks()
         val index = getValidatedTaskIndex()
         val selectedTask = currentTasks[index]
