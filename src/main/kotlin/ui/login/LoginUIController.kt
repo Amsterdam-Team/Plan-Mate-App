@@ -6,9 +6,7 @@ import ui.console.ConsoleIO
 import ui.controller.BaseUIController
 import ui.menuHandler.AdminMenuHandler
 import ui.menuHandler.MateMenuHandler
-import ui.project.CreateProjectUIController
 import ui.utils.DisplayUtils.printError
-import ui.utils.DisplayUtils.printSubTitle
 import ui.utils.DisplayUtils.printSuccess
 import ui.utils.DisplayUtils.printTitle
 import ui.utils.DisplayUtils.promptInput

@@ -19,8 +19,8 @@ class LoggerUseCase(
         val currentDateTime : LocalDateTime= Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
         val formattedLogMessage = buildString {
             append(message)
-            append("by ${stateManager.getLoggedInUser().username}")
-            append("on ${currentDateTime.toString()}")
+            append("$BY_KEYWORD ${stateManager.getLoggedInUser().username}")
+            append("$ON_KEYWORD ${currentDateTime.toString()}")
         }
         val logItem = LogItem(
             id = UUID.randomUUID(),
@@ -29,5 +29,10 @@ class LoggerUseCase(
             entityId = entityId
         )
         return logRepository.addLog(logItem)
+    }
+
+    companion object{
+        const val BY_KEYWORD = "by"
+        const val ON_KEYWORD = "on"
     }
 }

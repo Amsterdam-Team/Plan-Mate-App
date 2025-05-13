@@ -40,11 +40,15 @@ class DeleteStateUseCase(
         val deleted = repository.deleteStateById(uuid, state)
 
         if (deleted) {
-            loggerUseCase.createLog("Delete State ${state} in Project Name  ${project.name}", uuid)
+            loggerUseCase.createLog("$DELETE_STATE_KEYWORD ${state} $IN_PROJECT_NAME_KEYWORD ${project.name}", uuid)
         }
 
         return deleted
+    }
 
+    companion object{
+        const val  DELETE_STATE_KEYWORD = "Delete State"
+        const val  IN_PROJECT_NAME_KEYWORD = "in Project Name"
     }
 }
 

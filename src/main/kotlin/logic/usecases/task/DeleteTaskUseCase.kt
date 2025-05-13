@@ -17,7 +17,12 @@ class DeleteTaskUseCase(
             throw InvalidTaskIDException
         }
         return taskRepository.deleteTask(taskUUID).also { isDeleted ->
-            if(isDeleted) loggerUseCase.createLog("deleted ${taskRepository.getTaskById(taskUUID).name} task",taskUUID)
+            if(isDeleted) loggerUseCase.createLog("$DELETED_KEYWORD ${taskRepository.getTaskById(taskUUID).name} $TASK_KEYWORD",taskUUID)
         }
+    }
+
+    companion object{
+        const val  DELETED_KEYWORD = "deleted"
+        const val  TASK_KEYWORD = "task"
     }
 }

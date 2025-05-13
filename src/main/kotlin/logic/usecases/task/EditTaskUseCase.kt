@@ -29,7 +29,7 @@ class EditTaskUseCase(
             val nameUpdated = taskRepository.updateTaskNameByID(taskUUID, newName)
             if (!nameUpdated) throw TaskNotFoundException
 
-            loggerUseCase.createLog("Updated task ${existingTask.name} name to $newName", taskUUID)
+            loggerUseCase.createLog("$UPDATE_TASK_KEYWORD ${existingTask.name} $NAME_TO_KEYWORD $newName", taskUUID)
 
             hasChanges = true
         }
@@ -39,7 +39,7 @@ class EditTaskUseCase(
             if (!stateUpdated) throw TaskNotFoundException
 
             loggerUseCase.createLog(
-                "Updated task ${existingTask.name} state from ${existingTask.state} to $newState",
+                "$UPDATE_TASK_KEYWORD ${existingTask.name} $STATE_FROM_KEYWORD ${existingTask.state} $TO_KEYWORD $newState",
                 taskUUID
             )
 
@@ -72,5 +72,12 @@ class EditTaskUseCase(
         } catch (_: IllegalArgumentException) {
             throw InvalidTaskIDException
         }
+    }
+
+    companion object{
+        const val  UPDATE_TASK_KEYWORD = "Updated task"
+        const val  NAME_TO_KEYWORD = "name to"
+        const val  STATE_FROM_KEYWORD = "state from"
+        const val TO_KEYWORD = "to"
     }
 }

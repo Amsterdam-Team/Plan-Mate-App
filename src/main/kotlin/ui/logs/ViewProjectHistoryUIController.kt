@@ -40,7 +40,5 @@ class ViewProjectHistoryUIController(
         const val RETRY = "retry"
         const val CANCEL = "cancel"
         const val FAIL_TO_GET_PROJECTS_HISTORY_MESSAGE = "Enter $RETRY to re enter a new id again or $CANCEL to exit"
-
-
     }
 }

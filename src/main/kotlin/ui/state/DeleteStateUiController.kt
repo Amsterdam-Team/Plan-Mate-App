@@ -12,16 +12,20 @@ class DeleteStateUiController(
 
 
     override suspend fun execute() {
-        consoleIO.println("Enter project ID :)")
+        consoleIO.println(ENTER_PROJECT_ID_MESSAGE)
         val id = consoleIO.readFromUser()
-        consoleIO.println("Enter  State :)")
+        consoleIO.println(ENTER_STATE_MESSAGE)
         val oldState = consoleIO.readFromUser()
 
         tryToExecute(
             action = { deleteStateUseCase(id, oldState) },
-            onSuccess = { consoleIO.println("State Delete Successfully") })
+            onSuccess = { consoleIO.println(DELETE_STATE_MESSAGE) })
 
     }
 
-
+    companion object{
+        const val ENTER_PROJECT_ID_MESSAGE = "Enter project ID :)"
+        const val ENTER_STATE_MESSAGE = "Enter  State :)"
+        const val DELETE_STATE_MESSAGE = "State Delete Successfully"
+    }
 }

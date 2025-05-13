@@ -43,8 +43,9 @@ class FileManager<T>(name: String) {
 
     companion object {
         inline fun <reified T> create(): FileManager<T> {
-            val name = T::class.simpleName?.lowercase() ?: "unknown"
+            val name = T::class.simpleName?.lowercase() ?: UNKNOWN
             return FileManager(name)
         }
+        const val UNKNOWN = "unknown"
     }
 }

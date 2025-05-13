@@ -25,7 +25,7 @@ class EditProjectUseCase(
         validateProjectNameNotTaken(projectId, newName)
 
         return projectRepository.updateProjectNameById(projectId, newName).also { isEdited ->
-            if (isEdited) loggerUseCase.createLog("Edited project ${project.name} name to $newName", projectId)
+            if (isEdited) loggerUseCase.createLog("$EDITE_PROJECT_KEYWORD ${project.name} $NAME_TO_KEYWORD $newName", projectId)
         }
     }
 
@@ -53,5 +53,10 @@ class EditProjectUseCase(
         if (nameExists) {
             throw PlanMateException.ValidationException.ProjectNameAlreadyExistException
         }
+    }
+
+    companion object{
+        const val  EDITE_PROJECT_KEYWORD = "Edited Project"
+        const val  NAME_TO_KEYWORD = "Name To"
     }
 }

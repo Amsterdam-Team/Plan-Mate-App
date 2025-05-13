@@ -53,6 +53,4 @@ class UpdateStateUiController(
             "Please Enter All Inputs Correctly,\n Enter $RETRY to re enter ur inputs again or $CANCEL to exit"
 
     }
-
-
 }

@@ -22,8 +22,13 @@ class DeleteProjectUseCase(
         val projectUUID = UUID.fromString(projectId)
         val project = projectRepository.getProjectById(projectUUID)
         return projectRepository.deleteProjectById(projectUUID).also { isDeleted ->
-            if (isDeleted) loggerUseCase.createLog("deleted ${project.name} Project", projectUUID)
+            if (isDeleted) loggerUseCase.createLog("$DELETE_KEYWORD ${project.name} $PROJECT_KEYWORD", projectUUID)
         }
+    }
+
+    companion object{
+        const val  DELETE_KEYWORD = "Deleted"
+        const val  PROJECT_KEYWORD = "Project"
     }
 
 

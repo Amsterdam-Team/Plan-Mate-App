@@ -47,7 +47,7 @@ class CreateTaskUseCase(
                 state = state
             )
         ).also { isCreated ->
-            if(isCreated) loggerUseCase.createLog("Created $name task",taskUUID)
+            if(isCreated) loggerUseCase.createLog("$CREATED_KEYWORD $name $TASK_KEYWORD",taskUUID)
         }
     }
 
@@ -59,4 +59,8 @@ class CreateTaskUseCase(
         return state in projectStates
     }
 
+    companion object{
+        const val  CREATED_KEYWORD = "Created"
+        const val  TASK_KEYWORD = "task"
+    }
 }

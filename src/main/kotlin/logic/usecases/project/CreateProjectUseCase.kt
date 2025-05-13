@@ -24,7 +24,12 @@ class CreateProjectUseCase(
         val projectId = UUID.randomUUID()
         val createdProject = Project(id = projectId, name = name, states = states, tasks = emptyList())
         return projectRepository.createProject(createdProject).also { isCreated ->
-            if (isCreated) loggerUseCase.createLog("created $name Project", projectId)
+            if (isCreated) loggerUseCase.createLog("$CREATED_KEYWORD $name $PROJECT_KEYWORD", projectId)
         }
+    }
+
+    companion object{
+        const val  CREATED_KEYWORD = "Created"
+        const val  PROJECT_KEYWORD = "Project"
     }
 }

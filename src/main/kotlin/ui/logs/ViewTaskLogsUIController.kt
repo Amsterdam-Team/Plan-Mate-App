@@ -40,6 +40,5 @@ class ViewTaskLogsUIController(
         const val RETRY = "retry"
         const val CANCEL = "cancel"
         const val RETRY_MESSAGE = "Enter $RETRY to re enter a new id again or $CANCEL to exit"
-
     }
 }
