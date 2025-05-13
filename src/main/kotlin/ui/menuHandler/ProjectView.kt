@@ -1,6 +1,6 @@
 package ui.menuHandler
 
-import TaskManagerView
+
 import logic.entities.Project
 import logic.entities.Task
 import logic.usecases.logs.GetProjectHistoryUseCase
@@ -156,7 +156,7 @@ class ProjectsView(
         } else {
             consoleIO.println("History for project '${selectedProject.name}':")
             history.forEach { log ->
-                consoleIO.println("- $log")
+                consoleIO.println("- ${log.message}")
             }
         }
 
@@ -165,15 +165,16 @@ class ProjectsView(
 
 
     suspend fun deleteProject() {
-        consoleIO.println("Enter the project number to view, or 0 to exit:")
+        consoleIO.println("Enter the project number to delete, or 0 to exit:")
         val input = consoleIO.readFromUser().trim()
         if (input == "0") return
 
-        val projectIndex = input.toIntOrNull()
+        var projectIndex = input.toIntOrNull()
         if (projectIndex == null || projectIndex !in 1..allProjects.size) {
             consoleIO.println("Invalid project number. Please try again.")
             deleteProject()
         }
+        projectIndex = projectIndex?.minus(1)
         val currentSSelectedProject = projectIndex?.let { allProjects.get(it) }
         if (deleteProjectUseCase.deleteProject(currentSSelectedProject?.id.toString())) {
             consoleIO.println("Project deleted successfully")

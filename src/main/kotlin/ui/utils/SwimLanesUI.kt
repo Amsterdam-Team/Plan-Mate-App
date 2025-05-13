@@ -21,7 +21,7 @@ fun printSwimlanesView(
 
     val maxTasks = laneMap.values.maxOfOrNull { it.size } ?: 0
 
-    println("\nProject: ${project.name} [ID : ${project.id} ]\n")
+    println("\nProject: ${project.name} \n")
 
     println(lanes.joinToString(" | ") { it.padEnd(columnWidth) })
     println("-".repeat((columnWidth + 3) * lanes.size - 3))
