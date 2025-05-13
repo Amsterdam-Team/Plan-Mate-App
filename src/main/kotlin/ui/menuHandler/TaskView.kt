@@ -5,6 +5,7 @@ import logic.usecases.task.CreateTaskUseCase
 import logic.usecases.task.DeleteTaskUseCase
 import ui.console.ConsoleIO
 import ui.utils.getErrorMessageByException
+import ui.utils.printSwimlanesView
 import java.util.UUID
 
 class TaskManagerView(
@@ -52,11 +53,15 @@ class TaskManagerView(
 
         consoleIO.println("Enter task state; ${currentProject.states}:")
         val taskState = getValidatedInputString()
-
+        if (currentProject.states.find { it == taskState } == null ){
+            consoleIO.println("Please enter valid state name; allowed states are ${currentProject.states}")
+            createTask()
+        }
         if(createTaskUseCase.createTask(taskName, currentProject.id.toString(), taskState)){
             consoleIO.println("Task '$taskName' created successfully!")
+            return
         }
-        showTaskOptions(currentProject)
+
     }
 
     private suspend fun deleteTask() {
