@@ -1,20 +1,18 @@
 package logic.usecases.project
 
+import logic.entities.Project
 import logic.entities.User
 import logic.exception.PlanMateException
 import logic.repository.ProjectRepository
-import java.util.*
-import logic.usecases.utils.ValidateInputUseCase
-import logic.entities.Project
-import logic.usecases.logs.LoggerUseCase
 import logic.usecases.utils.StateManager
+import logic.usecases.utils.ValidateInputUseCase
+import java.util.*
 
 
 class EditProjectUseCase(
     private val projectRepository: ProjectRepository,
     private val validateInputUseCase: ValidateInputUseCase,
     private val stateManager: StateManager,
-    private val loggerUseCase: LoggerUseCase
     )  {
 
     suspend fun editProjectName( projectId: UUID, newName: String) : Boolean {
@@ -24,9 +22,7 @@ class EditProjectUseCase(
         val project = ensureProjectExists(projectId)
         validateProjectNameNotTaken(projectId, newName)
 
-        return projectRepository.updateProjectNameById(projectId, newName).also { isEdited ->
-            if (isEdited) loggerUseCase.createLog("Edited project ${project.name} name to $newName", projectId)
-        }
+        return projectRepository.updateProjectNameById(projectId, newName)
     }
 
     private fun validateAdmin(user: User) {

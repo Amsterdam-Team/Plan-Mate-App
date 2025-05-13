@@ -1,4 +1,4 @@
-package data.datasources
+package data.datasources.mongoUtils
 
 import com.mongodb.ConnectionString
 import com.mongodb.MongoClientSettings
@@ -15,7 +15,9 @@ object MongoDatabaseFactory {
         .uuidRepresentation(UuidRepresentation.STANDARD)
         .build()
 
-    val db = MongoClient
+    val client = MongoClient
         .create(settings)
+
+    val db = client
         .getDatabase("Amsterdam")
 }

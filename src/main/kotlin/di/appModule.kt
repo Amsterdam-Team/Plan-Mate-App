@@ -1,15 +1,17 @@
 package di
 
 import com.mongodb.kotlin.client.coroutine.MongoCollection
-import data.datasources.MongoDatabaseFactory
 import data.datasources.logDataSource.ILogDataSource
 import data.datasources.logDataSource.LogDataSource
+import data.datasources.mongoUtils.MongoDatabaseFactory
+import data.datasources.mongoUtils.MongoTransactionManager
 import data.datasources.projectDataSource.IProjectDataSource
 import data.datasources.projectDataSource.ProjectDataSource
 import data.datasources.taskDataSource.ITaskDataSource
 import data.datasources.taskDataSource.TaskDataSource
 import data.datasources.userDataSource.IUserDataSource
 import data.datasources.userDataSource.UserDataSource
+import data.proxy.ProjectRepositoryProxy
 import data.repository.auth.AuthRepositoryImpl
 import data.repository.log.LogRepositoryImpl
 import data.repository.project.ProjectRepositoryImpl
@@ -31,7 +33,6 @@ import logic.usecases.state.*
 import logic.usecases.task.*
 import logic.usecases.user.CreateUserUseCase
 import logic.usecases.utils.StateManager
-import logic.usecases.utils.ValidateInputUseCase
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import ui.console.ConsoleIO
@@ -47,7 +48,6 @@ import ui.state.AddStateUIController
 import ui.state.UpdateStateUiController
 import ui.task.*
 import ui.user.CreateUserUIController
-import java.util.*
 
 val appModule = module {
 
@@ -81,11 +81,22 @@ val appModule = module {
     val viewTaskDetailsUiController = named("viewTaskDetailsUiController")
     val viewAllTasksByProjectIdUiController = named("viewAllTasksByProjectIdUiController")
 
+    // Repository Implementation Names
+    val userRepositoryImpl = named("userRepository")
+    val taskRepositoryImpl = named("taskRepository")
+    val logRepositoryImpl = named("logRepository")
+    val projectRepositoryImpl = named("projectRepository")
+
+    // Repository Proxies Names
+    val userRepositoryProxy = named("userRepositoryProxy")
+    val taskRepositoryProxy = named("taskRepositoryProxy")
+    val projectRepositoryProxy = named("projectRepositoryProxy")
+
     // MongoCollections
-    single<MongoCollection<User>>(usersCollection){MongoDatabaseFactory.db.getCollection<User>("users")}
-    single<MongoCollection<Project>>(projectsCollection){MongoDatabaseFactory.db.getCollection<Project>("projects")}
-    single<MongoCollection<Task>>(tasksCollection){MongoDatabaseFactory.db.getCollection<Task>("tasks")}
-    single<MongoCollection<LogItem>>(logsCollection){MongoDatabaseFactory.db.getCollection<LogItem>("logs")}
+    single<MongoCollection<User>>(usersCollection){ MongoDatabaseFactory.db.getCollection<User>("users")}
+    single<MongoCollection<Project>>(projectsCollection){ MongoDatabaseFactory.db.getCollection<Project>("projects")}
+    single<MongoCollection<Task>>(tasksCollection){ MongoDatabaseFactory.db.getCollection<Task>("tasks")}
+    single<MongoCollection<LogItem>>(logsCollection){ MongoDatabaseFactory.db.getCollection<LogItem>("logs")}
 
     // DataSources
     single<ILogDataSource> { LogDataSource(get(logsCollection)) }
@@ -93,29 +104,29 @@ val appModule = module {
     single<IUserDataSource> { UserDataSource(get(usersCollection)) }
     single<ITaskDataSource> { TaskDataSource(get(tasksCollection)) }
 
+    single { MongoTransactionManager(MongoDatabaseFactory.client) }
 
     // Repositories
-    single<AuthRepository> { AuthRepositoryImpl(get()) }
-    single<TaskRepository> { TaskRepositoryImpl(get()) }
-    single<LogRepository> { LogRepositoryImpl(get()) }
-    single<ProjectRepository> { ProjectRepositoryImpl(get()) }
+    single<AuthRepository>(userRepositoryImpl) { AuthRepositoryImpl(get()) }
+    single<TaskRepository>(taskRepositoryImpl) { TaskRepositoryImpl(get()) }
+    single<LogRepository>(logRepositoryImpl) { LogRepositoryImpl(get()) }
+    single<ProjectRepository>(projectRepositoryImpl) { ProjectRepositoryImpl(get()) }
     single<StateManager>{ StateManager }
 
+    // Repository Proxies
+    single<ProjectRepository>(projectRepositoryProxy) { ProjectRepositoryProxy(get(projectRepositoryImpl), get(logRepositoryImpl), get()) }
 
-    single<User> { User(id = UUID.randomUUID(), username = "fsef", password = "fsefs", isAdmin = true) }
-
-    single { ValidateInputUseCase() }
 
     //logger use Case
     single{ LoggerUseCase(get(),get()) }
 
     // Project UseCases
-    single { CreateProjectUseCase(get(), get(), get(), get()) }
-    single { DeleteProjectUseCase(get(), get(), get(), get()) }
-    single { EditProjectUseCase(get(), get(), get(),get()) }
-    single { GetAllProjectsUseCase(get(), get()) }
-    single { GetProjectDetailsUseCase(get(),get(), get()) }
-    single { GetProjectHistoryUseCase(get()) }
+    single { CreateProjectUseCase(get(projectRepositoryProxy), get(), get()) }
+    single { DeleteProjectUseCase(get(projectRepositoryProxy), get(), get()) }
+    single { EditProjectUseCase(get(projectRepositoryProxy), get(), get()) }
+    single { GetAllProjectsUseCase(get(projectRepositoryProxy), get()) }
+    single { GetProjectDetailsUseCase(get(projectRepositoryProxy),get(), get()) }
+    single { GetProjectHistoryUseCase(get(logRepositoryImpl)) }
 
 
     // StateUseCase
