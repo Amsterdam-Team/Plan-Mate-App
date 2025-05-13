@@ -16,8 +16,13 @@ class DeleteTaskUseCase(
         }catch (_:IllegalArgumentException){
             throw InvalidTaskIDException
         }
-        return taskRepository.deleteTask(taskUUID).also { isDeleted ->
-            if(isDeleted) loggerUseCase.createLog("deleted ${taskRepository.getTaskById(taskUUID).name} task",taskUUID)
+        val task = taskRepository.getTaskById(taskUUID)
+        val isDeleted = taskRepository.deleteTask(taskUUID)
+
+        if (isDeleted) {
+            loggerUseCase.createLog("Deleted task '${task.name}'", taskUUID)
         }
+
+        return isDeleted
     }
 }
