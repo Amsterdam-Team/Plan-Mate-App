@@ -23,6 +23,7 @@ class TaskManagerView(
             [1] Create a New Task
             [2] Delete a Task
             [3] Show Task Logs
+            [4] Edit Task
             [0] Go Back to Projects
         """.trimIndent())
 
@@ -30,6 +31,7 @@ class TaskManagerView(
             "1" -> createTask()
             "2" -> deleteTask()
             "3" -> showTaskLogs()
+            "4" -> editTask()
             "0" -> return
             else -> {
                 consoleIO.println("Invalid option. Please try again.")
@@ -42,15 +44,9 @@ class TaskManagerView(
         consoleIO.println("Enter task name:")
         val taskName = getValidatedInputString()
 
-        consoleIO.println("Enter task state (todo, in-progress, done):")
+        consoleIO.println("Enter task state; ${currentProject.states}:")
         val taskState = getValidatedInputString()
 
-        val task = Task(
-            id = UUID.randomUUID(),
-            name = taskName,
-            state = taskState,
-            projectId = currentProject.id
-        )
         createTaskUseCase.createTask(taskName, currentProject.id.toString(), taskState)
         consoleIO.println("Task '$taskName' created successfully!")
         showTaskOptions(currentProject)
@@ -80,6 +76,9 @@ class TaskManagerView(
         showTaskOptions(currentProject)
     }
 
+    private fun editTask(){
+
+    }
     private fun showAllTasks() {
         consoleIO.println("All Tasks:")
         currentTasks.forEachIndexed { index, task ->

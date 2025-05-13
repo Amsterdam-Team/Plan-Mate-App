@@ -11,7 +11,7 @@ fun printSwimlanesView(
 
     val lanes = project.states
     val data = project.tasks
-    val taskFormatter: (Task) -> String = { "${it.id} - ${it.name}" }
+    val taskFormatter: (Task) -> String = { it.name }
 
     val columnWidth = data.maxOfOrNull { taskFormatter(it).length } ?: 10
 
