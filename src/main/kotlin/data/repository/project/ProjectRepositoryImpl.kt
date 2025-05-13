@@ -60,5 +60,8 @@ class ProjectRepositoryImpl(
 
 
     override suspend fun addStateById(projectId: UUID, state: String) = projectDataSource.insertProjectState(projectId, state)
+    override suspend fun deleteAllProjects() {
+        projectDataSource.deleteAllProject()
+    }
 
 }

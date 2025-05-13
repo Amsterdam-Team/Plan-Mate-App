@@ -1,5 +1,6 @@
 package di
 
+import TaskManagerView
 import com.mongodb.kotlin.client.coroutine.MongoCollection
 import data.datasources.MongoDatabaseFactory
 import data.datasources.logDataSource.ILogDataSource
@@ -176,8 +177,8 @@ val appModule = module {
             8 to get(viewTaskLogsUiController)
         )
     }
-
-    single { ProjectsView(get(),get(),get()) }
+    single {TaskManagerView(get(),get(),get(),get())}
+    single { ProjectsView(get(),get(),get(),get(), get() ) }
 
     // Admin Menus
     single<Map<Int, BaseUIController>>(adminMap) {
@@ -205,7 +206,7 @@ val appModule = module {
     single { MateMenuHandler(get(userMap)) }
 
     // LoginUiController
-    single { LoginUIController(get(), get(), get(), get()) }
+    single { LoginUIController(get(), get(), get(), get(), get()) }
 
     // project view
 }

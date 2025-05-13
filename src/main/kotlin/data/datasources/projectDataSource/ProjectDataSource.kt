@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.toList
 import logic.entities.Project
 import logic.exception.PlanMateException.DataSourceException.ObjectDoesNotExistException
+import org.bson.BsonDocument
 import org.bson.Document
 import java.util.*
 
@@ -110,5 +111,9 @@ class ProjectDataSource(
         )
 
         return result.modifiedCount > 0
+    }
+
+    override suspend fun deleteAllProject() {
+        projectCollection.deleteMany(BsonDocument())
     }
 }

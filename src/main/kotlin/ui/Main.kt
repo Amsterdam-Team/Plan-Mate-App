@@ -8,6 +8,7 @@ import org.koin.core.context.startKoin
 import org.koin.java.KoinJavaComponent.getKoin
 import ui.login.LoginUIController
 import ui.menuHandler.ProjectsView
+import ui.utils.tryToExecute
 
 
 fun main() {
@@ -21,7 +22,8 @@ fun main() {
     val projectsView: ProjectsView = getKoin().get()
     runBlocking {
         loginUIController.execute()
-        projectsView.start()
+//        projectsView.start()
+
     }
 
 

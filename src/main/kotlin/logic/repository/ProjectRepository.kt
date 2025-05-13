@@ -13,5 +13,5 @@ interface ProjectRepository {
     suspend fun updateProjectStateById(projectId: UUID, oldState: String, newState: String): Boolean
     suspend fun deleteStateById(projectId: UUID, oldState: String): Boolean
     suspend fun addStateById(projectId: UUID, state: String): Boolean
-
+    suspend fun deleteAllProjects()
 }

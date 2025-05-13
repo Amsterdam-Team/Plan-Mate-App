@@ -6,13 +6,15 @@ import ui.console.ConsoleIO
 import ui.controller.BaseUIController
 import ui.menuHandler.AdminMenuHandler
 import ui.menuHandler.MateMenuHandler
+import ui.menuHandler.ProjectsView
 import ui.utils.tryToExecute
 
 class LoginUIController(
     private val loginUseCase: LoginUseCase,
     private val adminMenuHandler: AdminMenuHandler,
     private val mateMenuHandler: MateMenuHandler,
-    private val consoleIO: ConsoleIO
+    private val consoleIO: ConsoleIO,
+    private val projectsView: ProjectsView
 ): BaseUIController {
     lateinit var user : User
 
@@ -26,7 +28,9 @@ class LoginUIController(
                 user = loginUseCase.validateUserCredentials(username, password)
 //                onLoginSuccess(user)
             },
-            onSuccess = { consoleIO.println("Success Login......") }
+            onSuccess = { consoleIO.println("Success Login......")
+            projectsView.start()
+            }
         )
 
     }

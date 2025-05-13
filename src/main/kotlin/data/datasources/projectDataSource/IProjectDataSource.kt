@@ -24,4 +24,5 @@ interface IProjectDataSource {
     suspend fun deleteProjectState(projectId: UUID, state: String): Boolean
 
     suspend fun updateProjectState(projectId: UUID, oldState: String, newState: String): Boolean
+    suspend fun deleteAllProject()
 }
