@@ -53,8 +53,9 @@ class TaskManagerView(
         consoleIO.println("Enter task state; ${currentProject.states}:")
         val taskState = getValidatedInputString()
 
-        createTaskUseCase.createTask(taskName, currentProject.id.toString(), taskState)
-        consoleIO.println("Task '$taskName' created successfully!")
+        if(createTaskUseCase.createTask(taskName, currentProject.id.toString(), taskState)){
+            consoleIO.println("Task '$taskName' created successfully!")
+        }
         showTaskOptions(currentProject)
     }
 
