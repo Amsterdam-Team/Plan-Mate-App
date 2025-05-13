@@ -4,6 +4,7 @@ import logic.usecases.logs.ViewTaskLogsUseCase
 import logic.usecases.task.CreateTaskUseCase
 import logic.usecases.task.DeleteTaskUseCase
 import ui.console.ConsoleIO
+import ui.utils.getErrorMessageByException
 import java.util.UUID
 
 class TaskManagerView(
@@ -16,9 +17,10 @@ class TaskManagerView(
     private lateinit var currentTasks: List<Task>
 
     suspend fun showTaskOptions(project: Project) {
-        currentProject = project
-        currentTasks = currentProject.tasks
-        consoleIO.println("""
+        try {
+            currentProject = project
+            currentTasks = currentProject.tasks
+            consoleIO.println("""
             Options:
             [1] Create a New Task
             [2] Delete a Task
@@ -27,17 +29,21 @@ class TaskManagerView(
             [0] Go Back to Projects
         """.trimIndent())
 
-        when (consoleIO.readFromUser().trim()) {
-            "1" -> createTask()
-            "2" -> deleteTask()
-            "3" -> showTaskLogs()
-            "4" -> editTask()
-            "0" -> return
-            else -> {
-                consoleIO.println("Invalid option. Please try again.")
-                showTaskOptions(currentProject)
+            when (consoleIO.readFromUser().trim()) {
+                "1" -> createTask()
+                "2" -> deleteTask()
+                "3" -> showTaskLogs()
+                "4" -> editTask()
+                "0" -> return
+                else -> {
+                    consoleIO.println("Invalid option. Please try again.")
+                    showTaskOptions(currentProject)
+                }
             }
+        }catch (e:Exception){
+            getErrorMessageByException(e)
         }
+
     }
 
     private suspend fun createTask() {
