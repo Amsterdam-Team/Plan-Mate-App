@@ -12,18 +12,15 @@ import ui.utils.tryToExecute
 
 
 fun main() {
-    startKoin{
+    startKoin {
         modules(
             appModule
         )
     }
 
     val loginUIController: LoginUIController = getKoin().get()
-    val projectsView: ProjectsView = getKoin().get()
     runBlocking {
         loginUIController.execute()
-//        projectsView.start()
-
     }
 
 

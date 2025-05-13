@@ -10,7 +10,7 @@ suspend fun <T> tryToExecute(action: suspend () -> T,  onSuccess: suspend (resul
 
 suspend fun <T> tryToExecute(
     action: suspend () -> T,
-    onSuccess: (result: T) -> Unit,
+    onSuccess: suspend (result: T) -> Unit,
     onError: suspend (exception: Exception) -> Unit
 ) {
     try {

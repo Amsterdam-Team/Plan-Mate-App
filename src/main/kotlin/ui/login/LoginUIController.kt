@@ -15,10 +15,10 @@ class LoginUIController(
     private val mateMenuHandler: MateMenuHandler,
     private val consoleIO: ConsoleIO,
     private val projectsView: ProjectsView
-): BaseUIController {
-    lateinit var user : User
+) : BaseUIController {
+    lateinit var user: User
 
-    override suspend  fun execute() {
+    override suspend fun execute() {
         consoleIO.println("Hello My Friend..\nI hope You Remember Your username and password to login quickly...\nEnter Your user name : ")
         val username = consoleIO.readFromUser()
         consoleIO.println("Enter Your Password : ")
@@ -26,16 +26,28 @@ class LoginUIController(
         tryToExecute(
             action = {
                 user = loginUseCase.validateUserCredentials(username, password)
-//                onLoginSuccess(user)
             },
-            onSuccess = { consoleIO.println("Success Login......")
-            projectsView.start()
-            }
+            onSuccess = {
+                consoleIO.println("Success Login......")
+                projectsView.start()
+            },
+            onError = ::onError
         )
 
     }
-    private suspend fun onLoginSuccess(user: User) {
-        if (user.isAdmin) adminMenuHandler.start() else mateMenuHandler.start()
-    }
 
+    suspend fun onError(exception: Exception) {
+        consoleIO.println("Please enter [retry] to login again or [cancel] to end the process")
+        while (true){
+            val input = consoleIO.readFromUser()
+            if (input == "retry" ){
+                execute()
+            }else if ( input == "cancel"){
+                consoleIO.println("Program exit.")
+                return
+            }else {
+                consoleIO.println("Please enter either [retry] or [cancel] commands")
+            }
+        }
+    }
 }
