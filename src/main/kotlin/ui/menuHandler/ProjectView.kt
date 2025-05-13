@@ -61,7 +61,7 @@ class ProjectsView(
         try {
             consoleIO.println(
                 """
-            [1] Enter the project number to view
+            [1] View Project
             [2] create user
             [3] Create a New Project
             [4] Show Project Logs
