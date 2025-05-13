@@ -177,7 +177,7 @@ val appModule = module {
             8 to get(viewTaskLogsUiController)
         )
     }
-    single {TaskManagerView(get(),get(),get(),get())}
+    single {TaskManagerView(get(),get(),get(),get(), get())}
     single { ProjectsView(get(),get(),get(),get(), get(), get(), get() ) }
 
     // Admin Menus

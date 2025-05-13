@@ -3,14 +3,15 @@ import logic.entities.Task
 import logic.usecases.logs.ViewTaskLogsUseCase
 import logic.usecases.task.CreateTaskUseCase
 import logic.usecases.task.DeleteTaskUseCase
+import logic.usecases.task.EditTaskUseCase
 import ui.console.ConsoleIO
 import ui.utils.getErrorMessageByException
-import java.util.UUID
 
 class TaskManagerView(
     private val createTaskUseCase: CreateTaskUseCase,
     private val deleteTaskUseCase: DeleteTaskUseCase,
     private val viewTaskLogsUseCase: ViewTaskLogsUseCase,
+    private val editTaskUseCase: EditTaskUseCase,
     private val consoleIO: ConsoleIO
 ) {
     private lateinit var currentProject: Project
@@ -20,14 +21,16 @@ class TaskManagerView(
         try {
             currentProject = project
             currentTasks = currentProject.tasks
-            consoleIO.println("""
+            consoleIO.println(
+                """
             Options:
             [1] Create a New Task
             [2] Delete a Task
             [3] Show Task Logs
             [4] Edit Task
             [0] Go Back to Projects
-        """.trimIndent())
+        """.trimIndent()
+            )
 
             when (consoleIO.readFromUser().trim()) {
                 "1" -> createTask()
@@ -40,7 +43,7 @@ class TaskManagerView(
                     showTaskOptions(currentProject)
                 }
             }
-        }catch (e:Exception){
+        } catch (e: Exception) {
             getErrorMessageByException(e)
         }
 
@@ -82,9 +85,42 @@ class TaskManagerView(
         showTaskOptions(currentProject)
     }
 
-    private fun editTask(){
+    private suspend fun editTask() {
+        showAllTasks()
+        val index = getValidatedTaskIndex()
+        val selectedTask = currentTasks[index]
 
+        consoleIO.println("Editing Task '${selectedTask.name}'")
+
+        consoleIO.println("Enter new name (leave blank to keep '${selectedTask.name}'):")
+        val newName = consoleIO.readFromUser().trim().ifEmpty { selectedTask.name }
+
+        consoleIO.println("Enter new state (leave blank to keep '${selectedTask.state}'): ${currentProject.states}")
+        val newState = consoleIO.readFromUser().trim().ifEmpty { selectedTask.state }
+
+        try {
+            val updated = editTaskUseCase.editTask(
+                taskId = selectedTask.id.toString(),
+                newName = newName,
+                newState = newState
+            )
+
+            if (updated) {
+                consoleIO.println("Task updated successfully.")
+            } else {
+                consoleIO.println("No changes were made.")
+            }
+
+            currentTasks = currentProject.tasks
+
+        } catch (e: Exception) {
+            consoleIO.println(getErrorMessageByException(e))
+        }
+
+        showTaskOptions(currentProject)
     }
+
+
     private fun showAllTasks() {
         consoleIO.println("All Tasks:")
         currentTasks.forEachIndexed { index, task ->
