@@ -74,7 +74,7 @@ class TaskDataSourceTest{
     @Test
     fun `should return tasks for specific project`() = runTest {
         // When
-        val result = dataSource.getAllProjectTasks(project1Id)
+        val result = dataSource.getAllTasksByProjectId(project1Id)
 
         // Then
         assertThat(result).containsExactly(task1Project1, task2Project1)
@@ -83,7 +83,7 @@ class TaskDataSourceTest{
     @Test
     fun `should return empty list when no tasks for project`() = runTest {
         // When
-        val result = dataSource.getAllProjectTasks(UUID.randomUUID())
+        val result = dataSource.getAllTasksByProjectId(UUID.randomUUID())
 
         // Then
         assertThat(result).isEmpty()
@@ -144,7 +144,7 @@ class TaskDataSourceTest{
     @Test
     fun `should delete task when ID exists`() = runTest {
         // When
-        val result = dataSource.deleteTask(task2Id)
+        val result = dataSource.deleteTaskById(task2Id)
 
         // Then
         assertThat(result).isTrue()
@@ -153,7 +153,7 @@ class TaskDataSourceTest{
     @Test
     fun `should return false when deleting non-existent task`() = runTest {
         // When
-        val result = dataSource.deleteTask(notFoundId)
+        val result = dataSource.deleteTaskById(notFoundId)
 
         // Then
         assertThat(result).isFalse()
@@ -164,7 +164,7 @@ class TaskDataSourceTest{
     @Test
     fun `should return task state when task exists`() = runTest {
         // When
-        val result = dataSource.getTaskState(task2Id)
+        val result = dataSource.getTaskStateById(task2Id)
 
         // Then
         assertThat(result).isEqualTo(task2Project1.state)
@@ -174,7 +174,7 @@ class TaskDataSourceTest{
     fun `should throw exception when task not found for get state`() = runTest {
         // When & Then
         assertThrows<ObjectDoesNotExistException> {
-            dataSource.getTaskState(notFoundId)
+            dataSource.getTaskStateById(notFoundId)
         }
     }
     // endregion
@@ -183,7 +183,7 @@ class TaskDataSourceTest{
     @Test
     fun `should update task name when new name is unique in project`() = runTest {
         // When
-        val result = dataSource.updateTaskName(task2Id, ":D")
+        val result = dataSource.updateTaskNameById(task2Id, ":D")
 
         // Then
         assertThat(result).isTrue()
@@ -192,7 +192,7 @@ class TaskDataSourceTest{
     @Test
     fun `should not update task name when new name exists in same project`() = runTest {
         // When
-        val result = dataSource.updateTaskName(task2Id, task1Project1.name)
+        val result = dataSource.updateTaskNameById(task2Id, task1Project1.name)
 
         // Then
         assertThat(result).isFalse()
@@ -203,7 +203,7 @@ class TaskDataSourceTest{
         collection.insertOne(taskSameNameDifferentProjectGlobal)
 
         // When
-        val result = dataSource.updateTaskName(task2Id, taskSameNameDifferentProjectGlobal.name)
+        val result = dataSource.updateTaskNameById(task2Id, taskSameNameDifferentProjectGlobal.name)
 
         // Then
         assertThat(result).isTrue()
@@ -214,7 +214,7 @@ class TaskDataSourceTest{
     @Test
     fun `should update task state when task exists`() = runTest {
         // When
-        val result = dataSource.updateTaskState(task2Id, "Finally done")
+        val result = dataSource.updateTaskStateById(task2Id, "Finally done")
 
         // Then
         assertThat(result).isTrue()
@@ -223,36 +223,7 @@ class TaskDataSourceTest{
     @Test
     fun `should return false when updating state of non-existent task`() = runTest {
         // When
-        val result = dataSource.updateTaskState(notFoundId, "Finally done")
-
-        // Then
-        assertThat(result).isFalse()
-    }
-    // endregion
-
-    // region replaceAllTasks
-    @Test
-    fun `should replace all tasks when no duplicates in project`() = runTest {
-        // When
-        val result = dataSource.replaceAllTasks(tasksReplace)
-
-        // Then
-        assertThat(result).isTrue()
-    }
-
-    @Test
-    fun `should not replace all tasks when duplicate names exist in same project`() = runTest {
-        // When
-        val result = dataSource.replaceAllTasks(duplicatedTaskNamesInSameProject)
-
-        // Then
-        assertThat(result).isFalse()
-    }
-
-    @Test
-    fun `should not replace all tasks when duplicate Ids exist in same project`() = runTest {
-        // When
-        val result = dataSource.replaceAllTasks(duplicatedTaskIds)
+        val result = dataSource.updateTaskStateById(notFoundId, "Finally done")
 
         // Then
         assertThat(result).isFalse()
@@ -275,10 +246,6 @@ class TaskDataSourceTest{
         private val taskNotInDatabase = task1Project1.copy(id = UUID.randomUUID(), name = "task not in database")
         private val notFoundId = UUID.randomUUID()
         private val taskWithSameName = task1Project1.copy(id = UUID.randomUUID())
-        private val taskWithSameId = task1Project1.copy(name = "renamed task")
-        private val tasksReplace = listOf(taskWithSameId, taskWithSameName)
-        private val duplicatedTaskNamesInSameProject = listOf(task1Project1, taskWithSameName)
-        private val duplicatedTaskIds = listOf(task1Project1, taskWithSameId)
 
         // Testing Purposes
         private const val CONNECTION_STRING = "mongodb+srv://7amasa:9LlgpCLbd99zoRrJ@amsterdam.qpathz3.mongodb.net/?retryWrites=true&w=majority&appName=Amsterdam"

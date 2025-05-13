@@ -6,15 +6,15 @@ import logic.exception.PlanMateException.ValidationException.InvalidTaskNameExce
 import logic.exception.PlanMateException.ValidationException.InvalidStateNameException
 import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
 import logic.exception.PlanMateException.NotFoundException.StateNotFoundException
-import logic.repository.ProjectRepository
-import logic.repository.TaskRepository
+import logic.repository.IProjectRepository
+import logic.repository.ITaskRepository
 import logic.usecases.logs.LoggerUseCase
 import logic.usecases.utils.ValidateInputUseCase
 import java.util.UUID
 
 class CreateTaskUseCase(
-    private val taskRepository: TaskRepository,
-    private val projectRepository: ProjectRepository,
+    private val taskRepository: ITaskRepository,
+    private val projectRepository: IProjectRepository,
     private val validateInputUseCase: ValidateInputUseCase,
     private val loggerUseCase: LoggerUseCase
 ) {
@@ -33,7 +33,7 @@ class CreateTaskUseCase(
             exception = InvalidStateNameException
         )
 
-        val targetProject = projectRepository.getProject(UUID.fromString(projectId))
+        val targetProject = projectRepository.getProjectById(UUID.fromString(projectId))
         requireOrThrow(
             condition = isStateInProject(state = state, projectStates = targetProject.states),
             exception = StateNotFoundException
@@ -47,7 +47,7 @@ class CreateTaskUseCase(
                 state = state
             )
         ).also { isCreated ->
-            if(isCreated) loggerUseCase.createLog("Created $name task",taskUUID)
+            if(isCreated) loggerUseCase.createLog("$CREATED_KEYWORD $name $TASK_KEYWORD",taskUUID)
         }
     }
 
@@ -59,4 +59,8 @@ class CreateTaskUseCase(
         return state in projectStates
     }
 
+    companion object{
+        const val  CREATED_KEYWORD = "Created"
+        const val  TASK_KEYWORD = "task"
+    }
 }

@@ -2,12 +2,12 @@ package data.repository.log
 
 import data.datasources.logDataSource.ILogDataSource
 import logic.entities.LogItem
-import logic.repository.LogRepository
+import logic.repository.ILogRepository
 import java.util.*
 
-class LogRepositoryImpl(private val logDataSource: ILogDataSource): LogRepository {
-    override suspend fun viewLogsById(entityId: UUID) =
-        logDataSource.getLogsByEntityId(entityId)
+class LogRepository(private val logDataSource: ILogDataSource): ILogRepository {
+    override suspend fun viewLogsByLogId(id: UUID) =
+        logDataSource.getLogsByEntityId(id)
 
     override suspend fun viewAllLogs() =
         logDataSource.getAllLogs()

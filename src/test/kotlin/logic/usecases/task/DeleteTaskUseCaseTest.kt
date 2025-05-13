@@ -7,14 +7,14 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException
-import logic.repository.TaskRepository
+import logic.repository.ITaskRepository
 import logic.usecases.logs.LoggerUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 class DeleteTaskUseCaseTest {
-    private lateinit var repository: TaskRepository
+    private lateinit var repository: ITaskRepository
     private lateinit var useCase: DeleteTaskUseCase
     private lateinit var loggerUseCase: LoggerUseCase
 

@@ -5,13 +5,13 @@ import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
 import logic.exception.PlanMateException.ValidationException.InvalidStateNameException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskIDException
 import logic.exception.PlanMateException.ValidationException.InvalidTaskNameException
-import logic.repository.TaskRepository
+import logic.repository.ITaskRepository
 import logic.usecases.logs.LoggerUseCase
 import logic.usecases.utils.ValidateInputUseCase
 import java.util.UUID
 
 class EditTaskUseCase(
-    private val taskRepository: TaskRepository,
+    private val taskRepository: ITaskRepository,
     private val validateInputUseCase: ValidateInputUseCase,
     private val loggerUseCase: LoggerUseCase
 ) {
@@ -29,7 +29,7 @@ class EditTaskUseCase(
             val nameUpdated = taskRepository.updateTaskNameByID(taskUUID, newName)
             if (!nameUpdated) throw TaskNotFoundException
 
-            loggerUseCase.createLog("Updated task ${existingTask.name} name to $newName", taskUUID)
+            loggerUseCase.createLog("$UPDATE_TASK_KEYWORD ${existingTask.name} $NAME_TO_KEYWORD $newName", taskUUID)
 
             hasChanges = true
         }
@@ -39,7 +39,7 @@ class EditTaskUseCase(
             if (!stateUpdated) throw TaskNotFoundException
 
             loggerUseCase.createLog(
-                "Updated task ${existingTask.name} state from ${existingTask.state} to $newState",
+                "$UPDATE_TASK_KEYWORD ${existingTask.name} $STATE_FROM_KEYWORD ${existingTask.state} $TO_KEYWORD $newState",
                 taskUUID
             )
 
@@ -50,7 +50,7 @@ class EditTaskUseCase(
     }
 
 
-    fun validateTaskInputs(taskId: String, name: String, state: String): Boolean {
+   private fun validateTaskInputs(taskId: String, name: String, state: String): Boolean {
         if (!validateInputUseCase.isValidUUID(taskId)) {
             throw InvalidTaskIDException
         }
@@ -72,5 +72,12 @@ class EditTaskUseCase(
         } catch (_: IllegalArgumentException) {
             throw InvalidTaskIDException
         }
+    }
+
+    companion object{
+        const val  UPDATE_TASK_KEYWORD = "Updated task"
+        const val  NAME_TO_KEYWORD = "name to"
+        const val  STATE_FROM_KEYWORD = "state from"
+        const val TO_KEYWORD = "to"
     }
 }

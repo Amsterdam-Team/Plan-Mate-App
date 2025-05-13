@@ -1,7 +1,7 @@
 package logic.usecases.task
 
 import com.google.common.truth.Truth.assertThat
-import data.repository.task.TaskRepositoryImpl
+import data.repository.task.TaskRepository
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
@@ -17,7 +17,7 @@ import java.util.UUID
 import kotlin.test.Test
 
 class EditTaskUseCaseTest {
-    lateinit var repository: TaskRepositoryImpl
+    lateinit var repository: TaskRepository
     lateinit var useCase: EditTaskUseCase
     lateinit var validation: ValidateInputUseCase
     lateinit var loggerUseCase: LoggerUseCase

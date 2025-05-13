@@ -6,12 +6,12 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import logic.entities.LogItem
-import logic.repository.LogRepository
+import logic.repository.ILogRepository
 import logic.usecases.utils.StateManager
 import java.util.UUID
 
 class LoggerUseCase(
-    private val logRepository: LogRepository,
+    private val logRepository: ILogRepository,
     private val stateManager: StateManager,
 ) {
 
@@ -19,8 +19,8 @@ class LoggerUseCase(
         val currentDateTime : LocalDateTime= Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
         val formattedLogMessage = buildString {
             append(message)
-            append("by ${stateManager.getLoggedInUser().username}")
-            append("on ${currentDateTime.toString()}")
+            append("$BY_KEYWORD ${stateManager.getLoggedInUser().username}")
+            append("$ON_KEYWORD ${currentDateTime.toString()}")
         }
         val logItem = LogItem(
             id = UUID.randomUUID(),
@@ -29,5 +29,10 @@ class LoggerUseCase(
             entityId = entityId
         )
         return logRepository.addLog(logItem)
+    }
+
+    companion object{
+        const val BY_KEYWORD = "by"
+        const val ON_KEYWORD = "on"
     }
 }

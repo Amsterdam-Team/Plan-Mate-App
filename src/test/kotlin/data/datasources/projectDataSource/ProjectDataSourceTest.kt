@@ -134,7 +134,7 @@ class ProjectDataSourceTest {
     @Test
     fun `should return true when project is deleted successfully`() = runTest {
         // When
-        val result = dataSource.deleteProject(project2Id)
+        val result = dataSource.deleteProjectById(project2Id)
 
         // Then
         assertThat(result).isTrue()
@@ -143,7 +143,7 @@ class ProjectDataSourceTest {
     @Test
     fun `should return false when project to delete is not found`() = runTest {
         // When
-        val result = dataSource.deleteProject(notFoundId)
+        val result = dataSource.deleteProjectById(notFoundId)
 
         // Then
         assertThat(result).isFalse()
@@ -164,37 +164,6 @@ class ProjectDataSourceTest {
     fun `should return false when project is not found for name update`() = runTest {
         // When
         val result = dataSource.updateProjectName(notFoundId, "New Name")
-
-        // Then
-        assertThat(result).isFalse()
-    }
-    // endregion
-
-
-    // region replaceAllProjects
-    @Test
-    fun `should return true when all projects are replaced successfully`() = runTest {
-        // When
-        val result = dataSource.replaceAllProjects(projectsReplace)
-
-        // Then
-        assertThat(result).isTrue()
-
-    }
-
-    @Test
-    fun `should return false when projects have duplicated Ids`() = runTest {
-        // When
-        val result = dataSource.replaceAllProjects(duplicatedProjectIds)
-
-        // Then
-        assertThat(result).isFalse()
-    }
-
-    @Test
-    fun `should return false when projects have duplicated names`() = runTest {
-        // When
-        val result = dataSource.replaceAllProjects(duplicatedProjectNames)
 
         // Then
         assertThat(result).isFalse()
@@ -234,7 +203,7 @@ class ProjectDataSourceTest {
     @Test
     fun `should return list of states when project exists`() = runTest {
         // When
-        val result = dataSource.getProjectStates(project2Id)
+        val result = dataSource.getProjectStatesById(project2Id)
 
         // Then
         assertThat(result).containsExactlyElementsIn(project2.states)
@@ -243,7 +212,7 @@ class ProjectDataSourceTest {
     @Test
     fun `should return empty list when project ID for getting states does not exist`() = runTest {
         // When
-        val result = dataSource.getProjectStates(notFoundId)
+        val result = dataSource.getProjectStatesById(notFoundId)
 
         // Then
         assertThat(result).isEmpty()
@@ -254,7 +223,7 @@ class ProjectDataSourceTest {
     @Test
     fun `should return true when state is deleted successfully`() = runTest {
         // When
-        val result = dataSource.deleteProjectState(project2Id, project2.states.first())
+        val result = dataSource.deleteProjectStateById(project2Id, project2.states.first())
 
         // Then
         assertThat(result).isTrue()
@@ -263,7 +232,7 @@ class ProjectDataSourceTest {
     @Test
     fun `should return false when project ID for deleting state does not exist`() = runTest {
         // When
-        val result = dataSource.deleteProjectState(notFoundId, "To Do")
+        val result = dataSource.deleteProjectStateById(notFoundId, "To Do")
 
         // Then
         assertThat(result).isFalse()
@@ -272,7 +241,7 @@ class ProjectDataSourceTest {
     @Test
     fun `should return false when state does not exist`() = runTest {
         // When
-        val result = dataSource.deleteProjectState(project2Id, "this state is not real")
+        val result = dataSource.deleteProjectStateById(project2Id, "this state is not real")
 
         // Then
         assertThat(result).isFalse()
@@ -283,7 +252,7 @@ class ProjectDataSourceTest {
     @Test
     fun `should return true when state is updated successfully`() = runTest {
         // When
-        val result = dataSource.updateProjectState(project2Id, project2.states.first(), "good!!!")
+        val result = dataSource.updateProjectStateById(project2Id, project2.states.first(), "good!!!")
 
         assertThat(result).isTrue()
     }
@@ -291,7 +260,7 @@ class ProjectDataSourceTest {
     @Test
     fun `should return false when project ID does not exist`() = runTest {
         // When
-        val result = dataSource.updateProjectState(notFoundId, "To Do", "bad :(")
+        val result = dataSource.updateProjectStateById(notFoundId, "To Do", "bad :(")
 
         assertThat(result).isFalse()
     }
@@ -299,7 +268,7 @@ class ProjectDataSourceTest {
     @Test
     fun `should return false when old state does not exist`() = runTest {
         // When
-        val result = dataSource.updateProjectState(project2Id, "business business", ":(")
+        val result = dataSource.updateProjectStateById(project2Id, "business business", ":(")
 
         assertThat(result).isFalse()
     }
@@ -307,7 +276,7 @@ class ProjectDataSourceTest {
     @Test
     fun `should return false when new state already exists`() = runTest {
         // When
-        val result = dataSource.updateProjectState(
+        val result = dataSource.updateProjectStateById(
             project2Id, project2.states.first(),
             project2.states.last()
         )
@@ -332,10 +301,6 @@ class ProjectDataSourceTest {
         private val notFoundId = UUID.randomUUID()
         private val projectWithSameName = project1.copy(id = UUID.randomUUID())
         private val projectWithSameId = project1.copy(name = "very important")
-        private val projectsReplace = listOf(projectWithSameId, projectWithSameName)
-        private val duplicatedProjectNames = listOf(project1, projectWithSameName)
-        private val duplicatedProjectIds = listOf(project1, projectWithSameId)
-
 
         // Testing Purposes
         private const val CONNECTION_STRING =

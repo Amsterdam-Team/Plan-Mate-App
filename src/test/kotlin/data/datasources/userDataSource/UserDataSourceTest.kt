@@ -97,7 +97,7 @@ class UserDataSourceTest {
     @Test
     fun `should return true when user is inserted successfully`() = runTest {
         // When
-        val result = dataSource.insertUser(userNotInDatabase)
+        val result = dataSource.upsertUser(userNotInDatabase)
 
         // Then
         assertThat(result).isTrue()
@@ -106,7 +106,7 @@ class UserDataSourceTest {
     @Test
     fun `should return false when inserting user with existing id fails`() = runTest {
         // When
-        val result = dataSource.insertUser(userWithSameId)
+        val result = dataSource.upsertUser(userWithSameId)
 
         // Then
         assertThat(result).isFalse()
@@ -115,7 +115,7 @@ class UserDataSourceTest {
     @Test
     fun `should return false when inserting user with existing username fails`() = runTest {
         // When
-        val result = dataSource.insertUser(userWithSameName)
+        val result = dataSource.upsertUser(userWithSameName)
 
         // Then
         assertThat(result).isFalse()
@@ -127,7 +127,7 @@ class UserDataSourceTest {
     @Test
     fun `should return true when user is deleted successfully`() = runTest {
         // When
-        val result = dataSource.deleteUser(user2Id)
+        val result = dataSource.deleteUserById(user2Id)
 
         // Then
         assertThat(result).isTrue()
@@ -136,7 +136,7 @@ class UserDataSourceTest {
     @Test
     fun `should return false when user to delete is not found`() = runTest {
         // When
-        val result = dataSource.deleteUser(notFoundId)
+        val result = dataSource.deleteUserById(notFoundId)
 
         // Then
         assertThat(result).isFalse()
@@ -147,7 +147,7 @@ class UserDataSourceTest {
     @Test
     fun `should return true when username is updated successfully`() = runTest{
         // When
-        val result = dataSource.updateUserName(user2Id, "mohamed")
+        val result = dataSource.updateUserNameById(user2Id, "mohamed")
 
         // Then
         assertThat(result).isTrue()
@@ -156,7 +156,7 @@ class UserDataSourceTest {
     @Test
     fun `should return false when user is not found for username update`() = runTest{
         // When
-        val result = dataSource.updateUserName(notFoundId, "mohamed")
+        val result = dataSource.updateUserNameById(notFoundId, "mohamed")
 
         // Then
         assertThat(result).isFalse()
@@ -167,7 +167,7 @@ class UserDataSourceTest {
     @Test
     fun `should return true when password is updated successfully`() = runTest{
         // When
-        val result = dataSource.updatePassword(user2Id, "passwordVerySecure")
+        val result = dataSource.updatePasswordById(user2Id, "passwordVerySecure")
 
         // Then
         assertThat(result).isTrue()
@@ -176,37 +176,7 @@ class UserDataSourceTest {
     @Test
     fun `should return false when user is not found for password update`() = runTest{
         // When
-        val result = dataSource.updatePassword(notFoundId, "passwordVerySecure")
-
-        // Then
-        assertThat(result).isFalse()
-    }
-    // endregion
-
-    // region replaceAllUsers
-    @Test
-    fun `should return true when all users are replaced successfully`() = runTest{
-        // When
-        val result = dataSource.replaceAllUsers(usersReplace)
-
-        // Then
-        assertThat(result).isTrue()
-
-    }
-
-    @Test
-    fun `should return false when users have duplicated Ids`() = runTest{
-        // When
-        val result = dataSource.replaceAllUsers(duplicatedUserIds)
-
-        // Then
-        assertThat(result).isFalse()
-    }
-
-    @Test
-    fun `should return false when users have duplicated usernames`() = runTest{
-        // When
-        val result = dataSource.replaceAllUsers(duplicatedUserNames)
+        val result = dataSource.updatePasswordById(notFoundId, "passwordVerySecure")
 
         // Then
         assertThat(result).isFalse()
@@ -227,7 +197,7 @@ class UserDataSourceTest {
     fun `should throw exception when credentials do not match any user`() = runTest{
         // When & Then
         assertThrows<ObjectDoesNotExistException>{
-            dataSource.findUserByCredentials(userNotInDatabase.username, userNotInDatabase.password)
+            dataSource.findUserByCredentials("omer faris", "ee2b80364a7b0f611d8eac7f1cf42cae")
         }
     }
     // endregion
@@ -244,10 +214,6 @@ class UserDataSourceTest {
         private val notFoundId = UUID.randomUUID()
         private val userWithSameName = user1.copy(id = UUID.randomUUID())
         private val userWithSameId = user1.copy(username = "luigi")
-        private val usersReplace = listOf(userWithSameId, userWithSameName)
-        private val duplicatedUserNames = listOf(user1, userWithSameName)
-        private val duplicatedUserIds = listOf(user1, userWithSameId)
-
 
         // Testing Purposes
         private const val CONNECTION_STRING = "mongodb+srv://7amasa:9LlgpCLbd99zoRrJ@amsterdam.qpathz3.mongodb.net/?retryWrites=true&w=majority&appName=Amsterdam"

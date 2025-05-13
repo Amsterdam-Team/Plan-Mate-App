@@ -8,7 +8,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
 import logic.exception.PlanMateException.NotFoundException.TaskNotFoundException
-import logic.repository.TaskRepository
+import logic.repository.ITaskRepository
 import logic.usecases.utils.ValidateInputUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -16,7 +16,7 @@ import org.junit.jupiter.api.assertThrows
 import java.util.UUID
 
 class GetAllTasksByProjectIdUseCaseTest {
-    private lateinit var repository: TaskRepository
+    private lateinit var repository: ITaskRepository
     private lateinit var useCase: GetAllTasksByProjectIdUseCase
     private lateinit var validateInputUseCase: ValidateInputUseCase
 

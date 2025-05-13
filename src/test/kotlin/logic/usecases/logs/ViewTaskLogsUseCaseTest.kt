@@ -8,7 +8,7 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException
-import logic.repository.LogRepository
+import logic.repository.ILogRepository
 import logic.usecases.utils.ValidateInputUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -17,7 +17,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
 class ViewTaskLogsUseCaseTest {
-    private lateinit var repository : LogRepository
+    private lateinit var repository : ILogRepository
     private lateinit var useCase : ViewTaskLogsUseCase
     private lateinit var validationInputUseCase: ValidateInputUseCase
 
@@ -33,7 +33,7 @@ class ViewTaskLogsUseCaseTest {
     fun `should return logs of task when id is valid format of UUID and found`() = runTest {
 
         every { validationInputUseCase.isValidUUID(validId.toString()) } returns true
-        coEvery { repository.viewLogsById(validId) } returns taskLogs()
+        coEvery { repository.viewLogsByLogId(validId) } returns taskLogs()
 
         val returnedLogs = useCase.viewTaskLogs(validId.toString())
 
@@ -62,7 +62,7 @@ class ViewTaskLogsUseCaseTest {
     fun `should throw TaskNotFoundException when id of task is valid format of UUID but not found`()= runTest {
 
         every { validationInputUseCase.isValidUUID(validId.toString()) } returns true
-        coEvery { repository.viewLogsById(validId) } throws PlanMateException.NotFoundException.TaskNotFoundException
+        coEvery { repository.viewLogsByLogId(validId) } throws PlanMateException.NotFoundException.TaskNotFoundException
 
         assertThrows<PlanMateException.NotFoundException.TaskNotFoundException> {
             useCase.viewTaskLogs(validId.toString())

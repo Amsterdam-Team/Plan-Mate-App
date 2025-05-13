@@ -12,7 +12,5 @@ interface ILogDataSource {
 
     suspend fun insertLog(logItem: LogItem): Boolean
 
-    suspend fun deleteLog(logId: UUID): Boolean
-
-    suspend fun replaceAllLogs(logs: List<LogItem>): Boolean
+    suspend fun deleteLogBy(logId: UUID): Boolean
 }

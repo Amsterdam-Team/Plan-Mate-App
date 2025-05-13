@@ -10,7 +10,7 @@ import logic.exception.PlanMateException
 import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
 import logic.exception.PlanMateException.ValidationException.InvalidStateNameException
 import logic.exception.PlanMateException.ValidationException.SameStateNameException
-import logic.repository.ProjectRepository
+import logic.repository.IProjectRepository
 import logic.usecases.utils.StateManager
 import logic.usecases.utils.ValidateInputUseCase
 import org.junit.jupiter.api.BeforeEach
@@ -21,7 +21,7 @@ import java.util.UUID
 import kotlin.test.Test
 
 class UpdateStateUseCaseTest {
-    private lateinit var repository: ProjectRepository
+    private lateinit var repository: IProjectRepository
     private lateinit var validationUseCase: ValidateInputUseCase
     private lateinit var useCase: UpdateStateUseCase
     private lateinit var user: User

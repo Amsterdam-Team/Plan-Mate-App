@@ -1,13 +1,13 @@
 package logic.usecases.state
 
 import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
-import logic.repository.ProjectRepository
+import logic.repository.IProjectRepository
 import java.util.UUID
 
-class GetProjectStatesUseCase(private val repository: ProjectRepository) {
+class GetProjectStatesUseCase(private val repository: IProjectRepository) {
 
     suspend fun execute(projectID: String): List<String> {
-        return if (isValidUUID(projectID)) repository.getProject(UUID.fromString(projectID)).states
+        return if (isValidUUID(projectID)) repository.getProjectById(UUID.fromString(projectID)).states
         else throw InvalidProjectIDException
     }
 

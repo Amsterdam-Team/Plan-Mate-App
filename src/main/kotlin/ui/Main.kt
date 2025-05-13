@@ -10,7 +10,7 @@ import ui.login.LoginUIController
 
 
 fun main() {
-    startKoin{
+    startKoin {
         modules(
             appModule
         )
@@ -23,7 +23,6 @@ fun main() {
     }
 
 
-    embeddedServer(Netty, port = 8080, host = "0.0.0.0") {
-    }.start(wait = true)
+    embeddedServer(Netty, port = 8080, host = "0.0.0.0") {}.start(wait = true)
 }
 

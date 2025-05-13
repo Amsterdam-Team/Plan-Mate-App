@@ -14,15 +14,15 @@ import org.junit.jupiter.api.assertThrows
 import java.util.UUID
 import java.util.UUID.randomUUID
 
-class DeleteProjectRepositoryTest {
+class DeleteIProjectRepositoryTest {
     lateinit var dataSource: IProjectDataSource
-    lateinit var repository: ProjectRepositoryImpl
+    lateinit var repository: ProjectRepository
     lateinit var dummyId: UUID
 
     @BeforeEach
     fun setUp() {
         dataSource = mockk(relaxed = true)
-        repository = ProjectRepositoryImpl(dataSource)
+        repository = ProjectRepository(dataSource)
         dummyId = randomUUID()
 
     }
@@ -30,9 +30,9 @@ class DeleteProjectRepositoryTest {
     @Test
     fun `should return true when deleting project complete successfully`() = runTest{
         // given
-        coEvery { dataSource.deleteProject(someProjects[0].id) } returns true
+        coEvery { dataSource.deleteProjectById(someProjects[0].id) } returns true
         // when
-        val result = repository.deleteProject(someProjects[0].id)
+        val result = repository.deleteProjectById(someProjects[0].id)
 
         // then
         assertThat(result).isTrue()
@@ -44,11 +44,11 @@ class DeleteProjectRepositoryTest {
     @Test
     fun `should throw project not found when deleting project not exist`() = runTest{
         // given
-        coEvery { dataSource.deleteProject(someProjects[0].id) } throws ProjectNotFoundException
+        coEvery { dataSource.deleteProjectById(someProjects[0].id) } throws ProjectNotFoundException
 
         // when & then
         assertThrows <ProjectNotFoundException> {
-            repository.deleteProject(someProjects[0].id)
+            repository.deleteProjectById(someProjects[0].id)
 
         }
     }

@@ -3,6 +3,9 @@ package ui.task
 import logic.usecases.task.CreateTaskUseCase
 import ui.console.ConsoleIO
 import ui.controller.BaseUIController
+import ui.utils.DisplayUtils.printError
+import ui.utils.DisplayUtils.printSuccess
+import ui.utils.DisplayUtils.promptInput
 import ui.utils.tryToExecute
 
 class CreateTaskUIController(
@@ -11,13 +14,13 @@ class CreateTaskUIController(
 ) : BaseUIController {
 
     override suspend fun execute() {
-        consoleIO.println(TASK_NAME_PROMPT_MESSAGE)
+        promptInput(TASK_NAME_PROMPT_MESSAGE)
         val taskName = consoleIO.readFromUser()
 
-        consoleIO.println(PROJECT_ID_PROMPT_MESSAGE)
+        promptInput(PROJECT_ID_PROMPT_MESSAGE)
         val projectId = consoleIO.readFromUser()
 
-        consoleIO.println(TASK_STATE_PROMPT_MESSAGE)
+        promptInput(TASK_STATE_PROMPT_MESSAGE)
         val taskState = consoleIO.readFromUser()
 
         tryToExecute(
@@ -35,13 +38,13 @@ class CreateTaskUIController(
 
     private fun onCreateTaskSuccess(isCreatedSuccessfully: Boolean) {
         if (isCreatedSuccessfully) {
-            consoleIO.println(TASK_CREATED_SUCCESSFULLY_MESSAGE)
+            printSuccess(TASK_CREATED_SUCCESSFULLY_MESSAGE)
             return
         }
     }
 
     private suspend fun onCreateTaskFail(exception: Exception) {
-        consoleIO.println(FAIL_TO_CREATE_TASK_MESSAGE)
+        printError(FAIL_TO_CREATE_TASK_MESSAGE)
         val input = consoleIO.readFromUser().trim().uppercase()
 
         when (input) {
@@ -60,6 +63,6 @@ class CreateTaskUIController(
         const val RETRY = "retry"
         const val CANCEL = "cancel"
         const val FAIL_TO_CREATE_TASK_MESSAGE =
-            "❌ Please Inter All Inputs Correctly, inter $RETRY or $CANCEL"
+            "Please Enter All Inputs Correctly,\n Enter $RETRY to re enter ur inputs again or $CANCEL to exit"
     }
 }

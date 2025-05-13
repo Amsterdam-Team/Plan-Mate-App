@@ -7,14 +7,14 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException.ValidationException.InvalidProjectIDException
-import logic.repository.LogRepository
+import logic.repository.ILogRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 class ViewProjectHistoryUseCaseTest {
 
-    private lateinit var logRepository: LogRepository
+    private lateinit var logRepository: ILogRepository
     private lateinit var getProjectHistoryUseCase: GetProjectHistoryUseCase
 
     @BeforeEach
@@ -28,7 +28,7 @@ class ViewProjectHistoryUseCaseTest {
         // Given
         val projectId = PROJECT_1.id
         val logs = LOGS_FOR_PROJECT_1
-        coEvery { logRepository.viewLogsById(projectId) } returns logs
+        coEvery { logRepository.viewLogsByLogId(projectId) } returns logs
 
         // When
         val result = getProjectHistoryUseCase.execute(projectId.toString())

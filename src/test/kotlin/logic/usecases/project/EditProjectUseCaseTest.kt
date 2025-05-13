@@ -8,7 +8,7 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import logic.exception.PlanMateException
-import logic.repository.ProjectRepository
+import logic.repository.IProjectRepository
 import logic.usecases.logs.LoggerUseCase
 import logic.usecases.utils.StateManager
 import logic.usecases.utils.ValidateInputUseCase
@@ -22,7 +22,7 @@ import java.util.*
 
 class EditProjectUseCaseTest{
 
-   private lateinit var projectRepository: ProjectRepository
+   private lateinit var projectRepository: IProjectRepository
    private lateinit var validateInputUseCase: ValidateInputUseCase
    private lateinit var editProjectNameUseCase: EditProjectUseCase
    private lateinit var loggerUseCase: LoggerUseCase
@@ -41,7 +41,7 @@ class EditProjectUseCaseTest{
     fun `should update project name when user is admin, name valid and not taken`() = runTest{
         val newName = "Updated Project Name"
         every { validateInputUseCase.isValidName(newName) } returns true
-        coEvery { projectRepository.getProject(validProjectId) } returns validProject()
+        coEvery { projectRepository.getProjectById(validProjectId) } returns validProject()
         coEvery { projectRepository.getProjects() } returns listOf(validProject())
         coEvery { projectRepository.updateProjectNameById(validProjectId, newName) } returns true
         every { stateManager.getLoggedInUser() } returns adminUser()
@@ -81,7 +81,7 @@ class EditProjectUseCaseTest{
     val duplicateProject = project1.copy(id = UUID.randomUUID(), name = newName)
 
     every { validateInputUseCase.isValidName(newName) } returns true
-       coEvery { projectRepository.getProject(project1.id) } returns project1
+       coEvery { projectRepository.getProjectById(project1.id) } returns project1
        coEvery { projectRepository.getProjects() } returns listOf(project1, duplicateProject)
        every { stateManager.getLoggedInUser() } returns adminUser()
 
@@ -96,7 +96,7 @@ class EditProjectUseCaseTest{
         val project = validProject()
 
         every { validateInputUseCase.isValidName(newName) } returns true
-        coEvery { projectRepository.getProject(project.id) } returns project
+        coEvery { projectRepository.getProjectById(project.id) } returns project
         coEvery { projectRepository.getProjects() } returns listOf(project)
         coEvery { projectRepository.updateProjectNameById(project.id, newName) } returns true
         every { stateManager.getLoggedInUser() } returns adminUser()

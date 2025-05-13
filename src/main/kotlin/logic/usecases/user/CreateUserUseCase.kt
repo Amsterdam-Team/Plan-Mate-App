@@ -4,14 +4,14 @@ import logic.entities.User
 import logic.exception.PlanMateException.AuthorizationException.AdminPrivilegesRequiredException
 import logic.exception.PlanMateException.ValidationException.InvalidPasswordException
 import logic.exception.PlanMateException.ValidationException.InvalidUsernameException
-import logic.repository.AuthRepository
+import logic.repository.IAuthRepository
 import logic.usecases.utils.StateManager
 import logic.usecases.utils.ValidateInputUseCase
 import ui.utils.md5Hash
 import java.util.UUID
 
 class CreateUserUseCase(
-    private val repository: AuthRepository,
+    private val repository: IAuthRepository,
     private val validateInputUseCase: ValidateInputUseCase,
     private val stateManager: StateManager,
 

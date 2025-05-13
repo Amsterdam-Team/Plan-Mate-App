@@ -134,7 +134,7 @@ class LogDataSourceTest{
     @Test
     fun `should return true when log is deleted successfully`() = runTest {
         // When
-        val result = dataSource.deleteLog(log2Id)
+        val result = dataSource.deleteLogBy(log2Id)
 
         // Then
         assertThat(result).isTrue()
@@ -143,27 +143,7 @@ class LogDataSourceTest{
     @Test
     fun `should return false when log to delete is not found`() = runTest {
         // When
-        val result = dataSource.deleteLog(notFoundId)
-
-        // Then
-        assertThat(result).isFalse()
-    }
-    // endregion
-
-    // region replaceAllLogs
-    @Test
-    fun `should return true when all logs are replaced successfully`() = runTest {
-        // When
-        val result = dataSource.replaceAllLogs(logsToReplace)
-
-        // Then
-        assertThat(result).isTrue()
-    }
-
-    @Test
-    fun `should return false when logs have duplicated ids`() = runTest {
-        // When
-        val result = dataSource.replaceAllLogs(duplicatedLogIds)
+        val result = dataSource.deleteLogBy(notFoundId)
 
         // Then
         assertThat(result).isFalse()
@@ -183,9 +163,6 @@ class LogDataSourceTest{
         private val logNotInDatabase = log1.copy(id = UUID.randomUUID(), message = "yooooo")
         private val notFoundId = UUID.randomUUID()
         private val logWithSameId = log1.copy(message = "luigi")
-        private val logsToReplace = listOf(logWithSameId, logNotInDatabase)
-        private val duplicatedLogIds = listOf(log1, logWithSameId)
-
 
         // Testing Purposes
         private const val CONNECTION_STRING = "mongodb+srv://7amasa:9LlgpCLbd99zoRrJ@amsterdam.qpathz3.mongodb.net/?retryWrites=true&w=majority&appName=Amsterdam"

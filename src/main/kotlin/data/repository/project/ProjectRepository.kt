@@ -1,25 +1,16 @@
 package data.repository.project
 
-
 import data.datasources.projectDataSource.IProjectDataSource
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
-import logic.entities.LogItem
 import logic.entities.Project
 import logic.exception.PlanMateException
 import logic.exception.PlanMateException.ValidationException.ProjectNameAlreadyExistException
 import logic.exception.PlanMateException.NotFoundException.ProjectNotFoundException
-import logic.repository.LogRepository
-import logic.repository.ProjectRepository
+import logic.repository.IProjectRepository
 import java.util.*
 
-
-
-
-class ProjectRepositoryImpl(
+class ProjectRepository(
     private val projectDataSource: IProjectDataSource,
-) : ProjectRepository {
+) : IProjectRepository {
   
     override suspend fun createProject(project: Project): Boolean {
         val existedProjects = getProjects()
@@ -30,19 +21,15 @@ class ProjectRepositoryImpl(
         return true
     }
 
-
     override suspend fun updateProjectNameById(projectId: UUID, newName: String) =
         projectDataSource.updateProjectName(projectId, newName)
 
 
-    override suspend fun deleteProject(projectId: UUID) = projectDataSource.deleteProject(projectId)
-
+    override suspend fun deleteProjectById(projectId: UUID) = projectDataSource.deleteProjectById(projectId)
 
     override suspend fun getProjects() = projectDataSource.getAllProjects()
 
-
-
-    override suspend fun getProject(projectId: UUID): Project {
+    override suspend fun getProjectById(projectId: UUID): Project {
         val project = try {
             projectDataSource.getProjectById(projectId)
         } catch (ex: PlanMateException.DataSourceException.ObjectDoesNotExistException) {
@@ -52,12 +39,11 @@ class ProjectRepositoryImpl(
     }
 
     override suspend fun updateProjectStateById(projectId: UUID, oldState: String, newState: String) =
-        projectDataSource.updateProjectState(projectId, oldState, newState)
+        projectDataSource.updateProjectStateById(projectId, oldState, newState)
 
 
     override suspend fun deleteStateById(projectId: UUID, oldState: String) =
-        projectDataSource.deleteProjectState(projectId, oldState)
-
+        projectDataSource.deleteProjectStateById(projectId, oldState)
 
     override suspend fun addStateById(projectId: UUID, state: String) = projectDataSource.insertProjectState(projectId, state)
 

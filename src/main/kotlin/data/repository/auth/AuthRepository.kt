@@ -2,13 +2,13 @@ package data.repository.auth
 
 import data.datasources.userDataSource.IUserDataSource
 import logic.entities.User
-import logic.repository.AuthRepository
+import logic.repository.IAuthRepository
 
-class AuthRepositoryImpl(
+class AuthRepository(
     private val userDataSource : IUserDataSource
-): AuthRepository {
+): IAuthRepository {
     override suspend fun createUser(user: User): Boolean {
-        return userDataSource.insertUser(user)
+        return userDataSource.upsertUser(user)
     }
 
     override suspend fun login(username: String, password: String): User {
