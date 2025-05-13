@@ -22,12 +22,13 @@ sealed class PlanMateException : Exception() {
         data object UserAlreadyExistsException : ValidationException()
         data object StateAlreadyExistsException : ValidationException()
         data object EmptyDataException : ValidationException()
-        data object InvalidUUIDFormatException:ValidationException()
+        data object InvalidUUIDFormatException : ValidationException()
 
         data object EmptyProjectStatesException : ValidationException()
         data object EmptyProjectNameException : ValidationException()
-        data object SameStateNameException: ValidationException()
-        data object ProjectNameAlreadyExistException: ValidationException()
+        data object SameStateNameException : ValidationException()
+        data object ProjectNameAlreadyExistException : ValidationException()
+        data object StateHasTasksException : ValidationException()
 
     }
 
@@ -46,7 +47,7 @@ sealed class PlanMateException : Exception() {
         data object ProjectNotFoundException : NotFoundException()
         data object TaskNotFoundException : NotFoundException()
         data object StateNotFoundException : NotFoundException()
-         data object TaskLogsNotFound : NotFoundException()
+        data object TaskLogsNotFound : NotFoundException()
     }
 
     sealed class ExistException : PlanMateException() {

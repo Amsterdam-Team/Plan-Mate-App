@@ -82,10 +82,10 @@ val appModule = module {
     val viewAllTasksByProjectIdUiController = named("viewAllTasksByProjectIdUiController")
 
     // MongoCollections
-    single<MongoCollection<User>>(usersCollection){MongoDatabaseFactory.database.getCollection<User>("users")}
-    single<MongoCollection<Project>>(projectsCollection){MongoDatabaseFactory.database.getCollection<Project>("projects")}
-    single<MongoCollection<Task>>(tasksCollection){MongoDatabaseFactory.database.getCollection<Task>("tasks")}
-    single<MongoCollection<LogItem>>(logsCollection){MongoDatabaseFactory.database.getCollection<LogItem>("logs")}
+    single<MongoCollection<User>>(usersCollection) { MongoDatabaseFactory.database.getCollection<User>("users") }
+    single<MongoCollection<Project>>(projectsCollection) { MongoDatabaseFactory.database.getCollection<Project>("projects") }
+    single<MongoCollection<Task>>(tasksCollection) { MongoDatabaseFactory.database.getCollection<Task>("tasks") }
+    single<MongoCollection<LogItem>>(logsCollection) { MongoDatabaseFactory.database.getCollection<LogItem>("logs") }
 
     // DataSources
     single<ILogDataSource> { LogDataSource(get(logsCollection)) }
@@ -99,7 +99,7 @@ val appModule = module {
     single<ITaskRepository> { TaskRepository(get()) }
     single<ILogRepository> { LogRepository(get()) }
     single<IProjectRepository> { ProjectRepository(get()) }
-    single<StateManager>{ StateManager }
+    single<StateManager> { StateManager }
 
 
     single<User> { User(id = UUID.randomUUID(), username = "fsef", password = "fsefs", isAdmin = true) }
@@ -107,35 +107,35 @@ val appModule = module {
     single { ValidateInputUseCase() }
 
     //logger use Case
-    single{ LoggerUseCase(get(),get()) }
+    single { LoggerUseCase(get(), get()) }
 
     // Project UseCases
     single { CreateProjectUseCase(get(), get(), get(), get()) }
     single { DeleteProjectUseCase(get(), get(), get(), get()) }
-    single { EditProjectUseCase(get(), get(), get(),get()) }
+    single { EditProjectUseCase(get(), get(), get(), get()) }
     single { GetAllProjectsUseCase(get(), get()) }
-    single { GetProjectDetailsUseCase(get(),get(), get()) }
+    single { GetProjectDetailsUseCase(get(), get(), get()) }
     single { GetProjectHistoryUseCase(get()) }
 
 
     // StateUseCase
     single { AddStateUseCase(get(), get(), get()) }
-    single { DeleteStateUseCase(get()) }
+    single { DeleteStateUseCase(get(), get(), get(), get(), get()) }
     single { GetProjectStatesUseCase(get()) }
     single { UpdateStateUseCase(get(), get(), get()) }
     single { GetTaskStateUseCase(get()) }
 
     // TaskUseCase
-    single { CreateTaskUseCase(get(), get(), get(),get()) }
-    single { DeleteTaskUseCase(get(),get()) }
-    single { EditTaskUseCase(get(), get(),get()) }
+    single { CreateTaskUseCase(get(), get(), get(), get()) }
+    single { DeleteTaskUseCase(get(), get()) }
+    single { EditTaskUseCase(get(), get(), get()) }
     single { GetAllTasksByProjectIdUseCase(get(), get()) }
     single { GetTaskByIdUseCase(get(), get()) }
-    single { ViewTaskLogsUseCase(get(),get()) }
+    single { ViewTaskLogsUseCase(get(), get()) }
 
     // UserUseCase
-    single { LoginUseCase(get(),get()) }
-    single { CreateUserUseCase(get(), get(),get()) }
+    single { LoginUseCase(get(), get()) }
+    single { CreateUserUseCase(get(), get(), get()) }
 
     // ConsoleIO
     single<ConsoleIO> { ConsoleIOImpl() }
@@ -159,7 +159,13 @@ val appModule = module {
     single<BaseUIController>(viewTaskLogsUiController) { ViewTaskLogsUIController(get(), get()) }
     single<BaseUIController>(editTaskUiController) { EditTaskUiController(get(), get()) }
     single<BaseUIController>(viewTaskDetailsUiController) { ViewTaskDetailsUIController(get(), get(), get(), get()) }
-    single<BaseUIController>(viewAllTasksByProjectIdUiController) { ViewAllTasksByProjectIdUIController(get(), get(), get()) }
+    single<BaseUIController>(viewAllTasksByProjectIdUiController) {
+        ViewAllTasksByProjectIdUIController(
+            get(),
+            get(),
+            get()
+        )
+    }
 
 
     // User Menus
