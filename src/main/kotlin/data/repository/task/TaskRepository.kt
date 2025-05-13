@@ -5,22 +5,25 @@ import logic.entities.Task
 import logic.repository.ITaskRepository
 import java.util.*
 
-class TaskRepository(private val taskDataSource: ITaskDataSource): ITaskRepository {
+class TaskRepository(private val taskDataSource: ITaskDataSource) : ITaskRepository {
     override suspend fun createTask(task: Task) =
         taskDataSource.insertTask(task)
 
 
     override suspend fun updateTask(task: Task) =
-        taskDataSource.updateTaskNameById(task.id,task.name)&&
-        taskDataSource.updateTaskStateById(task.id,task.state)
+        taskDataSource.updateTaskNameById(task.id, task.name) &&
+                taskDataSource.updateTaskStateById(task.id, task.state)
 
 
     override suspend fun updateTaskNameByID(taskId: UUID, newName: String) =
-        taskDataSource.updateTaskNameById(taskId,newName)
+        taskDataSource.updateTaskNameById(taskId, newName)
 
+    override suspend fun hasTasksWithState(projectId: UUID, state: String): Boolean {
+        return taskDataSource.hasTasksWithState(projectId, state)
+    }
 
     override suspend fun updateStateNameByID(taskId: UUID, newStateName: String) =
-        taskDataSource.updateTaskStateById(taskId,newStateName)
+        taskDataSource.updateTaskStateById(taskId, newStateName)
 
 
     override suspend fun deleteTask(taskId: UUID) =
@@ -28,7 +31,6 @@ class TaskRepository(private val taskDataSource: ITaskDataSource): ITaskReposito
 
     override suspend fun getTaskById(taskId: UUID): Task =
         taskDataSource.getTaskById(taskId)
-
 
 
     override suspend fun getAllTasksByProjectId(projectId: UUID) =

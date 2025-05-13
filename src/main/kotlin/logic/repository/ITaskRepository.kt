@@ -12,4 +12,5 @@ interface ITaskRepository {
 
     suspend fun updateStateNameByID(taskId: UUID, newStateName: String): Boolean
     suspend fun updateTaskNameByID(taskId: UUID, newName: String): Boolean
+    suspend fun hasTasksWithState(projectId: UUID, state: String): Boolean
 }

@@ -1,6 +1,8 @@
 package data.datasources.taskDataSource
 
 import com.mongodb.client.model.Filters
+import com.mongodb.client.model.Filters.and
+import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.UpdateOptions
 import com.mongodb.client.model.Updates
 import com.mongodb.kotlin.client.coroutine.MongoCollection
@@ -12,7 +14,7 @@ import java.util.*
 
 class TaskDataSource(
     private val tasksCollection: MongoCollection<Task>
-): ITaskDataSource {
+) : ITaskDataSource {
     override suspend fun getAllTasks(): List<Task> {
         return tasksCollection.find().toList()
     }
@@ -22,7 +24,8 @@ class TaskDataSource(
     }
 
     override suspend fun getTaskById(taskId: UUID): Task {
-        return tasksCollection.find(Filters.eq(FIELD_TASK_ID, taskId)).firstOrNull() ?: throw ObjectDoesNotExistException
+        return tasksCollection.find(Filters.eq(FIELD_TASK_ID, taskId)).firstOrNull()
+            ?: throw ObjectDoesNotExistException
     }
 
     override suspend fun insertTask(task: Task): Boolean {
@@ -44,7 +47,8 @@ class TaskDataSource(
     }
 
     override suspend fun getTaskStateById(taskId: UUID): String {
-        val task = tasksCollection.find(Filters.eq(FIELD_TASK_ID, taskId)).firstOrNull() ?: throw ObjectDoesNotExistException
+        val task =
+            tasksCollection.find(Filters.eq(FIELD_TASK_ID, taskId)).firstOrNull() ?: throw ObjectDoesNotExistException
         return task.state
     }
 
@@ -75,6 +79,14 @@ class TaskDataSource(
             Updates.set(FIELD_STATE, newState)
         )
         return updateResult.modifiedCount > 0
+    }
+
+    override suspend fun hasTasksWithState(projectId: UUID, state: String): Boolean {
+        val query = and(
+            eq(FIELD_PROJECT_ID, projectId),
+            eq(FIELD_STATE, state)
+        )
+        return tasksCollection.countDocuments(query) > 0
     }
 
     private companion object {

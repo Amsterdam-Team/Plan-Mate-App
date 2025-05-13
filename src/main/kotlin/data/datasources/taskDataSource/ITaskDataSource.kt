@@ -1,7 +1,7 @@
 package data.datasources.taskDataSource
 
 import logic.entities.Task
-import java.util.UUID
+import java.util.*
 
 interface ITaskDataSource {
 
@@ -20,4 +20,6 @@ interface ITaskDataSource {
     suspend fun updateTaskNameById(taskId: UUID, newName: String): Boolean
 
     suspend fun updateTaskStateById(taskId: UUID, newState: String): Boolean
+
+    suspend fun hasTasksWithState(projectId: UUID, state: String): Boolean
 }
