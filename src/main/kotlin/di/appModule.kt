@@ -1,5 +1,6 @@
 package di
 
+import AuthRepositoryLoggingProxy
 import com.mongodb.kotlin.client.coroutine.MongoCollection
 import data.datasources.MongoDatabaseFactory
 import data.datasources.logDataSource.ILogDataSource
@@ -95,7 +96,11 @@ val appModule = module {
 
 
     // Repositories
-    single<AuthRepository> { AuthRepositoryImpl(get()) }
+    single<AuthRepository> {
+        val impl = AuthRepositoryImpl(get())
+        AuthRepositoryLoggingProxy(impl, get())
+    }
+
     single<TaskRepository> { TaskRepositoryImpl(get()) }
     single<LogRepository> { LogRepositoryImpl(get()) }
     single<ProjectRepository> { ProjectRepositoryImpl(get()) }
